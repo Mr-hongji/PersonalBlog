@@ -1,0 +1,37 @@
+
+*{
+	margin: 0 auto;
+	padding: 0;
+}
+
+body,div,p{
+	font-family: 'Microsoft Yahei' ;
+	font-size: 14px;
+	color: #3D3D3D;
+}
+
+.box{
+	width: 100%;
+	text-align: center;
+}
+
+/*日期*/
+.date_info{
+    line-height:28px;
+    margin-top: 5px;
+	margin-right: 10px;
+	
+}
+
+.now_week{
+	margin: 5px auto;
+}
+
+.time_info{ 
+	line-height: 30px;
+	font-size: 16px;
+	font-family: "microsoft yahei","微软雅黑";
+	font-weight: bold;
+	margin-top: 5px;
+}
+
