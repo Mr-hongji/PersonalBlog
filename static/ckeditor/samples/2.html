@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../plugins/codesnippet/lib/highlight/styles/default.css">
+		<script src="../plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+		<script src="../jquery.js"></script>
+		<script>
+			
+			require(["highlight.js/build/highlight.pack"], function(hljs){
+
+  // If you know the language
+  hljs.highlight(lang, code).value;
+
+  // Automatic language detection
+  hljs.highlightAuto(code).value;
+});
+			
+			function changecodestyle(){
+				var lang = "python";
+				var code = '<pre><code class="language-python">def a():pass</code></pre>';
+				var data = hljs.highlight(lang, code);
+				console.log(data.value);
+				
+				$('.d').append(code);
+				
+				$('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+			}
+		</script>
+		
+		
+		<style type="text/css">
+			.d{
+				height: 300px;
+				border: 1px #000000 solid;
+			}
+		</style>
+	</head>
+
+	<body>
+		<button onclick="changecodestyle()"></button>
+		<div id="d" class="d">
+			<pre><code class="language-python">def a():pass</code></pre>
+		</div>
+	</body>
+
+</html>

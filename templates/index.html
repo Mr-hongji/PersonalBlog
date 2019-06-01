@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<link rel="stylesheet" href="../static/css/index.css"/>
+        {% load  CustomFilter %}
 	</head>
 	<body>
 		<div class="nav">
@@ -75,42 +76,49 @@
 					
 				</div>
 				<div class="rightContent">
-					<div class="article">
-						<p class="blog_op">
-							<a href="#" class="blog_edit"></a>
-							<!--<a href="#" class="blog_del"></a>-->
-						</p>
-						
-						<h4 class="articleTitle">
-							发到公司打工说过说过是否是
-						</h4>
-						<p class="articleSummery">
-							
-							发生的发生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法生发生发发送发发大发生大发打算法
-						</p>
-						
-						<div class="article_info">
-							<span>2019-03-31 14:02:36 &nbsp;&nbsp;&nbsp;分类: 122 &nbsp; 是de &nbsp;&nbsp;&nbsp;标签:	2、3</span>
-						</div>
-					</div>
+                    {% for article in articles %}
+                        <div class="article">
+                            <p class="blog_op">
+                                <a href="editBlog/?id={{ article.id }}" class="blog_edit"></a>
+                                <!--<a href="#" class="blog_del"></a>-->
+                            </p>
+
+                            <h4 class="articleTitle">
+                                {{ article.title }}
+                            </h4>
+                            <p class="articleSummery">
+
+                                {% substringFilter article.content %}
+                            </p>
+
+
+                            <div class="article_info">
+                                <span>发布时间: {{ article.createTime }} &nbsp;&nbsp;&nbsp;分类: {{ article.classify.name }} &nbsp;&nbsp;&nbsp;标签:
+                                    {% for tag in article.tag.all %}
+                                       &nbsp;{{ tag.name }}
+                                {% endfor %}
+                                </span>
+                            </div>
+					    </div>
+                    {% endfor %}
+
 					
-					<div class="article">
-						<p class="blog_op">
-							<a href="#" class="blog_edit"></a>
-							<!--<a href="#" class="blog_del"></a>-->
-						</p>
-						<h4 class="articleTitle">
-							发到公司打工说过说过是否是
-						</h4>
-						<p class="articleSummery">
-							
-							发生的发生发生发发送发发大发生大发打算法
-						</p>
-						
-						<div class="article_info">
-							<span>2019-03-31 14:02:36 &nbsp;&nbsp;&nbsp;分类: 122 &nbsp; 是de &nbsp;&nbsp;&nbsp;标签:	2、3</span>
-						</div>
-					</div>
+{#					<div class="article">#}
+{#						<p class="blog_op">#}
+{#							<a href="#" class="blog_edit"></a>#}
+{#						</p>#}
+{#						<h4 class="articleTitle">#}
+{#							发到公司打工说过说过是否是#}
+{#						</h4>#}
+{#						<p class="articleSummery">#}
+{#							#}
+{#							发生的发生发生发发送发发大发生大发打算法#}
+{#						</p>#}
+{#						#}
+{#						<div class="article_info">#}
+{#							<span>2019-03-31 14:02:36 &nbsp;&nbsp;&nbsp;分类: 122 &nbsp; 是de &nbsp;&nbsp;&nbsp;标签:	2、3</span>#}
+{#						</div>#}
+{#					</div>#}
 				</div>
 			</div>
 			

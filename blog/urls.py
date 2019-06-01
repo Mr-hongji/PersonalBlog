@@ -10,4 +10,5 @@ urlpatterns = [
     path('delArticleClassify/', views.delArticleClassify),
     path('addArticleTag/', views.addArticleTag),
     path('delArticleTag/', views.delArticleTag),
+    path('addArticle/', views.addArticle),
 ]

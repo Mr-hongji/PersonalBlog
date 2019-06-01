@@ -172,7 +172,8 @@ body {
 }
 
 .editormd {
-	top: 45px;
+	top: 85px;
+	float: left;
 }
 
 .article_active {
@@ -212,7 +213,7 @@ body {
 
 .selectDiv {
 	width: 98%;
-	height: 350px;
+	height: 385px;
 	overflow: auto;
 	margin-left: 5px;
 	margin-top: 0px;
@@ -303,7 +304,7 @@ body {
 	background: url(../images/blue.png) no-repeat -24px 0px;
 }
 
-.checkboxDiv .checkbox_classfy {
+.checkboxDiv .checkbox_classfy{
 	width: 100%;
 	height: 100%;
 	opacity: 0;
@@ -312,5 +313,47 @@ body {
 .textInputDiv{
 	float: left;
 	width: 200px;
+	height: 100%;
+}
+
+.articleTitleDiv{
+	background-color: #ffffff;
+	position: absolute;
+	top: 45px;
+	width: 70%;
+	left: 10px;
+	border: 1px #EBE7DF solid;
+}
+
+.articleTitleDiv .articleTitle{
+	width: 92%;
+	height: 30px;
+	border: 0px;
+	margin-left: 5px;
+	font-size: 14px;
+}
+
+.articleTitleDiv .articleTitle:focus{
+	outline: none;
+}
+
+.articleTitleDiv p{
+	float: right;
+	margin-right: 5px;
+	height: 30px;
+	line-height: 30px;
+	margin-top: 2px;
+}
+
+.adjoined-bottom{
+	float: left;
+	margin-top: 85px;
+	margin-left: 10px;
+	width: 70%;
+
+}
+
+.grid-container{
+width: 100%;
 	height: 100%;
 }

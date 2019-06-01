@@ -5,7 +5,8 @@ import json
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    ret = models.Article.objects.all()
+    return render(request, 'index.html',{'articles':ret})
 
 def clock(request):
     return render(request, 'clock.html')
@@ -102,4 +103,21 @@ def delArticleTag(request):
     except Exception as e:
         msg['status'] = 0
         msg['msg'] = '删除失败'
+    return HttpResponse(json.dumps(msg, ensure_ascii=False))
+
+def addArticle(request):
+    msg = {'status': None}
+    try:
+        articleTitle = request.GET.get('articleTitle')
+        articleContent = request.GET.get('articleContent')
+        classifyId = request.GET.get('classifyId')
+        tagIds = request.GET.getlist('tagIds')
+
+        msg['status'] = 1
+    except Exception as e:
+        print(e)
+        msg['status'] = 0
+    data = models.Article.objects.create(title=articleTitle, content=articleContent, classify_id=classifyId, user_id=1)
+    data.tag.add(*list(map(int, tagIds))) # ['1','2'] 转 [1, 2]
+
     return HttpResponse(json.dumps(msg, ensure_ascii=False))
