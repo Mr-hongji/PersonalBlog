@@ -11,4 +11,5 @@ urlpatterns = [
     path('addArticleTag/', views.addArticleTag),
     path('delArticleTag/', views.delArticleTag),
     path('addArticle/', views.addArticle),
+    path('getArticles/', views.getArticles),
 ]

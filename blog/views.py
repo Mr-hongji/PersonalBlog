@@ -1,20 +1,42 @@
 from django.shortcuts import render, HttpResponse
 from blog import models
+from django.core import serializers
 
 import json
 # Create your views here.
 
 def index(request):
-    ret = models.Article.objects.all()
-    return render(request, 'index.html',{'articles':ret})
+    ret_user = models.UserInfo.objects.all()
+
+    return render(request, 'index.html',{'userinfo':ret_user, 'classify':getClassify(), 'tag':getTag()})
+
+def getArticles(request):
+
+    pgnum = int(request.GET.get('pgnum', 0))
+    pageSize = 10
+    ret = {'pgnum': pgnum+1, 'data':None}
+    start_index = pgnum * pageSize
+    end_index = pgnum * pageSize + pageSize
+    ret_article = models.Article.objects.all()[start_index:end_index]
+
+    json_data = serializers.serialize('json', ret_article, use_natural_foreign_keys=True)
+    print(json_data)
+    ret['data'] = json_data
+    return HttpResponse(json.dumps(ret))
 
 def clock(request):
     return render(request, 'clock.html')
 
 def addBlog(request):
+    return render(request, 'add_blog.html', {'classify_ret':getClassify(), 'tag_ret':getTag()})
+
+def getClassify():
     classify_ret = models.Classify.objects.all()
+    return classify_ret
+
+def getTag():
     tag_ret = models.Tag.objects.all()
-    return render(request, 'add_blog.html', {'classify_ret':classify_ret, 'tag_ret':tag_ret})
+    return tag_ret
 
 def addArticleClassify(request):
     msg = {'action':'updateArticleClassify', 'msg':None, 'status':None}

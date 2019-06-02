@@ -11,6 +11,9 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name_plural = '用户信息'
 
+    def natural_key(self):
+        return {'id':self.pk, 'uname':self.uname}
+
     def __str__(self):
         return self.uname
 
@@ -36,6 +39,9 @@ class Classify(models.Model):
     class Meta:
         verbose_name_plural = '分类'
 
+    def natural_key(self):
+        return self.name
+
     def __str__(self):
         return self.name
 
@@ -44,6 +50,9 @@ class Tag(models.Model):
     user = models.ForeignKey('UserInfo', on_delete=models.CASCADE)
     class Meta:
         verbose_name_plural = '标签'
+
+    def natural_key(self):
+        return self.name
 
     def __str__(self):
         return self.name

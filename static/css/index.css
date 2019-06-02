@@ -115,7 +115,7 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 
 .content {
 	width: 100%;
-	height: 800px;
+
 	position: relative;
 	top: 45px;
 }
@@ -132,11 +132,6 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	background: #FFFFFF;
 	border-top: 2px yellowgreen solid;
 	
-}
-
-.banner  h4 {
-	margin-left: 53px;
-	margin-top: 12px;
 }
 
 .addblog{
@@ -156,26 +151,61 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	color: #3D3D3D;
 }
 
-.banner .uhead{
+.banner .uinfoDiv{
 	width: 100%;
 	height: 80px;
-	background-color: #000000;
-	margin-left: 5px;
-	background: url(../images/user_head.png) no-repeat left center;
+	background-color: #ffffff;
 }
 
+.uinfoDiv .uhead{
+	width: 48px;
+	height: 48px;
+	float: left;
+	margin-top: 16px;
+	margin-left: 2px;
+	border: 1px #d4d4d4 solid;
+}
+
+.uinfoDiv  h4 {
+	margin-left: 8px;
+	margin-top: 10px;
+	float: left;
+}
+
+.uinfoDiv p{
+	float: left;
+	margin-left: 8px;
+	margin-top: 10px;
+}
 .banner img{
 	height: 48px;
 }
-
 .content .rightContent {
-	height: 100%;
 	position: absolute;
 	left: 260px;
 	right: 0;
 	background: #FFFFFF;
 	/*background: cadetblue;*/
 	border-top: 2px yellowgreen solid;
+}
+
+.rightContent .articlesDiv{
+
+}
+
+.rightContent .load_more{
+	text-align: center;
+}
+
+.rightContent .load_more a{
+	display: inline-block;
+	padding: 15px 0px;
+    width: 150px;
+    text-decoration: none;
+     color: #d0d0d0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .footer {
@@ -345,7 +375,7 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 
 .articleSummery{
 	text-indent:2em;
-	max-height: 50px;
+	height: 62px;
 	overflow: hidden;
 	font-size:14px;
 	font-family: arial;

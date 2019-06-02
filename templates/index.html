@@ -3,8 +3,80 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="../static/css/index.css"/>
+		<link rel="stylesheet" href="../static/css/index.css?rn=11"/>
+        <script src="../static/js/jquery.js"></script>
         {% load  CustomFilter %}
+
+        <script>
+
+            window.onload=function(){
+                loadMore(0);
+            };
+
+            function loadMore(pgnum){
+
+                var load_over = '已加载到最后';
+                var click_load_more = '点击加载更多';
+                var no_data = '暂无文章';
+
+                if($('.rightContent').find('.load_more').find('a').text() == load_over){
+                    return;
+                }
+
+                $.ajax({
+                    url:'getArticles/',
+                    data:{pgnum:pgnum},
+                    dataType:'json',
+                    success:function (data) {
+
+                        var pgnum = data.pgnum;
+                        var article_data = JSON.parse(data.data);
+                        console.log(article_data);
+                        if(article_data){
+                            $(article_data).each(function(index,item){
+                                if(item && item.fields){
+                                    var tags_str='';
+                                    var arr_tags = item.fields.tag;
+                                    for (i in arr_tags){
+                                        tags_str += arr_tags[i] +' ';
+                                    }
+                                    var date_str = strFormat2Date(item.fields.createTime);
+                                   var summery_str = item.fields.content.replace(/<\/?.+?>/g,"").replace(/ /g,"").substring(0,300) + '...';
+
+                                    article_str = '<div class="article"><p class="blog_op"><a href="editBlog/?id='+ item.pk +'" class="blog_edit"></a></p><h4 class="articleTitle">'+ item.fields.title +'</h4><p class="articleSummery">'+ summery_str +'</p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
+                                }
+                                 $('.articlesDiv').append(article_str);
+                            });
+                            console.log(article_data.length);
+                            var el_a = $('.rightContent').find('.load_more').find('a');
+                            if(article_data.length < 10){
+                                if(pgnum == 1 && article_data.length == 0){
+                                    $(el_a).text(no_data);
+                                }
+                                else{
+                                    $(el_a).text(load_over);
+                                }
+                            }
+                            else{
+                                $(el_a).attr("onclick","loadMore("+pgnum+")");
+                                $(el_a).text(click_load_more);
+                            }
+                        }
+                    }
+                })
+            }
+            function strFormat2Date(str){
+                var datetime = new Date(str);
+                var year = datetime.getFullYear();
+                var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+                var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+                var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+                var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+                var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+                return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
+            }
+
+        </script>
 	</head>
 	<body>
 		<div class="nav">
@@ -33,92 +105,48 @@
 		<div class="main">
 			<div class="content">
 				<div class="leftContent">
+                    <!-- 用户信息 -->
 					<div class="banner">
-						<div class="uhead clearfix" >
-							<h4>唠唠叨叨</h4>
-							<p class="chickenSoup">只要思想不滑坡，办法总比困难多</p>
-							
-						</div>
+                        {% for u in userinfo %}
+                            <div class="uinfoDiv clearfix">
+                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+                                <h4>{{ u.uname }}</h4>
+                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
+						    </div>
+                        {% endfor %}
 					</div>
-					
+					<!-- 时间 -->
 					<div class="calendarDiv">
 						<iframe class="clockFrame" scrolling="no"
-							 src="clock.html" width="100%" height="100%">
+							 src="clock.html" style="width: 255px;height: 100px">
 						</iframe>
 					</div>
-					
+					<!-- 文章分类 -->
 					<div class="articleClassify">
 						<h4>分类</h4>
 						<ul>
-							<li><a href="#">Python</a></li>
-							<li><a href="#">Java</a></li>
-							<li><a href="#">C#</a></li>
-							<li><a href="#">Flex</a></li>
-							<li><a href="#">Python</a></li>
-							<li><a href="#">Java</a></li>
-							<li><a href="#">C#</a></li>
-							<li><a href="#">Flex</a></li>
+                            {% for c in classify %}
+                                <li><a href="#">{{ c.name }}</a></li>
+                            {% endfor %}
+
 						</ul>
 					</div>
+                    <!--  文章标签  -->
 					<div class="articleTag articleClassify">
 						<h4>标签</h4>
 						<ul>
-							<li><a href="#">Python</a></li>
-							<li><a href="#">Java</a></li>
-							<li><a href="#">C#</a></li>
-							<li><a href="#">Flex</a></li>
-							<li><a href="#">Python</a></li>
-							<li><a href="#">Java</a></li>
-							<li><a href="#">C#</a></li>
-							<li><a href="#">Flex</a></li>
+							 {% for t in tag %}
+                                <li><a href="#">{{ t.name }}</a></li>
+                            {% endfor %}
 						</ul>
 					</div>
-					
 				</div>
 				<div class="rightContent">
-                    {% for article in articles %}
-                        <div class="article">
-                            <p class="blog_op">
-                                <a href="editBlog/?id={{ article.id }}" class="blog_edit"></a>
-                                <!--<a href="#" class="blog_del"></a>-->
-                            </p>
+                    <!-- 文章 -->
+                    <div class="articlesDiv">
 
-                            <h4 class="articleTitle">
-                                {{ article.title }}
-                            </h4>
-                            <p class="articleSummery">
-
-                                {% substringFilter article.content %}
-                            </p>
-
-
-                            <div class="article_info">
-                                <span>发布时间: {{ article.createTime }} &nbsp;&nbsp;&nbsp;分类: {{ article.classify.name }} &nbsp;&nbsp;&nbsp;标签:
-                                    {% for tag in article.tag.all %}
-                                       &nbsp;{{ tag.name }}
-                                {% endfor %}
-                                </span>
-                            </div>
-					    </div>
-                    {% endfor %}
-
-					
-{#					<div class="article">#}
-{#						<p class="blog_op">#}
-{#							<a href="#" class="blog_edit"></a>#}
-{#						</p>#}
-{#						<h4 class="articleTitle">#}
-{#							发到公司打工说过说过是否是#}
-{#						</h4>#}
-{#						<p class="articleSummery">#}
-{#							#}
-{#							发生的发生发生发发送发发大发生大发打算法#}
-{#						</p>#}
-{#						#}
-{#						<div class="article_info">#}
-{#							<span>2019-03-31 14:02:36 &nbsp;&nbsp;&nbsp;分类: 122 &nbsp; 是de &nbsp;&nbsp;&nbsp;标签:	2、3</span>#}
-{#						</div>#}
-{#					</div>#}
+                    </div>
+                    <p class="load_more"><a href="javascript:void(0)"></a></p>
 				</div>
 			</div>
 			
