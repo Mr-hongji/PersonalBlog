@@ -3,48 +3,38 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-        <link rel="stylesheet" href="../../static/css/index.css"/>
-        <link rel="stylesheet" href="../static/css/article.css"/>
-        <script src="../static/js/jquery.js"></script>
+        <link rel="stylesheet" href="/static/css/index.css"/>
+        <link rel="stylesheet" href="/static/css/article.css"/>
+        <link rel="stylesheet" href="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css">
+		<script src="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+        <script src="/static/js/jquery.js"></script>
 
         {% load  CustomFilter %}
 
         <script>
+            hljs.initHighlightingOnLoad();
 
 function getQueryVariable() {
-	var query = window.location.search.substring(1);
-	query = decodeURI(query);
-	var vars = query.split("/");
+	var window_location = window.location.href;
+	window_location = decodeURI(window_location);
+	var params = window_location.split("/");
 
-    return vars[vars.length-1];
+    return params[params.length-1];
 }
             window.onload=function(){
              var article_pk =  getQueryVariable();
-             console.log(article_pk);
-               // loadMore(0);
+               articleDetails(article_pk);
             };
 
-            function loadMore(pgnum){
-
-                var load_over = '已加载到最后';
-                var click_load_more = '点击加载更多';
-                var no_data = '暂无文章';
-
-                if($('.rightContent').find('.load_more').find('a').text() == load_over){
-                    return;
-                }
-
+            function articleDetails(pk){
                 $.ajax({
-                    url:'getArticles/',
-                    data:{pgnum:pgnum},
+                    url:'../articleDetails/',
+                    data:{pk:pk},
                     dataType:'json',
                     success:function (data) {
-
-                        var pgnum = data.pgnum;
-                        var article_data = JSON.parse(data.data);
-                        console.log(article_data);
-                        if(article_data){
-                            $(article_data).each(function(index,item){
+                        console.log(data);
+                        if(data){
+                            $(data).each(function(index,item){
                                 if(item && item.fields){
                                     var tags_str='';
                                     var arr_tags = item.fields.tag;
@@ -52,27 +42,15 @@ function getQueryVariable() {
                                         tags_str += arr_tags[i] +' ';
                                     }
                                     var date_str = strFormat2Date(item.fields.createTime);
-                                   var summery_str = item.fields.content.replace(/<\/?.+?>/g,"").replace(/ /g,"").substring(0,300) + '...';
 
-                                    article_str = '<div class="article"><p class="blog_op"><a href="edit/?id='+ item.pk +'" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/?id='+item.pk+'" target="_blank">'+ item.fields.title +'</a></h4><p class="articleSummery"><a href="article/?id='+item.pk+'" target="_blank">'+ summery_str +'</a></p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
+                                    article_details_str = '<h2>'+item.fields.title+'</h2><p><span>'+date_str+' 类别: '+item.fields.classify+' 标签: '+tags_str+' </span></p><div class="article_content">'+item.fields.content+'</div>';
+
                                 }
-                                 $('.articlesDiv').append(article_str);
+                                 $('.articleDiv').append(article_details_str);
                             });
-                            console.log(article_data.length);
-                            var el_a = $('.rightContent').find('.load_more').find('a');
-                            if(article_data.length < 10){
-                                if(pgnum == 1 && article_data.length == 0){
-                                    $(el_a).text(no_data);
-                                }
-                                else{
-                                    $(el_a).text(load_over);
-                                }
-                            }
-                            else{
-                                $(el_a).attr("onclick","loadMore("+pgnum+")");
-                                $(el_a).text(click_load_more);
-                            }
                         }
+
+                        $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
                     }
                 })
             }
@@ -92,7 +70,7 @@ function getQueryVariable() {
 	<body>
 		<div class="nav">
 
-			<img class="blogimg" src="../static/images/blog_icon.png"/>
+			<img class="blogimg" src="/static/images/blog_icon.png"/>
 
 			<div class="addblogDiv">
 				<!--<img src="images/blog_add.png" />-->
@@ -120,7 +98,7 @@ function getQueryVariable() {
 					<div class="banner">
                         {% for u in userinfo %}
                             <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+                                <div class="uhead" style="background: url('/{{ u.img }}') no-repeat center;"></div>
                                 <h4>{{ u.uname }}</h4>
                                 <p class="chickenSoup">{{ u.chickenSoup }}</p>
 						    </div>
@@ -129,7 +107,7 @@ function getQueryVariable() {
 					<!-- 时间 -->
 					<div class="calendarDiv">
 						<iframe class="clockFrame" scrolling="no"
-							 src="clock.html" style="width: 255px;height: 100px">
+							 src="../clock.html" style="width: 255px;height: 100px">
 						</iframe>
 					</div>
 					<!-- 文章分类 -->
@@ -156,14 +134,6 @@ function getQueryVariable() {
                     <!-- 文章 -->
                     <div class="articleDiv">
 
-                        <h2>form表单的提交参数规则，以及jquery序列化表单的方法</h2>
-                        <p>
-                            <span>2018年08月08日 21:47:27 类别: 1 标签: 1 2 3 </span>
-                        </p>
-
-                        <div class="article_content">
-                                
-                        </div>
                     </div>
 				</div>
 			</div>

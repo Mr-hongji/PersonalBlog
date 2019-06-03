@@ -9,7 +9,7 @@
 		<script src="../static/js/jquery.js"></script>
 		<script src="../static/plugins/editorPlugin/editormd.js"></script>
 
-        <script src="../static/ckeditor/ckeditor.js?rn=1"></script>
+        <script src="../static/plugins/ckeditor/ckeditor.js?rn=1"></script>
         <link rel="stylesheet" href="../static/css/addBlog.css?rnd=1" />
 		<script type="text/javascript">
 
@@ -349,6 +349,7 @@ console.log(articleTagIds);
             <p>0/100</p>
         </div>
 
+        <!-- ckeditor -->
         <div class="adjoined-bottom">
             <div class="grid-container">
                 <div class="grid-width-100">
@@ -358,6 +359,7 @@ console.log(articleTagIds);
             </div>
         </div>
 
+        <!-- editormd -->
 		<div class="editormd" id="test-editormd" hidden>
 			<textarea class="editormd-markdown-textarea" name="test-editormd-markdown-doc"></textarea>
 				<!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->

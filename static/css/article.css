@@ -1,3 +1,7 @@
+ul,li{
+    list-style: none;
+}
+
 .articleDiv{
     width: 98%;
     margin: 0px auto;
