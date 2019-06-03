@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <link rel="stylesheet" href="../../static/css/index.css"/>
+        <link rel="stylesheet" href="../static/css/article.css"/>
+        <script src="../static/js/jquery.js"></script>
+
+        {% load  CustomFilter %}
+
+        <script>
+
+function getQueryVariable() {
+	var query = window.location.search.substring(1);
+	query = decodeURI(query);
+	var vars = query.split("/");
+
+    return vars[vars.length-1];
+}
+            window.onload=function(){
+             var article_pk =  getQueryVariable();
+             console.log(article_pk);
+               // loadMore(0);
+            };
+
+            function loadMore(pgnum){
+
+                var load_over = '已加载到最后';
+                var click_load_more = '点击加载更多';
+                var no_data = '暂无文章';
+
+                if($('.rightContent').find('.load_more').find('a').text() == load_over){
+                    return;
+                }
+
+                $.ajax({
+                    url:'getArticles/',
+                    data:{pgnum:pgnum},
+                    dataType:'json',
+                    success:function (data) {
+
+                        var pgnum = data.pgnum;
+                        var article_data = JSON.parse(data.data);
+                        console.log(article_data);
+                        if(article_data){
+                            $(article_data).each(function(index,item){
+                                if(item && item.fields){
+                                    var tags_str='';
+                                    var arr_tags = item.fields.tag;
+                                    for (i in arr_tags){
+                                        tags_str += arr_tags[i] +' ';
+                                    }
+                                    var date_str = strFormat2Date(item.fields.createTime);
+                                   var summery_str = item.fields.content.replace(/<\/?.+?>/g,"").replace(/ /g,"").substring(0,300) + '...';
+
+                                    article_str = '<div class="article"><p class="blog_op"><a href="edit/?id='+ item.pk +'" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/?id='+item.pk+'" target="_blank">'+ item.fields.title +'</a></h4><p class="articleSummery"><a href="article/?id='+item.pk+'" target="_blank">'+ summery_str +'</a></p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
+                                }
+                                 $('.articlesDiv').append(article_str);
+                            });
+                            console.log(article_data.length);
+                            var el_a = $('.rightContent').find('.load_more').find('a');
+                            if(article_data.length < 10){
+                                if(pgnum == 1 && article_data.length == 0){
+                                    $(el_a).text(no_data);
+                                }
+                                else{
+                                    $(el_a).text(load_over);
+                                }
+                            }
+                            else{
+                                $(el_a).attr("onclick","loadMore("+pgnum+")");
+                                $(el_a).text(click_load_more);
+                            }
+                        }
+                    }
+                })
+            }
+            function strFormat2Date(str){
+                var datetime = new Date(str);
+                var year = datetime.getFullYear();
+                var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+                var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+                var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+                var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+                var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+                return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
+            }
+
+        </script>
+	</head>
+	<body>
+		<div class="nav">
+
+			<img class="blogimg" src="../static/images/blog_icon.png"/>
+
+			<div class="addblogDiv">
+				<!--<img src="images/blog_add.png" />-->
+				<a href="add_blog.html" target="_self"></a>
+			</div>
+
+			<div class="searchInput">
+				<input placeholder="搜索框"/>
+				<button class="searhBtn">搜索</button>
+			</div>
+
+			<ul>
+				<li><a href="#">主页</a></li>
+				<li><a href="#">文章</a></li>
+				<li><a href="#">收藏</a></li>
+				<li><a href="#">文件下载</a></li>
+			</ul>
+
+
+		</div>
+		<div class="main">
+			<div class="content">
+				<div class="leftContent">
+                    <!-- 用户信息 -->
+					<div class="banner">
+                        {% for u in userinfo %}
+                            <div class="uinfoDiv clearfix">
+                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+                                <h4>{{ u.uname }}</h4>
+                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
+						    </div>
+                        {% endfor %}
+					</div>
+					<!-- 时间 -->
+					<div class="calendarDiv">
+						<iframe class="clockFrame" scrolling="no"
+							 src="clock.html" style="width: 255px;height: 100px">
+						</iframe>
+					</div>
+					<!-- 文章分类 -->
+					<div class="articleClassify">
+						<h4>分类</h4>
+						<ul>
+                            {% for c in classify %}
+                                <li><a href="#">{{ c.name }}</a></li>
+                            {% endfor %}
+
+						</ul>
+					</div>
+                    <!--  文章标签  -->
+					<div class="articleTag articleClassify">
+						<h4>标签</h4>
+						<ul>
+							 {% for t in tag %}
+                                <li><a href="#">{{ t.name }}</a></li>
+                            {% endfor %}
+						</ul>
+					</div>
+				</div>
+				<div class="rightContent">
+                    <!-- 文章 -->
+                    <div class="articleDiv">
+
+                        <h2>form表单的提交参数规则，以及jquery序列化表单的方法</h2>
+                        <p>
+                            <span>2018年08月08日 21:47:27 类别: 1 标签: 1 2 3 </span>
+                        </p>
+
+                        <div class="article_content">
+                                
+                        </div>
+                    </div>
+				</div>
+			</div>
+
+			<!--<div class="footer">
+				<p class="Copyright">Copyright &copy;2019 &nbsp; www.xiaohong.com</p>
+
+			</div>-->
+		</div>
+	</body>
+</html>

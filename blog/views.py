@@ -10,6 +10,11 @@ def index(request):
 
     return render(request, 'index.html',{'userinfo':ret_user, 'classify':getClassify(), 'tag':getTag()})
 
+def article(request,pk):
+    ret_user = models.UserInfo.objects.all()
+
+    return render(request, 'article.html', {'userinfo': ret_user, 'classify': getClassify(), 'tag': getTag()})
+
 def getArticles(request):
 
     pgnum = int(request.GET.get('pgnum', 0))
@@ -23,6 +28,13 @@ def getArticles(request):
     print(json_data)
     ret['data'] = json_data
     return HttpResponse(json.dumps(ret))
+
+
+def getArticle(request):
+    pk = request.GET.get('id')
+    ret = models.Article.objects.all().filter(pk=pk)
+    serializers.serialize('json', ret)
+    return
 
 def clock(request):
     return render(request, 'clock.html')

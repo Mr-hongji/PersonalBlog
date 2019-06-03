@@ -1,0 +1,19 @@
+.articleDiv{
+    width: 98%;
+    margin: 0px auto;
+    /*background-color: #0f74a8;*/
+
+}
+.articleDiv h2{
+    margin-top: 10px;
+    margin-left: 15px;
+}
+.articleDiv p{
+    padding: 15px 0px;
+    border-bottom: 1px #d4d4d4 solid;
+    color: #858585;
+}
+.article_content{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

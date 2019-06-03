@@ -193,6 +193,10 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 
 }
 
+.article a{
+    text-decoration: none;
+    color: #3D3D3D;
+}
 .rightContent .load_more{
 	text-align: center;
 }
