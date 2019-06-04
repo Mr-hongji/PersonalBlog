@@ -5,8 +5,9 @@ from blog import views
 urlpatterns = [
     path('index.html',views.index),
     path('clock.html', views.clock),
-    path('add_blog.html', views.addBlog),
+    re_path('articleEdit/(?P<pk>\d*)', views.articleEditPage),
     path('article/<int:pk>', views.article),
+    path('postedit/', views.postedit),
 
     path('addArticleClassify/', views.addArticleClassify),
     path('delArticleClassify/', views.delArticleClassify),

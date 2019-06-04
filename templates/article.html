@@ -39,11 +39,11 @@ function getQueryVariable() {
                                     var tags_str='';
                                     var arr_tags = item.fields.tag;
                                     for (i in arr_tags){
-                                        tags_str += arr_tags[i] +' ';
+                                        tags_str += arr_tags[i].name +' ';
                                     }
                                     var date_str = strFormat2Date(item.fields.createTime);
 
-                                    article_details_str = '<h2>'+item.fields.title+'</h2><p><span>'+date_str+' 类别: '+item.fields.classify+' 标签: '+tags_str+' </span></p><div class="article_content">'+item.fields.content+'</div>';
+                                    article_details_str = '<h2>'+item.fields.title+'</h2><p><span>'+date_str+' 类别: '+item.fields.classify.name+' 标签: '+tags_str+' </span></p><div class="article_content">'+item.fields.content+'</div>';
 
                                 }
                                  $('.articleDiv').append(article_details_str);

@@ -15,8 +15,23 @@ def article(request, pk):
 
     return render(request, 'article.html', {'userinfo': ret_user, 'classify': getClassify(), 'tag': getTag()})
 
-def getArticles(request):
+def postedit(request):
+    ret = {'status': None, 'article': None, 'classify': None, 'tag': None}
+    pk = request.GET.get('pk', None)
+    ret_classify = getClassify()
+    ret_tag = getTag()
+    ret['classify'] = serializers.serialize('json', ret_classify)
+    ret['tag'] = serializers.serialize('json', ret_tag)
+    ret['status'] = 1
 
+    if pk:
+        ret_article = models.Article.objects.all().filter(pk=int(pk))
+        ret['article'] = serializers.serialize('json', ret_article, use_natural_foreign_keys=True)
+        return HttpResponse(json.dumps(ret))
+    else:
+        return HttpResponse(json.dumps(ret));
+
+def getArticles(request):
     pgnum = int(request.GET.get('pgnum', 0))
     pageSize = 10
     ret = {'pgnum': pgnum+1, 'data':None}
@@ -33,13 +48,13 @@ def getArticles(request):
 def articleDetails(request):
     pk = request.GET.get('pk')
     ret = models.Article.objects.all().filter(pk=int(pk))
-    return HttpResponse(serializers.serialize('json', ret))
+    return HttpResponse(serializers.serialize('json', ret, use_natural_foreign_keys=True))
 
 def clock(request):
     return render(request, 'clock.html')
 
-def addBlog(request):
-    return render(request, 'add_blog.html', {'classify_ret':getClassify(), 'tag_ret':getTag()})
+def articleEditPage(request, pk):
+    return render(request, 'articleEdit.html')
 
 def getClassify():
     classify_ret = models.Classify.objects.all()
@@ -145,12 +160,17 @@ def addArticle(request):
         articleContent = request.GET.get('articleContent')
         classifyId = request.GET.get('classifyId')
         tagIds = request.GET.getlist('tagIds')
+        pk = request.GET.get('pk')
 
+        if pk:
+            data = models.Article.objects.create(title=articleTitle, content=articleContent, classify_id=classifyId, user_id=1)
+            data.tag.add(*list(map(int, tagIds)))  # ['1','2'] 转 [1, 2]
+        else:
+            data = models.Article.objects.update(title=articleTitle, content=articleContent, classify_id=classifyId)
+            data.tag.set(*list(map(int, tagIds)))  # ['1','2'] 转 [1, 2]
         msg['status'] = 1
     except Exception as e:
         print(e)
         msg['status'] = 0
-    data = models.Article.objects.create(title=articleTitle, content=articleContent, classify_id=classifyId, user_id=1)
-    data.tag.add(*list(map(int, tagIds))) # ['1','2'] 转 [1, 2]
 
     return HttpResponse(json.dumps(msg, ensure_ascii=False))

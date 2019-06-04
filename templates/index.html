@@ -38,12 +38,12 @@
                                     var tags_str='';
                                     var arr_tags = item.fields.tag;
                                     for (i in arr_tags){
-                                        tags_str += arr_tags[i] +' ';
+                                        tags_str += arr_tags[i].name +' ';
                                     }
                                     var date_str = strFormat2Date(item.fields.createTime);
                                    var summery_str = item.fields.content.replace(/<\/?.+?>/g,"").replace(/ /g,"").substring(0,300) + '...';
 
-                                    article_str = '<div class="article"><p class="blog_op"><a href="edit/?id='+ item.pk +'" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article.html?id='+item.pk+'" target="_blank">'+ item.fields.title +'</a></h4><p class="articleSummery"><a href="article.html?id='+item.pk+'" target="_blank">'+ summery_str +'</a></p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
+                                    article_str = '<div class="article"><p class="blog_op"><a href="articleEdit/'+ item.pk +'" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/'+item.pk+'" target="_blank">'+ item.fields.title +'</a></h4><p class="articleSummery"><a href="article/'+item.pk+'" target="_blank">'+ summery_str +'</a></p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify.name +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
                                 }
                                  $('.articlesDiv').append(article_str);
                             });
@@ -85,7 +85,7 @@
 			
 			<div class="addblogDiv">
 				<!--<img src="images/blog_add.png" />-->
-				<a href="add_blog.html" target="_self"></a>
+				<a href="articleEdit/" target="_self"></a>
 			</div>
 			
 			<div class="searchInput">

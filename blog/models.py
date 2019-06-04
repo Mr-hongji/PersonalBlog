@@ -40,7 +40,7 @@ class Classify(models.Model):
         verbose_name_plural = '分类'
 
     def natural_key(self):
-        return self.name
+        return {'id':self.pk, 'name':self.name}
 
     def __str__(self):
         return self.name
@@ -52,7 +52,7 @@ class Tag(models.Model):
         verbose_name_plural = '标签'
 
     def natural_key(self):
-        return self.name
+        return {'id':self.pk, 'name':self.name}
 
     def __str__(self):
         return self.name
