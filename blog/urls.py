@@ -3,18 +3,21 @@ from django.urls import include
 from blog import views
 
 urlpatterns = [
-    path('index.html',views.index),
+    path('',views.index),
     path('clock.html', views.clock),
-    re_path('articleEdit/(?P<pk>\d*)', views.articleEditPage),
+    re_path(r'articleEdit/(?P<pk>\d*)', views.articleEditPage),
     path('article/<int:pk>', views.article),
     path('postedit/', views.postedit),
 
     path('addArticleClassify/', views.addArticleClassify),
     path('delArticleClassify/', views.delArticleClassify),
+
     path('addArticleTag/', views.addArticleTag),
     path('delArticleTag/', views.delArticleTag),
+
     path('addArticle/', views.addArticle),
-    path('getArticles/', views.getArticles),
+    re_path(r'articles/(?P<type>\w+)/(?P<pk>\d*)', views.getArticles),
     path('articleDetails/', views.articleDetails),
+
 
 ]

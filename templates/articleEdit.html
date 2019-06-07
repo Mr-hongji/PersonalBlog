@@ -250,7 +250,7 @@ var initSample = ( function() {
                 var articleContent = CKEDITOR.instances.editor.getData();
 
                 var articleid = $('.article_id').attr('value');
-
+                alert(articleid);
                //获取属性name='checkboxClassfy' 和 选中的 input 标签的value
                 if(!articleTitle){
                     alert("内容不能为空");
@@ -293,6 +293,12 @@ var initSample = ( function() {
                    traditional:true,
                    success:function(args){
                         console.log(args);
+                        if(args.status){
+                             window.location = '../';
+                        }
+                        else{
+                            alert('数据保存失败');
+                        }
                    }
                });
             }
@@ -333,8 +339,16 @@ var initSample = ( function() {
 					{#alert(this.checked);#}
                     checkBoxChanged(this);
 				});
+                 $(".unsave_article").click(function(){
+					{#alert(this.checked);#}
+                    canclePublishArticle(this);
+				});
 
 				$(".save_article").click(function(){ saveData(); });
+            }
+
+            function canclePublishArticle(){
+                window.location = '../';
             }
 
             function post_article(pk){
@@ -406,7 +420,7 @@ var initSample = ( function() {
 		<div class="nav">
 		
 			<div class="article_active">
-				<a href="javascript:void(0);" class="save_article">保存</a>
+				<a href="javascript:void(0);" class="save_article">发布</a>
 				<a href="javascript:void(0);" class="unsave_article">取消</a>
 			</div>
 			<input class="article_id" hidden/>

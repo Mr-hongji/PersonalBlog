@@ -31,13 +31,19 @@ def postedit(request):
     else:
         return HttpResponse(json.dumps(ret));
 
-def getArticles(request):
+def getArticles(request, type, pk):
     pgnum = int(request.GET.get('pgnum', 0))
     pageSize = 10
-    ret = {'pgnum': pgnum+1, 'data':None}
+    ret = {'pgnum': pgnum+1,'type':type, 'id':pk, 'data':None}
     start_index = pgnum * pageSize
     end_index = pgnum * pageSize + pageSize
-    ret_article = models.Article.objects.all()[start_index:end_index]
+
+    if type == 'all':
+        ret_article = models.Article.objects.all()[start_index:end_index]
+    elif type == 'classify':
+        ret_article = models.Article.objects.all().filter(classify_id = pk)[start_index:end_index]
+    elif type == 'tag':
+        ret_article = models.Article.objects.all().filter(tag__id=pk)[start_index:end_index]
 
     json_data = serializers.serialize('json', ret_article, use_natural_foreign_keys=True)
     print(json_data)
@@ -163,14 +169,17 @@ def addArticle(request):
         pk = request.GET.get('pk')
 
         if pk:
-            data = models.Article.objects.create(title=articleTitle, content=articleContent, classify_id=classifyId, user_id=1)
-            data.tag.add(*list(map(int, tagIds)))  # ['1','2'] 转 [1, 2]
+            article = models.Article.objects.filter(pk=int(pk))
+            article.update(title=articleTitle, content=articleContent, classify_id=classifyId, user_id=1)
+            article.first().tag.set(list(map(int, tagIds)))
         else:
-            data = models.Article.objects.update(title=articleTitle, content=articleContent, classify_id=classifyId)
-            data.tag.set(*list(map(int, tagIds)))  # ['1','2'] 转 [1, 2]
+            article = models.Article.objects.create(title=articleTitle, content=articleContent, classify_id=classifyId)
+            article.tag.add(*list(map(int, tagIds)))  # ['1','2'] 转 [1, 2]
         msg['status'] = 1
     except Exception as e:
         print(e)
         msg['status'] = 0
 
     return HttpResponse(json.dumps(msg, ensure_ascii=False))
+
+
