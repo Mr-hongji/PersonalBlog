@@ -1,6 +1,5 @@
 *.pyc
 .idea/
-
 .git/
 venv/
 __pycache__/

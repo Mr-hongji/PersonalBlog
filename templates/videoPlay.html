@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
+	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
+    <link rel="stylesheet" href="/static/css/index.css?rn=11"/>
+		<link rel="stylesheet" href="/static/css/index.css?rn=11"/>
+        <link rel="stylesheet" href="/static/css/video_play.css?rn=11"/>
+        <script src="/static/js/jquery.js"></script>
+        {% load  CustomFilter %}
+	</head>
+	<body>
+		<div class="nav">
+
+            <a href="/blog/" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
+
+			<div class="addblogDiv">
+				<!--<img src="images/blog_add.png" />-->
+				<a href="articleEdit/" target="_self"></a>
+			</div>
+			<ul>
+				<li><a href="#">主页</a></li>
+				<li><a href="#">文章</a></li>
+				<li><a href="#">收藏</a></li>
+				<li><a href="#">文件下载</a></li>
+			</ul>
+		</div>
+		<div class="main">
+			<div class="content clearfix1">
+				<div class="leftContent">
+                    <select>
+                        <option value="0">-- SELECT --</option>
+                        <option value="1">JAVA</option>
+                        <option value="2">PYTHON</option>
+                    </select>
+                     <ul id="treeDemo" class="ztree"></ul>
+				</div>
+				<div class="rightContent">
+                    <!-- 面包屑 -->
+                    <div class="time_line">
+
+                    </div>
+                    <p>https://www.helloweba.net/javascript/572.html</p>
+                    <p>https://www.cnblogs.com/lhb25/p/chimee-h5-video-player.html</p>
+                    <p>http://www.jq22.com/jquery-info12829</p>
+                    <p>http://www.ckplayer.com/</p>
+                    <p>http://dy.163.com/v2/article/detail/E9JPAISC05313F7W.html</p>
+                    <p>https://videojs.com/</p>
+					
+				</div>
+			</div>
+
+			<!--<div class="footer">
+				<p class="Copyright">Copyright &copy;2019 &nbsp; www.xiaohong.com</p>
+
+			</div>-->
+		</div>
+	</body>
+</html>

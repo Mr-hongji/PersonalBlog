@@ -182,4 +182,21 @@ def addArticle(request):
 
     return HttpResponse(json.dumps(msg, ensure_ascii=False))
 
+from blog import fileTree
 
+def async(request):
+    return render(request, 'async.html')
+
+def list_dir(request):
+    p = request.POST.get('fpath', None)
+    if not p:
+        p = 'D:\pycode\PersonalBlog'
+    return HttpResponse(fileTree.list_dir(p))
+
+def readFile(request):
+    fpath = request.POST.get('fpath', None)
+    return HttpResponse(fileTree.readFile(fpath))
+
+
+def videoPlay(request):
+    return render(request, 'videoPlay.html')

@@ -1,0 +1,43 @@
+.main{
+    width: 100%;
+    height: 850px;
+}
+
+ul.ztree{
+    background-color: #fff;
+    margin-left: 10px;
+    margin-top: 0px;
+    overflow-y:auto;
+    border: 5px solid #f4f4f4;
+    height: 770px;
+}
+
+.content .rightContent{
+    left: 338px;
+    right: 15px;
+    background: transparent;
+}
+
+.content .leftContent{
+    width: 333px;
+
+}
+
+.article_content{
+
+    width: 100%;
+    height: 750px;
+    overflow: auto;
+    background-color: #fff;
+    border: 5px solid #f4f4f4;
+    font-size: 16px;
+}
+
+.rightContent .time_line{
+    background-color:transparent;
+    margin-left: 0px;
+}
+
+.nav ul{
+    list-style: none;
+}

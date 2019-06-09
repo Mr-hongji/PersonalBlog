@@ -20,6 +20,12 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	clear: both;
 }
 
+.clearfix1:after{
+	content: "";
+	display: table;
+	clear: both;
+}
+
 .main {
 	width: 80%;
 	height: 1000px;

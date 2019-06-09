@@ -18,6 +18,10 @@ urlpatterns = [
     path('addArticle/', views.addArticle),
     re_path(r'articles/(?P<type>\w+)/(?P<pk>\d*)', views.getArticles),
     path('articleDetails/', views.articleDetails),
+    path('list_dir/', views.list_dir),
+    path('async/', views.async),
+    path('readFile/', views.readFile),
+    path('videoPlay/', views.videoPlay),
 
 
 ]
