@@ -9,14 +9,102 @@
 	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
     <link rel="stylesheet" href="/static/css/index.css?rn=11"/>
 		<link rel="stylesheet" href="/static/css/index.css?rn=11"/>
-        <link rel="stylesheet" href="/static/css/video_play.css?rn=11"/>
+        <link rel="stylesheet" href="/static/css/video_play.css?rn=150"/>
+
+
         <script src="/static/js/jquery.js"></script>
         {% load  CustomFilter %}
+
+        <script>
+            var root_p = 'D:\\视频'; //根目录
+            window.onload=function() {
+                showFiles();
+            }
+
+            function showFiles(path){
+                if(!path){
+                    path = root_p;
+                }
+
+                $.ajax({
+                    url: '../list_dir/',
+                    data: {fpath:path, type:'video'},
+                    type: 'post',
+                    dataType:'json',
+                    success:function (args) {
+                       $('.time_line').children().remove();
+                       $('.time_line').text("");
+                       $('.time_line').append(parseTimeLine(path));
+                       $('.file_div').children().remove();
+                        var html_el = "";
+                        for(i in args){
+                            var fileType = "file";
+                            var item = args[i];
+
+                            if(item.isParent){
+                                fileType = "folder";
+                            }
+
+                            var p = item.path;
+                            p = p.replace(/\\/g, '\\\\');
+                            var s = 'ba'
+                            html_el += '<div class="fileDir ' + fileType + '" fpath="' + p + '" ondblclick="openDir(\'' + p +'\',\'' + fileType + '\')" style=""><div class="'+ fileType +'_icon" ></div><div class="ellipsis" title="'+ item.name +'">'+ item.name + '</div></div>';
+                        }
+
+                        $('.file_div').append(html_el);
+                    }
+                });
+            }
+
+            function parseTimeLine(path){
+                var el_a = '';
+                if(path == root_p){
+                    {#el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ root_p +'\', \'folder\')">root</a>' + '/';#}
+                    el_a += 'root/';
+                }else{
+                    path = path.replace(root_p, 'root');
+                    var paths = path.split('\\');
+                    if(paths){
+                        for (var i=0; i<paths.length - 1; i++) {
+                            console.log(paths[i]);
+                            var el_a_href = '';
+                            {##}
+                            for (var n = 0; n <= i; n++) {
+                                el_a_href += paths[n] + "\\\\";
+                            }
+                            console.log(el_a_href);
+                            el_a_href = el_a_href.replace('root', root_p.replace(/\\/g, '\\\\'));
+                            el_a_href = el_a_href.substring(0,el_a_href.length-2);
+                            el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
+                        }
+                        el_a += paths[paths.length-1] + '/';
+                    }
+                }
+                console.log(el_a);
+                el_a = '>> ' + el_a;
+                return el_a;
+            }
+            function openDir(path, fileType){
+
+                if(fileType == 'folder'){
+                    showFiles(path);
+                }
+                else{
+                    //打开视频
+                }
+                //
+            }
+
+            function showArticleDetial(id){
+                window.open("../article/"+id,"_blank");
+            }
+
+</script>
 	</head>
 	<body>
 		<div class="nav">
 
-            <a href="/blog/" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
+            <a href="/blog/" target="_self" ><img class="blogimg" src="/static/images/blog_icon.png"/></a>
 
 			<div class="addblogDiv">
 				<!--<img src="images/blog_add.png" />-->
@@ -32,26 +120,35 @@
 		<div class="main">
 			<div class="content clearfix1">
 				<div class="leftContent">
-                    <select>
-                        <option value="0">-- SELECT --</option>
-                        <option value="1">JAVA</option>
-                        <option value="2">PYTHON</option>
-                    </select>
-                     <ul id="treeDemo" class="ztree"></ul>
+                    <!-- 用户信息 -->
+					<div class="banner">
+                        {% for u in userinfo %}
+                            <div class="uinfoDiv clearfix">
+                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+                                <h4>{{ u.uname }}</h4>
+                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
+						    </div>
+                        {% endfor %}
+					</div>
+
+                    <div class="new_articles ">
+                        <p class="new_articles_title">最新文章</p>
+                        {% for article in articles %}
+                             <div class="article clearfix1" onclick="showArticleDetial({{ article.id }})">
+                            <p class="article_title">{% substringFilter article.title 10 %}</p>
+                            <p class="article_createTime">{% utc_to_local article.createTime %}</p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
 				</div>
 				<div class="rightContent">
                     <!-- 面包屑 -->
                     <div class="time_line">
-
                     </div>
-                    <p>https://www.helloweba.net/javascript/572.html</p>
-                    <p>https://www.cnblogs.com/lhb25/p/chimee-h5-video-player.html</p>
-                    <p>http://www.jq22.com/jquery-info12829</p>
-                    <p>http://www.ckplayer.com/</p>
-                    <p>http://dy.163.com/v2/article/detail/E9JPAISC05313F7W.html</p>
-                    <p>https://videojs.com/</p>
-					<p>https://blog.csdn.net/zgpeterliu/article/details/81004949</p>
-					
+
+                    <div class="file_div clearfix1">
+                    </div>
 				</div>
 			</div>
 

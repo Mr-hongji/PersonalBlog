@@ -189,9 +189,8 @@ def async(request):
 
 def list_dir(request):
     p = request.POST.get('fpath', None)
-    if not p:
-        p = 'D:\pycode\PersonalBlog'
-    return HttpResponse(fileTree.list_dir(p))
+    type = request.POST.get('type', None)
+    return HttpResponse(fileTree.list_dir(p, type))
 
 def readFile(request):
     fpath = request.POST.get('fpath', None)
@@ -199,4 +198,6 @@ def readFile(request):
 
 
 def videoPlay(request):
-    return render(request, 'videoPlay.html')
+    ret_user = models.UserInfo.objects.all()
+    ret_article = models.Article.objects.all()[:18]
+    return render(request, 'videoPlay.html', {'userinfo': ret_user, 'articles':ret_article})

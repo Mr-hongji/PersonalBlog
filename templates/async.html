@@ -32,10 +32,14 @@
 
         function treeNodePath(treeId, treeNode){
             {#console.log(treeNode);#}
+             var path = null;
             if(treeNode){
-                var path=treeNode.path;
+                path = treeNode.path;
             }
-            return {'fpath':path};
+            else{
+                path = 'D:\pycode\PersonalBlog';
+            }
+            return {'fpath':path, 'type':'all'};
         }
 
 		function zTreeOnDblClick(event, treeId, treeNode) {

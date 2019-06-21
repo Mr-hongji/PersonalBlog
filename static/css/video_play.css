@@ -3,9 +3,10 @@
 }
 .content .leftContent{
     width: 333px;
-    background-color: #fff;
+    /*background-color: #000;*/
     text-align: center;
-    border: 5px solid #f4f4f4;
+    /*border: 1px solid #f4f4f4;*/
+    height: 825px;
 }
 
 .time_line{
@@ -14,26 +15,113 @@
     background: #f4f4f4;
 }
 
-.leftContent select{
-    width: 100%;
-    height: 30px;
-    font-size: 16px;
-    text-align: center;
-    text-align-last: center;
-
-}
-
-ul.ztree{
-    background-color: #fff;
-    margin-left: 0px;
-    margin-top: 0px;
-    overflow-y:auto;
-    border-top: 5px solid #f4f4f4;
-    height: 770px;
+.file_div{
+    /*background: greenyellow;*/
+    height: 815px;
 }
 
 .content .rightContent{
     left: 348px;
     height: 816px;
      border: 5px solid #f4f4f4;
+}
+
+.fileDir{
+    margin: 10px 0px 0px 22px;
+    float: left;
+    width: 120px;
+}
+
+.fileDir .folder_icon,
+.fileDir .file_icon{
+    display: inline-block;
+    width: 120px;
+    height: 90px;
+}
+
+.fileDir .folder_icon{
+     background: url("../images/fold_icon.png") no-repeat;
+}
+
+.fileDir .file_icon{
+    background: url("../images/file_video.png") no-repeat;
+}
+
+.fileDir p{
+    height: 45px;
+}
+.fileDir p {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: none;
+
+}
+.ellipsis{
+word-break: break-all;
+text-overflow: ellipsis;/**显示省略号**/
+display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+-webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+-webkit-line-clamp: 2; /** 显示的行数 **/
+overflow: hidden;/** 隐藏超出的内容 **/
+  height:40px;
+
+}
+
+.fileDir:hover{
+    cursor:pointer;
+}
+
+
+.time_line a, .time_line{
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.banner{
+    background-color: #00c4ff;
+}
+.new_articles{
+    margin-top: 5px;
+    height: 740px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.new_articles .new_articles_title{
+    background-color: #f4f4f4;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.new_articles .article,
+.new_articles .article:hover{
+    cursor: pointer;
+    margin-left: 5px;
+    text-align: left;
+    border: none;
+    margin-top: 10px;
+
+}
+.new_articles .article p{
+float: left;
+      font-size: 16px;
+     padding: 5px 0px;
+}
+
+.new_articles .article .article_title,
+.new_articles .article .article_title a,
+.new_articles .article .article_createTime{
+    width: 60%;
+    text-align: left;
+    color: #808080;
+
+}
+
+.new_articles .article .article_createTime{
+    width: 30%;
+    text-align: right;
+    margin-right: 2px;
+
 }
