@@ -9,14 +9,14 @@
 	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
     <link rel="stylesheet" href="/static/css/index.css?rn=11"/>
 		<link rel="stylesheet" href="/static/css/index.css?rn=11"/>
-        <link rel="stylesheet" href="/static/css/video_play.css?rn=150"/>
+        <link rel="stylesheet" href="/static/css/video_play.css?rn=12"/>
 
 
         <script src="/static/js/jquery.js"></script>
         {% load  CustomFilter %}
 
         <script>
-            var root_p = 'D:\\视频'; //根目录
+            var root_p = 'F:\\视频'; //根目录
             window.onload=function() {
                 showFiles();
             }
@@ -84,15 +84,27 @@
                 el_a = '>> ' + el_a;
                 return el_a;
             }
-            function openDir(path, fileType){
 
+            function openDir(path, fileType){
                 if(fileType == 'folder'){
                     showFiles(path);
                 }
                 else{
-                    //打开视频
+                    console.log(path);
+                    getVideoUrl(path);
                 }
-                //
+            }
+
+            function getVideoUrl(path){
+                $.ajax({
+                    url:'../getVideoUrl/',
+                    data:{path:path},
+                    dataType: 'json',
+                    type:'post',
+                    success:function(args){
+                        console.log(args);
+                    }
+                });
             }
 
             function showArticleDetial(id){
@@ -147,7 +159,7 @@
                     <div class="time_line">
                     </div>
 
-                    <div class="file_div clearfix1">
+                    <div class="file_div">
                     </div>
 				</div>
 			</div>

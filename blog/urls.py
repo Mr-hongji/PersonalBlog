@@ -22,6 +22,7 @@ urlpatterns = [
     path('async/', views.async),
     path('readFile/', views.readFile),
     path('videoPlay/', views.videoPlay),
+    path('getVideoUrl/', views.getVideoUrl),
 
 
 ]

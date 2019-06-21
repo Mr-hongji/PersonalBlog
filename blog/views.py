@@ -1,8 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from blog import models
 from django.core import serializers
-
-import json
+import os, shutil, json
 # Create your views here.
 
 def index(request):
@@ -201,3 +200,19 @@ def videoPlay(request):
     ret_user = models.UserInfo.objects.all()
     ret_article = models.Article.objects.all()[:18]
     return render(request, 'videoPlay.html', {'userinfo': ret_user, 'articles':ret_article})
+
+def getVideoUrl(request):
+    ret = {'status':0, 'vurl':None,'vTrueName':None}
+    path = request.POST.get('path', None)
+    if path:
+        fpath, fname = os.path.split(path) # 获取文件路径，和文件名
+        shotname, extension = os.path.splitext(fname) # 获取文件名 和 文件扩展名
+
+        tempFileUrl= fpath + '/112233' + extension
+        shutil.copyfile(path, tempFileUrl)
+
+        ret['status'] = 1
+        ret['vurl'] = tempFileUrl
+        ret['vTrueName'] = fname
+
+    return HttpResponse(json.dumps(ret, ensure_ascii=False))

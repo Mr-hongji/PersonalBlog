@@ -17,7 +17,9 @@
 
 .file_div{
     /*background: greenyellow;*/
-    height: 815px;
+    height: 785px;
+    width: 100%;
+overflow: auto;
 }
 
 .content .rightContent{
