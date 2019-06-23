@@ -16,7 +16,8 @@
         {% load  CustomFilter %}
 
         <script>
-            var root_p = 'F:\\视频'; //根目录
+            var root_p = 'D:\\视频'; //根目录
+
             window.onload=function() {
                 showFiles();
             }
@@ -102,7 +103,11 @@
                     dataType: 'json',
                     type:'post',
                     success:function(args){
-                        console.log(args);
+                        if(args.status){
+                            console.log('videoPlayer://http://127.0.0.1:8000' + args.vPath);
+                            window.location.href = 'videoPlayer://http://127.0.0.1:8000' + args.vPath + "?vName=" + args.vTrueName;
+                        }
+
                     }
                 });
             }

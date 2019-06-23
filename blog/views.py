@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponse
 from blog import models
 from django.core import serializers
-import os, shutil, json
+import os, shutil, json, time
+from PersonalBlog import settings
 # Create your views here.
 
 def index(request):
@@ -189,6 +190,10 @@ def async(request):
 def list_dir(request):
     p = request.POST.get('fpath', None)
     type = request.POST.get('type', None)
+
+    if type == 'video':
+        p = os.path.join(settings.BASE_DIR, 'video')
+        print(p)
     return HttpResponse(fileTree.list_dir(p, type))
 
 def readFile(request):
@@ -202,17 +207,22 @@ def videoPlay(request):
     return render(request, 'videoPlay.html', {'userinfo': ret_user, 'articles':ret_article})
 
 def getVideoUrl(request):
-    ret = {'status':0, 'vurl':None,'vTrueName':None}
+
+    ret = {'status':0, 'vPath':None,'vTrueName':None, 'vExtName':None}
     path = request.POST.get('path', None)
     if path:
         fpath, fname = os.path.split(path) # 获取文件路径，和文件名
         shotname, extension = os.path.splitext(fname) # 获取文件名 和 文件扩展名
-
-        tempFileUrl= fpath + '/112233' + extension
-        shutil.copyfile(path, tempFileUrl)
+        fsize = os.path.getsize(path)
+        print(fsize)
+        tempFileUrl= os.path.join(settings.BASE_DIR, '1') + '/112233' + extension
+        #shutil.copyfile(path, tempFileUrl)
+        #newfsize = os.path.getsize(tempFileUrl)
 
         ret['status'] = 1
-        ret['vurl'] = tempFileUrl
+        ret['vPath'] = '/static/112233' + extension
         ret['vTrueName'] = fname
+        ret['vExtName'] = extension
+
 
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
