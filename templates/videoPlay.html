@@ -91,25 +91,11 @@
                     showFiles(path);
                 }
                 else{
-                    console.log(path);
-                    getVideoUrl(path);
+                    console.log(path.length + 'videoPlayer://'.length);
+                    //getVideoUrl(path);
+                    console.log(('videoPlayer://' + path).length);
+                    window.location.href = 'videoPlayer://' + path;
                 }
-            }
-
-            function getVideoUrl(path){
-                $.ajax({
-                    url:'../getVideoUrl/',
-                    data:{path:path},
-                    dataType: 'json',
-                    type:'post',
-                    success:function(args){
-                        if(args.status){
-                            console.log('videoPlayer://http://127.0.0.1:8000' + args.vPath);
-                            window.location.href = 'videoPlayer://http://127.0.0.1:8000' + args.vPath + "?vName=" + args.vTrueName;
-                        }
-
-                    }
-                });
             }
 
             function showArticleDetial(id){

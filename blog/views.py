@@ -191,9 +191,9 @@ def list_dir(request):
     p = request.POST.get('fpath', None)
     type = request.POST.get('type', None)
 
-    if type == 'video':
-        p = os.path.join(settings.BASE_DIR, 'video')
-        print(p)
+    # if type == 'video':
+    #     p = os.path.join(settings.BASE_DIR, 'video')
+    #     print(p)
     return HttpResponse(fileTree.list_dir(p, type))
 
 def readFile(request):
