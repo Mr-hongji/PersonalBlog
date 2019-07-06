@@ -226,3 +226,169 @@ def getVideoUrl(request):
 
 
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+def bookMark(request, opration, pk):
+    if opration == 'p':
+        ret_user = models.UserInfo.objects.all()
+        ret_article = models.Article.objects.all()[:10]
+        book_mark_classify_ret = models.BookMarkClassify.objects.all()
+
+        return render(request, 'bookMark.html', {'userinfo': ret_user, 'articles': ret_article, 'bookMarkClassifyRet': book_mark_classify_ret})
+
+    elif opration == 'add':
+        ret = addBookMark(request, pk)
+
+    elif opration == 'edit':
+        ret = editBookMark(request, pk)
+
+    elif opration.find('loadMoreBookMark-') > -1:
+        l = opration.split('-')
+        pageSize = l[1]
+        currentPageNum = l[2]
+        ret = loadMoreBookMark(request, int(pageSize), int(currentPageNum))
+
+    return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+def editBookMark(request, pk):
+    ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'edit'}
+
+    try:
+        title = request.POST.get('des', None)
+        location = request.POST.get('url', None)
+        classifyId = request.POST.get('classifyId', None)
+
+        models.BookMark.objects.filter(pk=pk).update(title=title, location=location, classify_id=classifyId)
+
+        ret['status'] = 1
+        ret['bookMark'] = {'des':title, 'localtion':location, 'classifyId':classifyId ,'bookMarkPk':pk}
+        ret['message'] = '书签已更新'
+    except Exception as e:
+        print(e)
+        ret['status'] = 0
+        ret['message'] = '书签更新失败'
+
+    return ret
+
+
+
+
+def loadMoreBookMark(request, pageSize, currentPageNum):
+
+    ret = {'status':None, 'currentPageNum': None, 'bookMarks':None, 'message':None, 'opration':'loadMoreBookMark'}
+    try:
+        start_index = currentPageNum * pageSize + 1
+        end_index = (currentPageNum + 1) * pageSize
+        ret_bookmark = models.BookMark.objects.all()[start_index:end_index]
+        ret_bookMark = serializers.serialize('json', ret_bookmark, use_natural_foreign_keys=True)
+
+        ret['status'] = 1
+        ret['message'] = 'OK'
+        ret['currentPageNum'] = currentPageNum + 1
+        ret['bookMarks'] = ret_bookMark
+
+    except Exception as e:
+        print(e)
+        ret['status'] = 0
+        ret['message'] = 'load book mark failed！'
+
+    return ret
+
+def addBookMark(request, pk):
+    ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'add'}
+
+    try:
+        des = request.POST.get('des')
+        url = request.POST.get('url')
+        uid = request.POST.get('uid')
+        classifyId = request.POST.get('classifyId')
+        if int(classifyId) == -1:
+            new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid)
+        else:
+            new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid, classify_id=classifyId)
+
+        classifyid = None
+        if new_book_mark.classify:
+            classifyid = new_book_mark.classify.id
+
+        ret['status'] = 1
+        ret['bookMark'] = {'pk':new_book_mark.id, 'title': new_book_mark.title, 'location': new_book_mark.location, 'classifyid':classifyid}
+        ret['message'] = '数据已更新'
+    except Exception:
+        ret['status'] = 0
+        ret['message'] = '书签添加失败'
+
+    return ret
+
+
+
+def bookMarkClassify(request, opration, pk):
+    if opration == 'add':
+        ret = addBookMarkClassify(request)
+    elif opration == 'del':
+        ret = delBookMarkClassify(request, pk)
+    elif opration == 'update':
+        ret = modifyBookMarkClassify(request, pk)
+
+    return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+def addBookMarkClassify(request):
+    ret  = {'status':None, 'classify':None, "message":None, 'opration':'add'}
+    name = request.GET.get('name', None)
+    uid = request.GET.get('uid', None)
+    if not name or not uid:
+        ret['status'] = 0
+        ret['message'] = '缺少参数'
+        return ret
+
+    try:
+        obj = models.BookMarkClassify.objects.get(name=name)
+        ret['status'] = 0
+        ret['message'] = '分类名称已存在'
+    except:
+        try:
+            classify = models.BookMarkClassify.objects.create(name=name, user_id=uid)
+            ret['status'] = 1
+            ret['classify'] = {'name': classify.name, 'id': classify.id}
+            ret['message'] = '数据已更新'
+        except:
+            ret['status'] = 0
+            ret['message'] = '数据更新失败'
+
+
+    return  ret
+
+def delBookMarkClassify(request, pk):
+    ret = {'status': None, 'classify': None, "message": None, 'opration': 'del'}
+
+    if not pk:
+        ret['status'] = 0
+        ret['message'] = '缺少参数'
+        return ret
+    try:
+        obj = models.BookMarkClassify.objects.filter(pk = pk).delete()
+        ret['status'] = 1
+        ret['classify'] = pk
+        ret['message'] = '数据已更新'
+    except:
+        ret['status'] = 0
+        ret['message'] = '数据更新失败'
+
+    return ret
+
+def modifyBookMarkClassify(request, pk):
+    ret = {'status': None, 'classify': None, "message": None, 'opration': 'update'}
+    name = request.GET.get('name', None)
+    if not pk or not name:
+        ret['status'] = 0
+        ret['message'] = '参数错误'
+        return ret
+    try:
+        obj = models.BookMarkClassify.objects.filter(pk=pk).update(name=name)
+        ret['status'] = 1
+        ret['classify'] = {'name':name, 'pk':pk}
+        ret['message'] = '数据已更新'
+    except:
+        ret['status'] = 0
+        ret['message'] = '数据更新失败'
+
+    return ret

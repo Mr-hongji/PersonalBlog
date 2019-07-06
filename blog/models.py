@@ -56,3 +56,28 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+class BookMarkClassify(models.Model):
+    user = models.ForeignKey('UserInfo', on_delete=models.CASCADE)
+    name = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name_plural = '书签分类'
+
+    def natural_key(self):
+        return {'id':self.pk, 'name':self.name}
+
+    def __str__(self):
+        return self.name
+
+class BookMark(models.Model):
+    title = models.CharField(max_length=300)
+    location = models.CharField(max_length=500)
+    classify = models.ForeignKey('BookMarkClassify', null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey('UserInfo', on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name_plural = '书签'
+
+    def __str__(self):
+        return self.title

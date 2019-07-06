@@ -1,0 +1,269 @@
+.bookMarkClassifyDiv{
+    margin-top: 5px;
+
+    background-color: #fff;
+    overflow: auto;
+}
+
+.addBookmarkDiv{
+    border-bottom: 2px #f4f4f4 solid;
+}
+
+.addBookmarkDiv .addBookmarkBtn{
+    float: right;
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+}
+
+.addBookmarkDiv .addBookmarkBtn a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background: url("../images/add_bookMark_icon.png") no-repeat;
+}
+
+ .addBookmarkDiv .addBookmarkBtn a:hover {
+     background: url("../images/add_bookMark_hover_icon.png") no-repeat;
+ }
+
+ .addBookmarkForm{
+     float: left;
+     margin-left: 5px;
+     width: 95%;
+     display: none;
+     /*background-color: #f4f4f4;*/
+ }
+
+ .addBookmarkForm p,
+ .addBookmarkForm div{
+     margin-bottom: 5px;
+     /*background-color: #0f74a8;*/
+     font-size: 14px;
+     height: 40px;
+     line-height: 40px;
+ }
+
+ .addBookmarkForm p input{
+     width: 93%;
+     height: 25px;
+ }
+
+ .addBookmarkForm div select{
+     width: 200px;
+     height: 32px;
+ }
+
+ .addBookmarkForm .saveBtn{
+     float: right;
+     margin-right: 10px;
+     margin-bottom: 10px;
+     padding-top: 30px;
+ }
+
+ .addBookmarkForm .saveBtn>a{
+      display: inline-block;
+     width: 60px;
+     text-align: center;
+     text-decoration: none;
+     height: 20px;
+     border-radius: 3px;
+     font-size: 14px;
+     margin: 0px;
+     line-height: 20px;
+ }
+
+ .addBookmarkForm .saveBtn>a:first-child{
+     border: #ca0c16 1px solid;
+     color: #ca0c16;
+ }
+
+ .addBookmarkForm .saveBtn>a:first-child:hover{
+     background-color: #fde3e4;
+ }
+
+ .addBookmarkForm .saveBtn>a:last-child{
+     border: #ccc 1px solid;
+     color: #4d4d4d;
+ }
+
+  .addBookmarkForm .saveBtn>a:last-child:hover{
+     background-color: #f7f7f7;
+ }
+
+ .addBookmarkForm .addNewClassify{
+     width: 196px;
+     height: 28px;
+  }
+
+ .addBookmarkForm .addNewClassifyBtn,
+ .addBookmarkForm .cancleSaveNewClassifyBtn,
+ .addBookmarkForm .saveNewClassifyBtn,
+ .addBookmarkForm .editClassifyBtn{
+     display: inline-block;
+    width: 25px;
+    height: 25px;
+     vertical-align: middle;
+ }
+
+.addBookmarkForm .addNewClassifyBtn{
+    background: url("../images/addBookMoarkClassify_icon.png") no-repeat;
+}
+
+.addBookmarkForm .cancleSaveNewClassifyBtn{
+    background: url("../images/cancleSaveBookMoarkClassify_icon.png") no-repeat;
+}
+
+.addBookmarkForm .saveNewClassifyBtn{
+    background: url("../images/saveBookMoarkClassify_icon.png") no-repeat;
+}
+
+.addBookmarkForm .addNewClassify,
+.addBookmarkForm .cancleSaveNewClassifyBtn,
+.addBookmarkForm .saveNewClassifyBtn{
+    display: none;
+}
+
+.addBookmarkForm .editClassifyBtn{
+    background: url("../images/editBookMarkClassify_icon.png") no-repeat;
+}
+
+.addBookmarkForm span{
+    color: #4f4f4f;
+    font-size: 14px;
+    height: 20px;
+}
+
+.bookMarkDiv{
+    /*background-color: #6a9fb5;*/
+}
+
+.bookMarkDiv .bookMarkTitle{
+    font-size: 14px;
+    color: #3D3D3D;
+    text-decoration: none;
+    display: inline-block;
+    width: 90%;
+}
+
+.bookMarkItem{
+    height: 45px;
+    line-height: 45px;
+    border-bottom: 1px #f7f7f7 solid;
+    padding-left: 10px;
+}
+
+.bookMarkItem:hover{
+    background-color: #f4f4f4;
+    cursor: pointer;
+}
+
+.bookMarkDiv .delBookMark,
+.bookMarkDiv .editBookMark{
+    display: inline-block;
+    float: right;
+    height: 15px;
+    line-height: 15px;
+    margin: 15px 5px;
+    font-size: 8px;
+}
+
+.content .rightContent{
+     border: 1px solid #F0F0F0;
+    min-width: 700px;
+}
+
+.new_articles{
+    margin-top: 5px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.new_articles .new_articles_title,
+.bookMarkClassifyDiv .book_mark_title{
+    background-color: #f4f4f4;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+.new_articles .article,
+.new_articles .article:hover{
+    cursor: pointer;
+    text-align: left;
+    border: none;
+    margin-top: 10px;
+    height: 30px;
+    line-height: 30px;
+
+}
+.new_articles .article p{
+    float: left;
+      font-size: 16px;
+}
+
+.new_articles .article .article_title,
+.new_articles .article .article_title a,
+.new_articles .article .article_createTime{
+    width: 64%;
+    text-align: left;
+    color: #808080;
+    padding-left: 5px;
+
+}
+.new_articles .article .article_createTime{
+    width: 30%;
+    text-align: right;
+    margin-right: 2px;
+    font-size: 10px;
+}
+
+.bookMarkClassifyDiv .bookMarkClassifyItem{
+    height: 30px;
+    /*background-color: #8e908c;*/
+    line-height: 30px;
+    margin-top: 5px;
+}
+
+.bookMarkClassifyDiv .bookMarkClassifyItem:hover{
+    background-color: #f4f4f4;
+}
+
+.bookMarkClassifyDiv .bookMarkClassifyItem>a:last-child,
+.bookMarkClassifyDiv .bookMarkClassifyItem>a:first-child{
+    text-decoration: none;
+     display: inline-block;
+}
+
+.bookMarkClassifyDiv .bookMarkClassifyItem>a:first-child{
+    height: 30px;
+    width: 80%;
+    font-size: 16px;
+    color: #808080;
+    padding-left: 5px;
+    float: left;
+}
+
+.bookMarkClassifyDiv .bookMarkClassifyItem>a:last-child{
+    font-size: 12px;
+    color: blue;
+    width: 40px;
+    text-align: center;
+    float: right;
+}
+
+.rightContent .load_more{
+	text-align: center;
+}
+
+.rightContent .load_more a{
+	display: inline-block;
+	padding: 15px 0px;
+    width: 150px;
+    text-decoration: none;
+     color: #d0d0d0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}

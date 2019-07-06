@@ -18,7 +18,7 @@ def list_dir(file_dir, type):
                 #如果是视频页面，判断文件后缀名是不是视频格式
                 if type == 'video':
                     temp_arr = cur_file.split('.')
-                    if temp_arr and temp_arr[len(temp_arr) - 1:][0] in ['mp4', 'flv', 'avi', 'rmvb']:
+                    if temp_arr and temp_arr[len(temp_arr) - 1:][0] in ['mp4', 'flv', 'avi', 'rmvb', 'mkv']:
                         addNode = True
                     else:
                         addNode = False

@@ -10,7 +10,7 @@
 }
 
 .time_line{
-    width: 100%;
+    width: 96.5%;
     margin: 0px;
     background: #f4f4f4;
 }
@@ -19,7 +19,7 @@
     /*background: greenyellow;*/
     height: 785px;
     width: 100%;
-overflow: auto;
+    overflow: auto;
 }
 
 .content .rightContent{
@@ -74,7 +74,6 @@ overflow: hidden;/** 隐藏超出的内容 **/
     cursor:pointer;
 }
 
-
 .time_line a, .time_line{
     font-size: 14px;
     text-decoration: none;
@@ -126,4 +125,19 @@ float: left;
     text-align: right;
     margin-right: 2px;
 
+}
+.videoPluginDpwnload{
+    width: 28px;
+    height: 30px;
+    float: right;
+    background-color: #f4f4f4;
+}
+.videoPluginDpwnload a{
+    font-size: 10px;
+    color: #0a001f;
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+    display: inline-block;
+    background: url("../images/file_dwonload_icon.png") no-repeat;
 }
