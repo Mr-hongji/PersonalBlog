@@ -26,7 +26,5 @@ urlpatterns = [
     re_path('bookMark/(?P<opration>[\w\d-]+)/(?P<pk>\d*)', views.bookMark),
     re_path('bookMarkClassify/(?P<opration>\w+)/(?P<pk>\d*)', views.bookMarkClassify),
 
-
-
 ]
 

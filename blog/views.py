@@ -227,13 +227,31 @@ def getVideoUrl(request):
 
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
+from django.db.models import Max,Avg,F,Q,Min,Count,Sum
+
 def bookMark(request, opration, pk):
     if opration == 'p':
         ret_user = models.UserInfo.objects.all()
         ret_article = models.Article.objects.all()[:10]
-        book_mark_classify_ret = models.BookMarkClassify.objects.all()
 
-        return render(request, 'bookMark.html', {'userinfo': ret_user, 'articles': ret_article, 'bookMarkClassifyRet': book_mark_classify_ret})
+        book_mark_classify_ret = models.BookMarkClassify.objects.all()
+        ret_classify_count = models.BookMark.objects.values('classify').annotate(classifyCount=Count('pk'))
+        ret_mark_classify = []
+
+        allBookMarkCount = 0
+
+        for markClassify in book_mark_classify_ret:
+            count = 0
+            for item in ret_classify_count:
+                classifyid = item['classify']
+                if classifyid == markClassify.id:
+                    count = item['classifyCount']
+
+            allBookMarkCount += count
+            obj = {'id':markClassify.id, 'name':markClassify.name, 'count':count}
+
+            ret_mark_classify.append(obj)
+        return render(request, 'bookMark.html', {'userinfo': ret_user, 'articles': ret_article, 'bookMarkClassifyRet': ret_mark_classify, 'allBookMarkCount':allBookMarkCount})
 
     elif opration == 'add':
         ret = addBookMark(request, pk)
@@ -241,26 +259,53 @@ def bookMark(request, opration, pk):
     elif opration == 'edit':
         ret = editBookMark(request, pk)
 
+    elif opration == 'del':
+        delBookMark(request, pk)
+
     elif opration.find('loadMoreBookMark-') > -1:
         l = opration.split('-')
         pageSize = l[1]
         currentPageNum = l[2]
-        ret = loadMoreBookMark(request, int(pageSize), int(currentPageNum))
+        classifyid = None
+        if len(l) > 3:
+            classifyid = l[3]
+
+        ret = loadMoreBookMark(request, int(pageSize), int(currentPageNum), classifyid)
 
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
+def delBookMark(request, pk):
+    ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'edit'}
+    try:
+        models.BookMark.objects.filter(pk=pk).delete()
+        ret['status'] = 1
+        ret['bookMark'] = pk
+        ret['message'] = '书签已删除'
+    except Exception as e:
+        print(e)
+        ret['status'] = 0
+        ret['message'] = '书签删除失败'
+
+    return ret
+
+
 def editBookMark(request, pk):
     ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'edit'}
-
     try:
         title = request.POST.get('des', None)
         location = request.POST.get('url', None)
-        classifyId = request.POST.get('classifyId', None)
+        new_classifyId = request.POST.get('classifyId', None)
 
-        models.BookMark.objects.filter(pk=pk).update(title=title, location=location, classify_id=classifyId)
+        # if int(classifyId) < 0:
+        #     obj = models.BookMark.objects.raw("UPDATE blog_bookmark SET title='"+title+"', location='"+location+"', classify_id=null WHERE id="+pk)#filter().update(title=title, location=location, classify_id=-1)
+        #
+        # else:
+        #     models.BookMark.objects.filter(pk=pk).update(title=title, location=location, classify_id=classifyId)
 
+        old_classify_id = models.BookMark.objects.filter(pk=pk).values('classify_id').first()['classify_id']
+        models.BookMark.objects.filter(pk=pk).update(title=title, location=location, classify_id=new_classifyId)
         ret['status'] = 1
-        ret['bookMark'] = {'des':title, 'localtion':location, 'classifyId':classifyId ,'bookMarkPk':pk}
+        ret['bookMark'] = {'des':title, 'localtion':location, 'newClassifyId':new_classifyId ,'oldClassifyId':old_classify_id, 'bookMarkPk':pk}
         ret['message'] = '书签已更新'
     except Exception as e:
         print(e)
@@ -269,22 +314,25 @@ def editBookMark(request, pk):
 
     return ret
 
+def loadMoreBookMark(request, pageSize, currentPageNum, classifyid):
 
-
-
-def loadMoreBookMark(request, pageSize, currentPageNum):
-
-    ret = {'status':None, 'currentPageNum': None, 'bookMarks':None, 'message':None, 'opration':'loadMoreBookMark'}
+    ret = {'status':None, 'currentPageNum': None, 'bookMarks':None, 'message':None, 'opration':'loadMoreBookMark', 'classifyid':None}
     try:
-        start_index = currentPageNum * pageSize + 1
+        start_index = currentPageNum * pageSize
         end_index = (currentPageNum + 1) * pageSize
-        ret_bookmark = models.BookMark.objects.all()[start_index:end_index]
+
+        if classifyid and classifyid != 'all':
+            ret_bookmark = models.BookMark.objects.all().filter(classify_id=int(classifyid))[start_index:end_index]
+        else:
+            ret_bookmark = models.BookMark.objects.all()[start_index:end_index]
+
         ret_bookMark = serializers.serialize('json', ret_bookmark, use_natural_foreign_keys=True)
 
         ret['status'] = 1
         ret['message'] = 'OK'
         ret['currentPageNum'] = currentPageNum + 1
         ret['bookMarks'] = ret_bookMark
+        ret['classifyid'] = classifyid
 
     except Exception as e:
         print(e)
@@ -301,11 +349,11 @@ def addBookMark(request, pk):
         url = request.POST.get('url')
         uid = request.POST.get('uid')
         classifyId = request.POST.get('classifyId')
-        if int(classifyId) == -1:
-            new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid)
-        else:
-            new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid, classify_id=classifyId)
-
+        # if int(classifyId) == -1:
+        #     new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid)
+        # else:
+        #     new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid, classify_id=classifyId)
+        new_book_mark = models.BookMark.objects.create(title=des, location=url, user_id=uid, classify_id=classifyId)
         classifyid = None
         if new_book_mark.classify:
             classifyid = new_book_mark.classify.id
@@ -318,8 +366,6 @@ def addBookMark(request, pk):
         ret['message'] = '书签添加失败'
 
     return ret
-
-
 
 def bookMarkClassify(request, opration, pk):
     if opration == 'add':

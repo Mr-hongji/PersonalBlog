@@ -1,2 +1,10 @@
+*.pyc
+
+.idea/
+
 .git/
 
+venv/
+
+__pycache__/
+.project

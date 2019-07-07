@@ -267,3 +267,21 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+.classifyTipEl{
+    background-color: #f4f4f4;
+    height: 40px;
+    line-height: 40px;
+     font-size: 12px;
+}
+.classifyTipEl>span:first-child{
+    font-weight: bold;
+}
+.classifyTipEl>span:last-child{
+    font-size: 14px;
+    color: #4d4d4d;
+}
+
+/*.nav ul>li:nth-child(2) a{*/
+
+/*}*/

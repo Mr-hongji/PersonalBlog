@@ -114,10 +114,10 @@
 				<a href="articleEdit/" target="_self"></a>
 			</div>
 			<ul>
-				<li><a href="#">主页</a></li>
-				<li><a href="#">文章</a></li>
-				<li><a href="#">收藏</a></li>
-				<li><a href="#">文件下载</a></li>
+				<li><a href="../">笔记</a></li>
+				<li><a href="../bookMark/p/">书签</a></li>
+				<li><a href="../async/">文档</a></li>
+				<li><a href="./" style="border-bottom: 2px solid red;">视频</a></li>
 			</ul>
 		</div>
 		<div class="main">
@@ -127,7 +127,7 @@
 					<div class="banner">
                         {% for u in userinfo %}
                             <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+                                <div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
                                 <h4>{{ u.uname }}</h4>
                                 <p class="chickenSoup">{{ u.chickenSoup }}</p>
 						    </div>

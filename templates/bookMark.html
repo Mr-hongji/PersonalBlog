@@ -11,11 +11,11 @@
         {% load  CustomFilter %}
 
         <script>
-            var pageSize = 15;
+            var pageSize = 3;
             var currentPageNum = 0;
 
             window.onload=function(){
-                bookMark('loadMoreBookMark-'+pageSize+'-'+currentPageNum);
+                bookMark('loadMoreBookMark-'+pageSize+'-'+currentPageNum + "-all");
             };
 
             function strFormat2Date(str){
@@ -163,26 +163,19 @@
                 });
             }
 
-            function addBookMark(){
-
-            }
-
             var load_over = '已加载到最后';
             var click_load_more = '点击加载更多';
             var no_data = '暂无文章';
             var bookMarkOpration = "p";
 
             function bookMark(bookMarkOpration){
-
+                console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
                 var des = $('.bookMarkDes').val();
                 var url = $('.bookMarkUrl').val();
                 var uid = $(".uinfoDiv").attr('uid');
                 var classifyId = $(".markClassifySel").find("option:selected").attr('value');
                 var bookMarkPK = $('.addBookmarkForm').attr('bookmarkid');
-
-                if(bookMarkPK){
-                    bookMarkOpration = 'edit';
-                }
+                console.log(bookMarkOpration, des, url, !des);
 
                 if(bookMarkOpration.indexOf('loadMoreBookMark-') < 0){
                     if(!des){
@@ -193,7 +186,22 @@
                         alert('请输入书签连接地址');
                         return;
                     }
+                     if(classifyId == -1){
+                         alert('请选择书签分类');
+                        return;
+                    }
+
+                    if(bookMarkPK && bookMarkPK!= 'del'){
+                        bookMarkOpration = 'edit';
+                    }
+
+                }else{
+                    if(bookMarkOpration.split("-").length < 4){
+                         bookMarkOpration = bookMarkOpration + "-" + $('.classifyTipEl').find('span:last-child').attr("classifyid");
+                    }
+                    console.log(bookMarkOpration);
                 }
+
                 $.ajax({
                     url: '../'+ bookMarkOpration +'/'+ bookMarkPK,
                     data:{des:des, url:url, uid: uid, classifyId:classifyId},
@@ -202,37 +210,91 @@
                     success:function (args) {
                         if(args.status){
                             if(args.opration == 'add'){
-                                //addBookMarkItemTobBookMarkDiv(args.bookMark.classifyid, args.bookMark.title, args.bookMark.pk, args.bookMark.location);
+                                addBookMarkItemTobBookMarkDiv(args.bookMark.classifyid, args.bookMark.title, args.bookMark.pk, args.bookMark.location);
+
+                                //更新左侧的分类列表中每个分类的书签个数
+                                //全部分类中的书签数加1
+                                var el_bookmarkSum  = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='-1']").find('a:last-child');
+
+                                console.log(parseInt($(el_bookmarkSum).text()) + 1);
+                                $(el_bookmarkSum).text(parseInt($(el_bookmarkSum).text()) + 1);
+
+                                //新增书签所属分类的个数加1
+                                var el_bookMarkCategory  = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='"+ args.bookMark.classifyid +"']").find('a:last-child');
+                                $(el_bookMarkCategory).text(parseInt($(el_bookMarkCategory).text()) + 1);
+
                             }else if(args.opration == 'edit'){
                                 updateBookMark(args);
-                            }else if(args.opration == 'del'){
+                                $(".addBookmarkForm").css("display","none");
+                                $(".addBookmarkBtn").css("display","block");
 
+                                var oldClassifyId = parseInt(args.bookMark.oldClassifyId);
+                                var newClassifyId = parseInt(args.bookMark.newClassifyId);
+
+                                if(oldClassifyId != newClassifyId){
+                                     //更改后的书签分类个数加1
+                                    var el_bookMarkCategory  = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='"+ newClassifyId +"']").find('a:last-child');
+                                    $(el_bookMarkCategory).text(parseInt($(el_bookMarkCategory).text()) + 1);
+
+                                    //更改前的书签分类数减1
+                                    var el_bookMarkCategory  = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='"+ oldClassifyId +"']").find('a:last-child');
+                                    $(el_bookMarkCategory).text(parseInt($(el_bookMarkCategory).text()) - 1);
+                                }
+
+                            }else if(args.opration == 'del'){
+                                removeBookMarkItem(args);
                             }else if(args.opration == 'loadMoreBookMark'){
+
+                                //按书签分类加载并且当前页数是第一页
+                                if(args.classifyid && args.currentPageNum ==1 ){
+                                    //移除所有的书签item
+                                    $('.bookMarkDiv').children().remove();
+
+                                    //更新当前查询的书签分类提示
+                                    var classifyname = "全部";
+                                    if(args.classifyid != 'all'){
+                                        var el_bookMarkCategory  = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='"+ args.classifyid +"']").find('a:first-child');
+                                        classifyname = $(el_bookMarkCategory).text();
+                                    }
+
+                                    $('.classifyTipEl').find('span:last-child').text("");
+                                    $('.classifyTipEl').find('span:last-child').text(classifyname);
+                                    $('.classifyTipEl').find('span:last-child').attr("classifyid", args.classifyid);
+                                }
+
+                                //解析书签查询结果并添加书签item到页面
                                 analysisBookMarksData(args);
                             }
                         }
 
-                        if((!args.opration == 'loadMoreBookMark') || (args.opration == 'loadMoreBookMark' && !args.status)){
+                        if((args.opration != 'loadMoreBookMark') || (args.opration == 'loadMoreBookMark' && !args.status)){
                              alert(args.message);
                         }
+
+                        $('.addBookmarkForm').removeAttr('bookmarkid');
                     }
                 });
             }
 
+            function removeBookMarkItem(args){
+                var bookMarkItemEl = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='"+args.bookMark.bookMarkPk+"']");
+                $(bookMarkItemEl).remove();
+            }
+
             function updateBookMark(args){
 
-                var currentEditBookMark = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='"+args.bookMarkPk+"']");
-
+                var currentEditBookMark = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='"+ args.bookMark.bookMarkPk +"']");
+                console.log(args);
                 var bookMarkTitleEl = $(currentEditBookMark).find('.bookMarkTitle');
-                $(bookMarkTitleEl).attr('href', args.localtion);
-                $(bookMarkTitleEl).attr('classifyid', args.classifyId);
-                $(bookMarkTitleEl).text(args.des);
+                $(bookMarkTitleEl).attr('href', args.bookMark.localtion);
+                $(bookMarkTitleEl).attr('classifyid', args.bookMark.newClassifyId);
+                $(bookMarkTitleEl).text(args.bookMark.des);
 
-                var editBookMarkBtnEl = $(currentEditBookMark).find('.editBookMark');
-                $(editBookMarkBtnEl).attr('onclick', editBookMark(this, args.bookMarkPk));
-
-                var delBookMarkBtnEl = $(currentEditBookMark).find('.delBookMark');
-                $(delBookMarkBtnEl).attr('onclick', delBookMark(this, args.bookMarkPk));
+                {#var editBookMarkBtnEl = $(currentEditBookMark).find('.editBookMark');#}
+                {#$(editBookMarkBtnEl).attr('onclick', editBookMark(this, args.bookMarkPk));#}
+                {##}
+                {#var delBookMarkBtnEl = $(currentEditBookMark).find('.delBookMark');#}
+                {#$(delBookMarkBtnEl).attr('onclick', delBookMark(this, args.bookMarkPk));#}
             }
 
             function analysisBookMarksData(args){
@@ -250,16 +312,25 @@
                         for(var i=0; i<ret_bookMark.length; i++){
                             var bookMar = ret_bookMark[i];
                             var classifyid = -1;
-                            if(bookMar.classify){
-                                classifyid = bookMar.classify.id;
+                            if(bookMar.fields.classify){
+                                classifyid = bookMar.fields.classify.id;
                             }
-                            addBookMarkItemTobBookMarkDiv(classifyid, bookMar.fields.title, bookMar.pk, bookMar.fields.location);
+
+                            //由于添加书签后页面会动态加载当前添加的书签，为防止点击加载更多按钮会出现重复的书签
+                            //如果在当前书签列表中能找到同一个书签，则不再添加到书签列表
+                            if($('.bookMarkDiv').find('.bookMarkItem[bookmarkid="'+bookMar.pk+'"]').length == 0){
+                               addBookMarkItemTobBookMarkDiv(classifyid, bookMar.fields.title, bookMar.pk, bookMar.fields.location);
+                            }
                         }
                     }
                     if(ret_bookMarkLen == 0){
                         if(currentPageNum == 0){
                             updateLoadMoreBtnText(no_data);
                             updateCurrentPageNum(0);
+                        }
+                        else{
+                            updateLoadMoreBtnText(load_over);
+                            updateCurrentPageNum(args.currentPageNum);
                         }
                      }else if(ret_bookMarkLen < pageSize){
                             updateLoadMoreBtnText(load_over);
@@ -276,14 +347,23 @@
             }
 
             function updateLoadMoreBtnText(value) {
-                $('.load_more').find('a:first').text("");
-                $('.load_more').find('a:first').text(value);
+
+                var el_a = $('.load_more').find('a:first');
+                if(value != click_load_more){
+                    $(el_a).attr("disabled",true);
+
+                }else{
+                    $(el_a).attr("disabled",false);
+                }
+
+                $(el_a).text("");
+                $(el_a).text(value);
             }
 
             function addBookMarkItemTobBookMarkDiv(classifyid, bookMarkTitle, bookMarkPk, bookMarkLocation){
                  var bookMarkItem = '<div class="bookMarkItem" bookmarkid="'+ bookMarkPk +'">' +
                                     '<a href="'+ bookMarkLocation +'" class="bookMarkTitle"  target="_blank" classifyid="'+ classifyid +'">'+ bookMarkTitle +'</a>' +
-                                    '<a href="javascript:void(0);" class="editBookMark" onclick="editBookMark(this,'+ bookMarkPk +')">编辑</a>' +
+                                    '<a href="#addBookmarkDiv" class="editBookMark" onclick="editBookMark(this, '+ bookMarkPk +')">编辑</a>' +
                                     '<a href="javascript:void(0);" class="delBookMark" onclick="delBookMark(this, '+ bookMarkPk +')">删除</a>' +
                                     '</div>';
                                 $('.bookMarkDiv').append(bookMarkItem);
@@ -306,8 +386,10 @@
                 $('.addBookmarkForm').attr('bookmarkid', id);
             }
 
-            function delBookMark(id){
-
+            function delBookMark(el, id){
+                $('.addBookmarkForm').attr('bookmarkid', id);
+                console.log('........del');
+                bookMark('del');
             }
         </script>
 	</head>
@@ -318,30 +400,30 @@
 
 			<div class="addblogDiv">
 				<!--<img src="images/blog_add.png" />-->
-				<a href="articleEdit/" target="_self"></a>
+				<a href="../../articleEdit/" target="_blank"></a>
 			</div>
 
 			<div class="searchInput">
-                <select class="searchType">
-                    <option value="1" selected>标题</option>
-                    <option value="2">分类</option>
-                    <option value="3">标签</option>
-                </select>
+{#                <select class="searchType">#}
+{#                    <option value="1" selected>标题</option>#}
+{#                    <option value="2">分类</option>#}
+{#                    <option value="3">标签</option>#}
+{#                </select>#}
 
-				<input placeholder="搜索框"/>
-				<button class="searhBtn">搜索</button>
+{#				<input placeholder="搜索框"/>#}
+{#				<button class="searhBtn">搜索</button>#}
 			</div>
 
 			<ul>
-				<li><a href="#">主页</a></li>
-				<li><a href="#">文章</a></li>
-				<li><a href="#">收藏</a></li>
-				<li><a href="#">文件下载</a></li>
+				<li><a href="../../">笔记</a></li>
+				<li><a href="./" style="border-bottom: 2px solid red;">书签</a></li>
+				<li><a href="../../async/">文档</a></li>
+				<li><a href="../../videoPlay/">视频</a></li>
 			</ul>
 
 
 		</div>
-		<div class="main">
+		<div class="main" id="addBookmarkDiv">
 			<div class="content">
 				<div class="leftContent">
                     <!-- 用户信息 -->
@@ -358,10 +440,14 @@
                     <!--  书签分类  -->
 					<div class="bookMarkClassifyDiv">
 						<p class="book_mark_title">书签分类</p>
+                        <div class="bookMarkClassifyItem" classifyid="-1">
+                            <a href="#" onclick="bookMark('loadMoreBookMark-'+pageSize+'-0-all')">全部</a>
+                            <a href="#">{{ allBookMarkCount }}</a>
+                        </div>
 						{% for t in bookMarkClassifyRet %}
                             <div class="bookMarkClassifyItem" classifyid="{{ t.id }}">
-                                <a href="#" onclick="getArticlesByTag({{ t.id }}, {{ t.name }})">{{ t.name }}</a>
-                                <a href="#">100个</a>
+                                <a href="#" onclick="bookMark('loadMoreBookMark-'+pageSize+'-0-'+{{ t.id }})">{{ t.name }}</a>
+                                <a href="#">{{ t.count }}</a>
                             </div>
                         {% endfor %}
 					</div>
@@ -378,7 +464,8 @@
 
 				</div>
 				<div class="rightContent">
-                    <div class="addBookmarkDiv clearfix1">
+
+                    <div class="addBookmarkDiv clearfix1" >
                         <p class="addBookmarkBtn"><a href="javascript:void(0);" title="添加书签" onclick="addNewBooMark()"></a></p>
                         <div class="addBookmarkForm">
                             <div>
@@ -390,8 +477,8 @@
                                 </div>
                                 <div>
                                    <span>类别：</span>
-                                    <select class="markClassifySel">
-                                        <option value="-1">全部</option>
+                                    <select class="markClassifySel" >
+                                        <option value="-1">-- 选择分类 --</option>
                                         {% for item in bookMarkClassifyRet %}
                                             <option value="{{ item.id }}">{{ item.name }}</option>
                                         {% endfor %}
@@ -407,6 +494,7 @@
 
                         </div>
                     </div>
+                    <p class="classifyTipEl"><span>类别: </span><span classifyid="all">全部</span></p>
                     <!-- 文章 -->
                     <div class="bookMarkDiv">
 
