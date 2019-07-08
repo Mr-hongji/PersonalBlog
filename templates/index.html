@@ -47,7 +47,7 @@
 
                 type_id = type_id?type_id:'';
                 var req_url = 'articles/'+type+'/' + type_id;
-                console.log(req_url);
+                //console.log(req_url);
                 $.ajax({
                     url:req_url,
                     data:{pgnum:pgnum},
@@ -57,7 +57,7 @@
                         var type_id = data.id;
                         var pgnum = data.pgnum;
                         var article_data = JSON.parse(data.data);
-                        console.log(old_type, type, eventType);
+                        //console.log(old_type, type, eventType);
 
 
                         if(article_data){
@@ -76,7 +76,7 @@
 
                                  $('.articlesDiv').append(article_str);
                             });
-                            console.log(article_data.length);
+                            //console.log(article_data.length);
                             var el_a = $('.rightContent').find('.load_more').find('a');
                             if(article_data.length < 10){
                                 if(pgnum == 1 && article_data.length == 0){
@@ -147,10 +147,7 @@
 			
             <a href="../blog/" target="_self"><img class="blogimg" src="../static/images/blog_icon.png"/></a>
 			
-			<div class="addblogDiv">
-				<!--<img src="images/blog_add.png" />-->
-				<a href="articleEdit/" target="_self"></a>
-			</div>
+
 			
 			<div class="searchInput">
 {#                <select class="searchType">#}
@@ -216,6 +213,10 @@
                     <div class="time_line">
                         <p><a href="javascript:void(0)" onclick="loadMore('all',null, 0)">全部文章</a></p>
                     </div>
+                    <div class="addblogDiv">
+				        <!--<img src="images/blog_add.png" />-->
+				        <a href="articleEdit/" target="_blank" title="添加文章"></a>
+			        </div>
                     <!-- 文章 -->
                     <div class="articlesDiv">
 

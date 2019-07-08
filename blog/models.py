@@ -35,7 +35,7 @@ class Article(models.Model):
 
 class Classify(models.Model):
     name = models.CharField(max_length=30)
-    user = models.ForeignKey('UserInfo', on_delete=models.CASCADE)
+    user = models.ForeignKey('UserInfo', null=True, on_delete=models.SET_NULL)
     class Meta:
         verbose_name_plural = '分类'
 
@@ -47,7 +47,7 @@ class Classify(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=30)
-    user = models.ForeignKey('UserInfo', on_delete=models.CASCADE)
+    user = models.ForeignKey('UserInfo', null=True, on_delete=models.SET_NULL)
     class Meta:
         verbose_name_plural = '标签'
 

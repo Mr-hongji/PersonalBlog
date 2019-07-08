@@ -43,7 +43,7 @@
         }
 
 		function zTreeOnDblClick(event, treeId, treeNode) {
-            console.log(treeNode.getPath());
+            //console.log(treeNode.getPath());
             alert(treeNode ? treeNode.tId + ", " + treeNode.name + ", " + treeNode.getPath() : 'isRoot');
             if(treeNode && !treeNode.isParent){
                 var path=treeNode.path;
@@ -193,10 +193,9 @@
 
 			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
 
-			<div class="addblogDiv">
-				<!--<img src="images/blog_add.png" />-->
-				<a href="../articleEdit/" target="_self"></a>
-			</div>
+{#			<div class="addblogDiv">#}
+{#				<a href="../articleEdit/" target="_self"></a>#}
+{#			</div>#}
 
 			<div class="searchInput">
 {#                <select class="searchType">#}
@@ -218,6 +217,16 @@
 		<div class="main">
 			<div class="content clearfix1">
 				<div class="leftContent">
+                    <!-- 用户信息 -->
+					<div class="banner">
+                        {% for u in userinfo %}
+                            <div class="uinfoDiv clearfix">
+                                <div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
+                                <h4>{{ u.uname }}</h4>
+                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
+						    </div>
+                        {% endfor %}
+					</div>
                     <ul id="treeDemo" class="ztree"></ul>
 				</div>
 				<div class="rightContent">

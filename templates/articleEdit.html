@@ -91,9 +91,14 @@ var initSample = ( function() {
                                     '<input type="text" id="editInput" class="editInput" disabled="true" onblur="EditInputOnblurFunc(this,' + flag + ')"/>' +
                                 '</div>';
 
-                var str = '<div class="itemDiv" id="itemDiv"> ' +
-                                '<div class="checkboxDiv">' +
-                                    '<input type="checkbox" value="aaa" name="'+checkname+'" class="checkbox_classfy" />' +
+                var itemDivStr = '<div class="itemDiv" id="itemDiv">';
+
+                if(flag == 1){
+                    itemDivStr = '<div class="itemDiv" id="itemDiv"  onclick="classifyChanged(this)">';
+                }
+
+                var str = itemDivStr + '<div class="checkboxDiv">' +
+                                    '<input type="checkbox" name="'+checkname+'" class="checkbox_classfy" />' +
                                 '</div>'+ inputDiv +'' +
                                 '<div class="editClassfyDiv" id="editClassfyDiv">' +
                                 '</div>' +
@@ -168,21 +173,21 @@ var initSample = ( function() {
                     return;
                 }
 
-                console.log($(obj).attr('index_db'));
+                //console.log($(obj).attr('index_db'));
 				saveClassfyTagInputVal(inputVal, flag, obj, $(obj).attr('index_db'));
 			}
 
 			function saveClassfyTagInputVal(text, flag, obj, id){
-               var urlS = flag == 2 ? 'addArticleTag/': 'addArticleClassify/';
-
+               var urlS = flag == 2 ? '../addArticleTag/': '../addArticleClassify/';
+                var uid = $('.uinfoDiv').attr("uid");
                 $.ajax({
                     url: urlS,
-                    data:id ? {value:text, id:id} : {value:text},
+                    data:id ? {value:text, id:id} : {value:text, uid:uid},
                     type:'GET',
                     dataType: 'json',
                     success:function(args) {
                         {#console.log(args);#}
-
+                        //新增分类或标签
                         if (args.action == 'addArticleClassify' || args.action == 'addArticleTag') {
                             //args.status = 1 保存成功  args.status = 0 失败
                             if (args.status < 1) {
@@ -198,13 +203,21 @@ var initSample = ( function() {
                                     $(obj).attr('index_db', args.id);
                                 }
                                 //给CheckBox设置value值
-                                var objParent = $(obj).parent('.itemDiv');
+                                var objParent = $(obj).parents('.itemDiv');
                                 var checkbox_classfy = $(objParent).find('.checkbox_classfy');
-                                if($(checkbox_classfy).attr('value')){
-                                    $(checkbox_classfy).attr('value', args.id);
+                                $(checkbox_classfy).attr('value', args.id);
+                                $(checkbox_classfy).change(function(){
+                                    checkBoxChanged(this);
+				                });
+
+                                //console.log($(obj).parents('.itemDiv'));
+                                if(args.action == 'addArticleClassify'){
+                                    $(objParent).attr('value', args.id);
                                 }
                             }
-                        } else if (args.action == 'updateArticleClassify' || args.action == 'updateArticleTag') {
+                        }
+                        //修改分类或标签
+                        else if (args.action == 'updateArticleClassify' || args.action == 'updateArticleTag') {
                              if(args.status < 1){
                                 showTipSpan(flag, args.msg, 'block');
                                 // 修改失败，把输入框中的值恢复到原有值
@@ -227,7 +240,7 @@ var initSample = ( function() {
                     type:'GET',
                     dataType: 'json',
                     success:function(args){
-                        console.log(args);
+                        //console.log(args);
                         if(args.status < 1){
                             showTipSpan(flag, args.msg, 'block');
                         }else{
@@ -250,7 +263,6 @@ var initSample = ( function() {
                 var articleContent = CKEDITOR.instances.editor.getData();
 
                 var articleid = $('.article_id').attr('value');
-                alert(articleid);
                //获取属性name='checkboxClassfy' 和 选中的 input 标签的value
                 if(!articleTitle){
                     alert("内容不能为空");
@@ -263,12 +275,11 @@ var initSample = ( function() {
                 }
 
                 var classifyId;
-                $("input[name='checkboxClassfy']:checked").each(function(){
-                    classifyId = parseInt($(this).attr('value'));
-                    console.log(parseInt($(this).attr('value')));
-                     console.log(classifyId);
-               });
-
+                var selectedClassifyItem = $('.classify').find(".itemDiv[seleted='true']");
+                if(selectedClassifyItem){
+                    classifyId = $(selectedClassifyItem).attr("value");
+                }
+                //alert(classifyId);
                 //获取属性name='checkboxTag' 和 选中的 input 标签的value值
                 var articleTagIds = [];
                $("input[name='checkboxTag']:checked").each(function(){
@@ -292,7 +303,7 @@ var initSample = ( function() {
                    dataType: 'json',
                    traditional:true,
                    success:function(args){
-                        console.log(args);
+                        //console.log(args);
                         if(args.status){
                              window.location = '../';
                         }
@@ -308,6 +319,8 @@ var initSample = ( function() {
 					if(obj.checked) {
 						positionx = 48;
 					}
+
+					//console.log(obj);
 					$(obj).parent('.checkboxDiv').css({
 						'background-image': 'url(/static/images/blue.png)',
 						'background-position-x': '-' + positionx + 'px',
@@ -328,7 +341,7 @@ var initSample = ( function() {
 }
             window.onload=function(){
              var article_pk =  getQueryVariable();
-             console.log('getQueryVariable: ' + article_pk);
+             //console.log('getQueryVariable: ' + article_pk);
                post_article(article_pk);
 
 
@@ -357,8 +370,8 @@ var initSample = ( function() {
                     data:{pk:pk},
                     dataType:'json',
                     success:function (args) {
-                          console.log(args);
-                          console.log(JSON.parse(args.article));
+                        //console.log(args);
+                        //console.log(JSON.parse(args.article));
                         var ret_article = JSON.parse(args.article);
                         if(JSON.parse(args.article)){
                             ret_article = JSON.parse(args.article)[0];
@@ -391,10 +404,11 @@ var initSample = ( function() {
                         }
 
                         for(i in ret_classify){
+                            //修改文章的时候需要判断文章当前所属分类，然后设置为选中状态
                             if(ret_article && ret_article.fields.classify.id == ret_classify[i].pk){
-                                classifyret_str += '<div class="itemDiv" id="itemDiv"><div class="checkboxDiv"><input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="'+ret_classify[i].pk+'" checked /> </div><div class="textInputDiv" ondblclick="editClassfyFunc(this)"><input type="text" value="'+ret_classify[i].fields.name+'" id="editInput" oldValue="'+ret_classify[i].fields.name+'" index_db="'+ret_classify[i].pk+'" class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/></div></div>';
+                                classifyret_str += '<div class="itemDiv" id="itemDiv"  onclick="classifyChanged(this)" value="'+ret_classify[i].pk+'" selected="true"><div class="checkboxDiv"><input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="'+ret_classify[i].pk+'" checked /> </div><div class="textInputDiv" ondblclick="editClassfyFunc(this)"><input type="text" value="'+ret_classify[i].fields.name+'" id="editInput" oldValue="'+ret_classify[i].fields.name+'" index_db="'+ret_classify[i].pk+'" class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/></div></div>';
                             }else{
-                                classifyret_str += '<div class="itemDiv" id="itemDiv"><div class="checkboxDiv"><input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="'+ret_classify[i].pk+'" /> </div><div class="textInputDiv" ondblclick="editClassfyFunc(this)"><input type="text" value="'+ret_classify[i].fields.name+'" id="editInput" oldValue="'+ret_classify[i].fields.name+'" index_db="'+ret_classify[i].pk+'" class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/></div></div>';
+                                classifyret_str += '<div class="itemDiv" id="itemDiv"  onclick="classifyChanged(this)" value="'+ret_classify[i].pk+'"><div class="checkboxDiv"><input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="'+ret_classify[i].pk+'" /> </div><div class="textInputDiv" ondblclick="editClassfyFunc(this)"><input type="text" value="'+ret_classify[i].fields.name+'" id="editInput" oldValue="'+ret_classify[i].fields.name+'" index_db="'+ret_classify[i].pk+'" class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/></div></div>';
                             }
                         }
                         //设置分类、标签
@@ -402,9 +416,15 @@ var initSample = ( function() {
                         $('.classify_selectDiv').append(classifyret_str);
 
                         //设置分类、标签选中状态
+                        /**
                         $("input[name='checkboxClassfy']:checked").each(function(){
                             checkBoxChanged(this);
                        });
+                         **/
+
+                        var defSelectedClassifyItem = $(".classify").find(".itemDiv[selected='true']");
+                        classifyChanged(defSelectedClassifyItem);
+
                        $("input[name='checkboxTag']:checked").each(function(){
                            checkBoxChanged(this);
                        });
@@ -414,22 +434,37 @@ var initSample = ( function() {
 
                 });
             }
+
+            function classifyChanged(obj){
+                var oldSelectedItem = $('.classify').find(".itemDiv[seleted='true']");
+                //清除前一个选中项的样式和选中属性
+                if(oldSelectedItem && oldSelectedItem != obj){
+                    $(oldSelectedItem).css("background-color", "#ffffff");
+                    $(oldSelectedItem).removeAttr("seleted");
+                }
+                 //设置当前选中项的样式
+                $(obj).css("background-color", "#70B7FF");
+                $(obj).attr("seleted", true);
+
+            }
         </script>
 	</head>
 	<body>
 		<div class="nav">
-		
-			<div class="article_active">
-				<a href="javascript:void(0);" class="save_article">发布</a>
-				<a href="javascript:void(0);" class="unsave_article">取消</a>
-			</div>
+
+            <!-- 用户信息 -->
+            {% for u in userinfo %}
+                <div class="uinfoDiv clearfix" uid="{{ u.id }}">
+                    <div class="uhead" style="background: url('../../../{{ u.img }}') no-repeat center;" title="{{ u.uname }}"></div>
+                </div>
+            {% endfor %}
+
 			<input class="article_id" hidden/>
             <a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
 
-			<div class="addblogDiv">
-				<!--<img src="images/blog_add.png" />-->
-				<a href="add_blog.html" target="_self"></a>
-			</div>
+{#			<div class="addblogDiv">#}
+{#				<a href="add_blog.html" target="_self"></a>#}
+{#			</div>#}
 			
 			<ul>
 				<li><a href="#">主页</a></li>
@@ -437,13 +472,49 @@ var initSample = ( function() {
 				<li><a href="#">收藏</a></li>
 				<li><a href="#">文件下载</a></li>
 			</ul>
+
+
 		</div>
+        <div class="mainDiv">
+            <div class="articleTitleDiv">
+                <input class="articleTitle" placeholder="输入文章标题"/>
+                <p>0/100</p>
+            </div>
 
-        <div class="articleTitleDiv">
-            <input class="articleTitle" placeholder="输入文章标题"/>
-            <p>0/100</p>
-        </div>
+		<div class="classify_tag">
+			<div class="classify">
+			    <a href = "javascript:void(0);" onclick ="addItem(this, 1)"
+				class="classify_addbtn"></a>
+			    <h4>文章分类</h4>
+                <p class="tipSpan">有未保存的分类 !</p>
+			    <div class='selectDiv classify_selectDiv'>
+{#                    <div class="itemDiv" id="itemDiv" >#}
+{#                            <div class="checkboxDiv">#}
+{#                                <input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="{{ classify_item.id }}" />#}
+{#                            </div>#}
+{#                            <div class="textInputDiv" ondblclick="editClassfyFunc(this)">#}
+{#                                <input type="text" value={{ classify_item.name }} id="editInput"#}
+{#                                       oldValue={{ classify_item.name }} index_db={{ classify_item.id }}#}
+{#                                class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/>#}
+{#                            </div>#}
+{#                            <div class="editClassfyDiv" id='editClassfyDiv' hidden>#}
+{#                                <a href="#" class="cancle_saveBtn">取消</a>#}
+{#                                <a href="#" class="saveClassfy_Btn"></a>#}
+{#                            </div>#}
+{#				        </div>#}
+			    </div>
+		    </div>
 
+            <div class="articletag">
+                <a href = "javascript:void(0);" onclick ="addItem(this, 2)"
+                    class="articletag_addbtn"></a>
+                <h4>文章标签</h4>
+                <p class="tipSpan"> 有未保存的标签 !</p>
+                <div class='selectDiv tag_selectDiv'>
+
+                </div>
+            </div>
+		</div>
 
         <!-- ckeditor -->
         <div class="adjoined-bottom">
@@ -460,44 +531,13 @@ var initSample = ( function() {
 				<!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
 			<textarea class="editormd-html-textarea markdownText" name="text"></textarea>
 		</div>
-		
-		<div class="classify_tag">
-			<div class="classify">
-			    <a href = "javascript:void(0);" onclick ="addItem(this, 1)"
-				class="classify_addbtn"></a>
-			    <h4>文章分类</h4>
-                <p class="tipSpan">有未保存的分类 !</p>
-			    <div class='selectDiv classify_selectDiv'>
-                    {% for classify_item in classify_ret %}
 
-                        <div class="itemDiv" id="itemDiv">
-                            <div class="checkboxDiv">
-                                <input type="checkbox" class="checkbox_classfy"  name="checkboxClassfy" value="{{ classify_item.id }}" />
-                            </div>
-                            <div class="textInputDiv" ondblclick="editClassfyFunc(this)">
-                                <input type="text" value={{ classify_item.name }} id="editInput"
-                                       oldValue={{ classify_item.name }} index_db={{ classify_item.id }}
-                                class="editInput" disabled="true" onblur="EditInputOnblurFunc(this, 1)"/>
-                            </div>
-                            <div class="editClassfyDiv" id='editClassfyDiv' hidden>
-                                <a href="#" class="cancle_saveBtn">取消</a>
-                                <a href="#" class="saveClassfy_Btn"></a>
-                            </div>
-				        </div>
-                    {% endfor %}
-			</div>
-		</div>
-	
-		    <div class="articletag">
-			<a href = "javascript:void(0);" onclick ="addItem(this, 2)"
-				class="articletag_addbtn"></a>
-			<h4>文章标签</h4>
-            <p class="tipSpan"> 有未保存的标签 !</p>
-			<div class='selectDiv tag_selectDiv'>
+         <div class="article_active">
+            <a href="javascript:void(0);" class="save_article">发布</a>
+            <a href="javascript:void(0);" class="unsave_article">取消</a>
+        </div>
+        </div>
 
-            </div>
-			</div>
-		</div>
 
 
 	</body>

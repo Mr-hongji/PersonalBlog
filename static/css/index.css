@@ -9,8 +9,8 @@ body{
 }
 
 p{
-color:rgb(76,76,76);
-font-family:Helvetica, Arial, SimSun, sans-serif;
+	color:rgb(76,76,76);
+	font-family:Helvetica, Arial, SimSun, sans-serif;
 	font-size:15px;
 }
 
@@ -30,7 +30,6 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	width: 80%;
 	height: 1000px;
 	min-width: 950px;
-	
 	position: relative;
 }
 
@@ -84,7 +83,6 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	float: right;
 	margin-right: 15px;
 	text-align: center;
-	margin-top: 1px;
 }
 
 .addblogDiv a{
@@ -95,12 +93,12 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	/*border: 2px solid #D9534F;*/
 	/*width: 60px;
 	height: 25px;*/
-	width: 32px;
-	height: 32px;
+	width: 25px;
+	height: 25px;
 	display: block;
 	border-radius: 4px;
 	line-height: 25px;
-	margin-top: 3px;
+	margin-top: 2px;
 	background: url(../images/blog_add.png) no-repeat;
 }
 
@@ -115,12 +113,12 @@ font-family:Helvetica, Arial, SimSun, sans-serif;
 	line-height: 40px;
 }
 .searchType{
-border: 1px #000 solid;
+	border: 1px #000 solid;
 	height: 22px;
 	border-color: rgb(169, 169, 169);
 }
 .searchInput input{
-height: 19px;
+	height: 19px;
 }
 
 .searhBtn {
@@ -129,7 +127,6 @@ height: 19px;
 
 .content {
 	width: 100%;
-
 	position: relative;
 	top: 45px;
 }
@@ -145,7 +142,6 @@ height: 19px;
 	height: 80px;
 	background: #FFFFFF;
 	/*border-top: 2px yellowgreen solid;*/
-	
 }
 
 .addblog{
@@ -204,7 +200,8 @@ height: 19px;
 }
 
 .rightContent .articlesDiv{
-
+	margin-top:30px;
+	border-top: 2px #C9DFED solid;
 }
 
 .article a{
@@ -214,10 +211,10 @@ height: 19px;
 
 .time_line{
 	float: left;
-	width: 98%;
+	width: 50%;
 	height: 30px;
 	margin-left: 10px;
-	border-bottom: 1px #F7F7F7 solid;
+	/*border-bottom: 1px #F7F7F7 solid;*/
 	line-height: 30px;
 }
 
@@ -246,7 +243,7 @@ height: 19px;
 	padding: 15px 0px;
     width: 150px;
     text-decoration: none;
-     color: #d0d0d0;
+	color: #d0d0d0;
     text-align: center;
     font-size: 14px;
     font-weight: bold;
@@ -263,7 +260,6 @@ height: 19px;
 	padding-left: 5px;
 	font-family: arial;
 }
-
 
 .calendarDiv {
 	width: 100%;
@@ -319,7 +315,6 @@ height: 19px;
 	color:#454545;
 	text-decoration: none;
 }
-
 
 .opration {
 	text-align: center;

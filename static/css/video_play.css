@@ -1,6 +1,7 @@
 .content{
     height: 100%;
 }
+
 .content .leftContent{
     width: 333px;
     /*background-color: #000;*/
@@ -10,22 +11,23 @@
 }
 
 .time_line{
-    width: 96.5%;
+    width: 95%;
     margin: 0px;
-    background: #f4f4f4;
+    /*background: #f4f4f4;*/
 }
 
 .file_div{
     /*background: greenyellow;*/
-    height: 785px;
+    border-top: 2px #C9DFED solid;
+    height: 880px;
     width: 100%;
     overflow: auto;
 }
 
 .content .rightContent{
     left: 348px;
-    height: 816px;
-     border: 5px solid #f4f4f4;
+    height: 880px;
+    /*border: 5px solid #f4f4f4;*/
 }
 
 .fileDir{
@@ -60,14 +62,13 @@
 
 }
 .ellipsis{
-word-break: break-all;
-text-overflow: ellipsis;/**显示省略号**/
-display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
--webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
--webkit-line-clamp: 2; /** 显示的行数 **/
-overflow: hidden;/** 隐藏超出的内容 **/
-  height:40px;
-
+    word-break: break-all;
+    text-overflow: ellipsis;/**显示省略号**/
+    display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 2; /** 显示的行数 **/
+    overflow: hidden;/** 隐藏超出的内容 **/
+    height:40px;
 }
 
 .fileDir:hover{
@@ -106,9 +107,9 @@ overflow: hidden;/** 隐藏超出的内容 **/
 
 }
 .new_articles .article p{
-float: left;
-      font-size: 16px;
-     padding: 5px 0px;
+    float: left;
+    font-size: 16px;
+    padding: 5px 0px;
 }
 
 .new_articles .article .article_title,
@@ -117,20 +118,18 @@ float: left;
     width: 60%;
     text-align: left;
     color: #808080;
-
 }
 
 .new_articles .article .article_createTime{
     width: 30%;
     text-align: right;
     margin-right: 2px;
-
 }
 .videoPluginDpwnload{
     width: 28px;
     height: 30px;
     float: right;
-    background-color: #f4f4f4;
+    /*background-color: #f4f4f4;*/
 }
 .videoPluginDpwnload a{
     font-size: 10px;
@@ -140,4 +139,15 @@ float: left;
     margin-top: 1px;
     display: inline-block;
     background: url("../images/file_dwonload_icon.png") no-repeat;
+}
+
+.leftContent .banner .uinfoDiv  h4{
+    width: 80%;
+    text-align: left;
+}
+
+.leftContent .banner .chickenSoup {
+	margin-top: 7px;
+	margin-left: 5px;
+	color: #3D3D3D;
 }

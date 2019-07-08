@@ -59,10 +59,10 @@ body {
 }
 
 .classify_tag{
-	float: left;
-	margin-left: 10px;
+	float: right;
+	margin-right: 210px;
 	width: 300px;
-	margin-top: 45px;
+	margin-top: 0px;
 	/*position: fixed;*/
 	/*top: 45px;*/
 	/*left: 70.5%;*/
@@ -92,6 +92,10 @@ body {
 	/*outline: none;*/
 /*}*/
 
+.classify .itemDiv .checkboxDiv{
+	visibility: hidden;
+}
+
 .articletag .selectDiv::-webkit-scrollbar,
 .classify .selectDiv::-webkit-scrollbar {
 	width: 4px;
@@ -117,13 +121,14 @@ body {
 	display: inline-block;
 	width: 18px;
 	height: 18px;
-	background: url(../images/blog_add.png) no-repeat -8px -8px;
+	background: url(../images/classify_add.png) no-repeat;
 	float: right;
 	margin-top: 10px;
 	margin-right: 5px;
 }
 
-.classify_addbtn:hover {
+.classify_addbtn:hover,
+.articletag_addbtn:hover{
 	opacity: 0.6;
 }
 
@@ -135,6 +140,12 @@ body {
 .classify .addarticleClassify,
 .articletag .addArticleTag {
 	display: none;
+}
+.classify .editInput{
+	background: transparent;
+}
+.classify .itemDiv:hover{
+	background-color: #99ccff;
 }
 
 .addNewArticle {
@@ -178,8 +189,13 @@ body {
 
 .article_active {
 	float: right;
-	margin-right: 20px;
-	padding-top: 7px;
+	margin-right: 210px;
+	margin-top: 0px;
+	width: 300px;
+	height: 48px;
+	background-color: #ffffff;
+	line-height: 48px;
+	text-align: center;
 }
 
 .article_active a {
@@ -219,6 +235,10 @@ body {
 	margin-top: 0px;
 }
 
+.classify .selectDiv{
+	margin-left: 0px;
+}
+
 .selectDiv .itemDiv {
 	width: 100%;
 	height: 35px;
@@ -247,7 +267,8 @@ body {
 }
 
 .editInput:disabled {
-	background-color: #FFFFFF;
+	/*background-color: #FFFFFF;*/
+	background-color: transparent;
 }
 
 .selectDiv img {
@@ -317,12 +338,12 @@ body {
 }
 
 .articleTitleDiv{
+	float: left;
 	background-color: #ffffff;
-	position: absolute;
-	top: 45px;
+	margin: 0px 0px;
+	margin-left: 10px;
 	width: 70%;
-	left: 10px;
-	border: 1px #EBE7DF solid;
+	/*border: 1px #EBE7DF solid;*/
 }
 
 .articleTitleDiv .articleTitle{
@@ -347,13 +368,43 @@ body {
 
 .adjoined-bottom{
 	float: left;
-	margin-top: 85px;
+	margin-top: 5px;
 	margin-left: 10px;
 	width: 70%;
+}
 
+.grid-container{
+	margin-top: 0px;
 }
 
 .grid-container{
 width: 100%;
 	height: 100%;
+}
+
+.nav .uinfoDiv{
+	float: right;
+	height: 100%;
+
+	/*background-color: #4f4f4f;*/
+	margin-right: 20px;
+	line-height: 40px;
+}
+
+.nav .uinfoDiv div{
+	float: left;
+	font-weight: normal;
+	font-size: 12px;
+	width: 35px;
+	height: 35px;
+	border: 1px #fde3e4 solid;
+	margin-top: 2px;
+}
+
+.mainDiv{
+    margin-top: 45px;
+    /*background-color: #4f4f4f;*/
+    /*text-align: center;*/
+	float: left;
+	margin-left: 150px;
 }

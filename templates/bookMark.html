@@ -11,7 +11,7 @@
         {% load  CustomFilter %}
 
         <script>
-            var pageSize = 3;
+            var pageSize = 15;
             var currentPageNum = 0;
 
             window.onload=function(){
@@ -28,8 +28,6 @@
                 var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
                 return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
             }
-
-
 
             function changeTimeLine(type, name){
                 var el_p = $('.time_line').find('p');
@@ -169,13 +167,13 @@
             var bookMarkOpration = "p";
 
             function bookMark(bookMarkOpration){
-                console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+               //console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
                 var des = $('.bookMarkDes').val();
                 var url = $('.bookMarkUrl').val();
                 var uid = $(".uinfoDiv").attr('uid');
                 var classifyId = $(".markClassifySel").find("option:selected").attr('value');
                 var bookMarkPK = $('.addBookmarkForm').attr('bookmarkid');
-                console.log(bookMarkOpration, des, url, !des);
+                //console.log(bookMarkOpration, des, url, !des);
 
                 if(bookMarkOpration.indexOf('loadMoreBookMark-') < 0){
                     if(!des){
@@ -284,7 +282,7 @@
             function updateBookMark(args){
 
                 var currentEditBookMark = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='"+ args.bookMark.bookMarkPk +"']");
-                console.log(args);
+                //console.log(args);
                 var bookMarkTitleEl = $(currentEditBookMark).find('.bookMarkTitle');
                 $(bookMarkTitleEl).attr('href', args.bookMark.localtion);
                 $(bookMarkTitleEl).attr('classifyid', args.bookMark.newClassifyId);
@@ -305,7 +303,7 @@
                 }else{
                     return;
                 }
-                console.log(ret_bookMark);
+                //console.log(ret_bookMark);
                 if(ret_bookMark){
                     var ret_bookMarkLen = ret_bookMark.length;
                      if(ret_bookMarkLen > 0){
@@ -388,7 +386,7 @@
 
             function delBookMark(el, id){
                 $('.addBookmarkForm').attr('bookmarkid', id);
-                console.log('........del');
+                //console.log('........del');
                 bookMark('del');
             }
         </script>
@@ -398,10 +396,9 @@
 
             <a href="/blog/" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
 
-			<div class="addblogDiv">
-				<!--<img src="images/blog_add.png" />-->
-				<a href="../../articleEdit/" target="_blank"></a>
-			</div>
+{#			<div class="addblogDiv">#}
+{#				<a href="../../articleEdit/" target="_blank"></a>#}
+{#			</div>#}
 
 			<div class="searchInput">
 {#                <select class="searchType">#}

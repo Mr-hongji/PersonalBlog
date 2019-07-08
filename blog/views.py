@@ -60,7 +60,8 @@ def clock(request):
     return render(request, 'clock.html')
 
 def articleEditPage(request, pk):
-    return render(request, 'articleEdit.html')
+    ret_user = models.UserInfo.objects.all()
+    return render(request, 'articleEdit.html', {'userinfo': ret_user})
 
 def getClassify():
     classify_ret = models.Classify.objects.all()
@@ -71,15 +72,16 @@ def getTag():
     return tag_ret
 
 def addArticleClassify(request):
-    msg = {'action':'updateArticleClassify', 'msg':None, 'status':None}
+    msg = {'action':'addArticleClassify', 'msg':None, 'status':None}
     classify_name = request.GET.get('value')
     classify_id = request.GET.get('id', None)
+    uid = request.GET.get('uid', None)
 
     if(classify_id):
        return updateArticleClassify(classify_id,classify_name )
 
     try:
-        re = models.Classify.objects.create(name=classify_name)
+        re = models.Classify.objects.create(name=classify_name, user_id=uid)
         print(re)
         msg['status'] = 1
         msg['msg'] = '保存成功'
@@ -108,11 +110,12 @@ def addArticleTag(request):
     msg = {'action':'addArticleTag', 'msg': None, 'status': None}
     tag_name = request.GET.get('value')
     tag_id = request.GET.get('id', None)
+    uid = request.GET.get('uid', None)
 
     if (tag_id):
         return updateArticleTag(tag_id, tag_name)
     try:
-        re = models.Tag.objects.create(name=tag_name)
+        re = models.Tag.objects.create(name=tag_name, user_id=uid)
         msg['status'] = 1
         msg['msg'] = '保存成功'
         msg['id'] = re.id
@@ -185,7 +188,8 @@ def addArticle(request):
 from blog import fileTree
 
 def async(request):
-    return render(request, 'async.html')
+    ret_user = models.UserInfo.objects.all()
+    return render(request, 'async.html', {'userinfo': ret_user})
 
 def list_dir(request):
     p = request.POST.get('fpath', None)
