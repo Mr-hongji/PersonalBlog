@@ -1,164 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	    <link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
-	    <script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
-	    <script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
-        <link rel="stylesheet" href="/static/css/index.css?rn=11"/>
-		<link rel="stylesheet" href="/static/css/index.css?rn=11"/>
-        <link rel="stylesheet" href="/static/css/video_play.css?rn=111"/>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
+		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
+		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
+		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
+		<link rel="stylesheet" href="/static/css/video_play.css?rn=111" />
 
+		<script src="/static/js/jquery.js"></script>
+		{% load CustomFilter %}
 
-        <script src="/static/js/jquery.js"></script>
-        {% load  CustomFilter %}
+		<script>
+			var root_p = 'F:\\视频'; //根目录
+			window.onload = function() {
+				showFiles();
+			}
 
-        <script>
-            var root_p = 'F:\\视频'; //根目录
-            window.onload=function() {
-                showFiles();
-            }
+			function showFiles(path) {
+				if(!path) {
+					path = root_p;
+				}
 
-            function showFiles(path){
-                if(!path){
-                    path = root_p;
-                }
+				$.ajax({
+					url: '../list_dir/',
+					data: {
+						fpath: path,
+						type: 'video'
+					},
+					type: 'post',
+					dataType: 'json',
+					success: function(args) {
+						$('.time_line').children().remove();
+						$('.time_line').text("");
+						$('.time_line').append(parseTimeLine(path));
+						$('.file_div').children().remove();
+						var html_el = "";
+						for(i in args) {
+							var fileType = "file";
+							var item = args[i];
 
-                $.ajax({
-                    url: '../list_dir/',
-                    data: {fpath:path, type:'video'},
-                    type: 'post',
-                    dataType:'json',
-                    success:function (args) {
-                       $('.time_line').children().remove();
-                       $('.time_line').text("");
-                       $('.time_line').append(parseTimeLine(path));
-                       $('.file_div').children().remove();
-                        var html_el = "";
-                        for(i in args){
-                            var fileType = "file";
-                            var item = args[i];
+							if(item.isParent) {
+								fileType = "folder";
+							}
 
-                            if(item.isParent){
-                                fileType = "folder";
-                            }
+							var p = item.path;
+							p = p.replace(/\\/g, '\\\\');
+							var s = 'ba'
+							html_el += '<div class="fileDir ' + fileType + '" fpath="' + p + '" ondblclick="openDir(\'' + p + '\',\'' + fileType + '\')" style=""><div class="' + fileType + '_icon" ></div><div class="ellipsis" title="' + item.name + '">' + item.name + '</div></div>';
+						}
 
-                            var p = item.path;
-                            p = p.replace(/\\/g, '\\\\');
-                            var s = 'ba'
-                            html_el += '<div class="fileDir ' + fileType + '" fpath="' + p + '" ondblclick="openDir(\'' + p +'\',\'' + fileType + '\')" style=""><div class="'+ fileType +'_icon" ></div><div class="ellipsis" title="'+ item.name +'">'+ item.name + '</div></div>';
-                        }
+						$('.file_div').append(html_el);
+					}
+				});
+			}
 
-                        $('.file_div').append(html_el);
-                    }
-                });
-            }
+			function parseTimeLine(path) {
+				var el_a = '';
+				if(path == root_p) {
+					//el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ root_p +'\', \'folder\')">root</a>' + '/';#}
+					el_a += 'root/';
+				} else {
+					path = path.replace(root_p, 'root');
+					var paths = path.split('\\');
+					if(paths) {
+						for(var i = 0; i < paths.length - 1; i++) {
+							//console.log(paths[i]);
+							var el_a_href = '';
 
-            function parseTimeLine(path){
-                var el_a = '';
-                if(path == root_p){
-                    {#el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ root_p +'\', \'folder\')">root</a>' + '/';#}
-                    el_a += 'root/';
-                }else{
-                    path = path.replace(root_p, 'root');
-                    var paths = path.split('\\');
-                    if(paths){
-                        for (var i=0; i<paths.length - 1; i++) {
-                            //console.log(paths[i]);
-                            var el_a_href = '';
-                            {##}
-                            for (var n = 0; n <= i; n++) {
-                                el_a_href += paths[n] + "\\\\";
-                            }
-                            //console.log(el_a_href);
-                            el_a_href = el_a_href.replace('root', root_p.replace(/\\/g, '\\\\'));
-                            el_a_href = el_a_href.substring(0,el_a_href.length-2);
-                            el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
-                        }
-                        el_a += paths[paths.length-1] + '/';
-                    }
-                }
-                //console.log(el_a);
-                el_a = '>> ' + el_a;
-                return el_a;
-            }
+							for(var n = 0; n <= i; n++) {
+								el_a_href += paths[n] + "\\\\";
+							}
+							//console.log(el_a_href);
+							el_a_href = el_a_href.replace('root', root_p.replace(/\\/g, '\\\\'));
+							el_a_href = el_a_href.substring(0, el_a_href.length - 2);
+							el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
+						}
+						el_a += paths[paths.length - 1] + '/';
+					}
+				}
+				//console.log(el_a);
+				el_a = '>> ' + el_a;
+				return el_a;
+			}
 
-            function openDir(path, fileType){
-                if(fileType == 'folder'){
-                    showFiles(path);
-                }
-                else{
-                    //console.log(path.length + 'videoPlayer://'.length);
-                    //getVideoUrl(path);
-                    //console.log(('videoPlayer://' + path).length);
-                    window.location.href = 'videoPlayer://' + path;
-                }
-            }
+			function openDir(path, fileType) {
+				if(fileType == 'folder') {
+					showFiles(path);
+				} else {
+					//console.log(path.length + 'videoPlayer://'.length);
+					//getVideoUrl(path);
+					//console.log(('videoPlayer://' + path).length);
+					window.location.href = 'videoPlayer://' + path;
+				}
+			}
 
-            function showArticleDetial(id){
-                window.open("../article/"+id,"_blank");
-            }
-
-</script>
+			function showArticleDetial(id) {
+				window.open("../article/" + id, "_blank");
+			}
+		</script>
 	</head>
+
 	<body>
 		<div class="nav">
 
-            <a href="/blog/" target="_self" ><img class="blogimg" src="/static/images/blog_icon.png"/></a>
-
-{#			<div class="addblogDiv">#}
-{#				<a href="articleEdit/" target="_self"></a>#}
-{#			</div>#}
+			<a href="/blog/" target="_self"><img class="blogimg" src="/static/images/blog_icon.png" /></a>
+			<!--<div class="addblogDiv">
+				<a href="articleEdit/" target="_self"></a>
+			</div>-->
 			<ul>
-				<li><a href="../">笔记</a></li>
-				<li><a href="../bookMark/p/">书签</a></li>
-				<li><a href="../async/">文档</a></li>
-				<li><a href="./" style="border-bottom: 2px solid red;">视频</a></li>
+				<li>
+					<a href="../">笔记</a>
+				</li>
+				<li>
+					<a href="../bookMark/p/">书签</a>
+				</li>
+				<li>
+					<a href="../async/">文档</a>
+				</li>
+				<li>
+					<a href="./" style="border-bottom: 2px solid red;">视频</a>
+				</li>
 			</ul>
 		</div>
 		<div class="main">
 			<div class="content clearfix1">
 				<div class="leftContent">
-                    <!-- 用户信息 -->
+					<!-- 用户信息 -->
 					<div class="banner">
-                        {% for u in userinfo %}
-                            <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
-                                <h4>{{ u.uname }}</h4>
-                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
-						    </div>
-                        {% endfor %}
+						{% for u in userinfo %}
+							<div class="uinfoDiv clearfix">
+								<div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
+								<h4>{{ u.uname }}</h4>
+								<p class="chickenSoup">{{ u.chickenSoup }}</p>
+							</div>
+						{% endfor %}
 					</div>
 
-                    <div class="new_articles ">
-                        <p class="new_articles_title">最新文章</p>
-                        {% for article in articles %}
-                             <div class="article clearfix1" onclick="showArticleDetial({{ article.id }})">
-                            <p class="article_title">{% substringFilter article.title 10 %}</p>
-                            <p class="article_createTime">{% utc_to_local article.createTime %}</p>
-                        </div>
-                        {% endfor %}
+					<div class="new_articles ">
+						<p class="new_articles_title">最新文章</p>
+						{% for article in articles %}
+							<div class="article clearfix1" onclick="showArticleDetial({{ article.id }})">
+								<p class="article_title">{% substringFilter article.title 10 %}</p>
+								<p class="article_createTime">{% utc_to_local article.createTime %}</p>
+							</div>
+						{% endfor %}
 
-                    </div>
+					</div>
 				</div>
 				<div class="rightContent">
-                    <!-- 面包屑 -->
-                    <div class="time_line">
-                    </div>
-                    <div class="videoPluginDpwnload">
-                        <a href="https://codeload.github.com/Mr-hongji/HtmlCallVideoExeMiddlePlugin/zip/master" title="下载视频播放插件"></a>
-                    </div>
-                    <div class="file_div">
-                    </div>
+					<!-- 面包屑 -->
+					<div class="time_line">
+					</div>
+					<div class="videoPluginDpwnload">
+						<a href="https://codeload.github.com/Mr-hongji/HtmlCallVideoExeMiddlePlugin/zip/master" title="下载视频播放插件"></a>
+					</div>
+					<div class="file_div">
+					</div>
 				</div>
 			</div>
-
 			<!--<div class="footer">
 				<p class="Copyright">Copyright &copy;2019 &nbsp; www.xiaohong.com</p>
-
 			</div>-->
 		</div>
 	</body>
+
 </html>

@@ -1,139 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-        <link rel="stylesheet" href="/static/css/index.css"/>
-        <link rel="stylesheet" href="/static/css/article.css"/>
-        <link rel="stylesheet" href="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css">
+		<link rel="stylesheet" href="/static/css/index.css" />
+		<link rel="stylesheet" href="/static/css/article.css" />
+		<link rel="stylesheet" href="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/default.css">
 		<script src="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
-        <script src="/static/js/jquery.js"></script>
+		<script src="/static/js/jquery.js"></script>
 
-        {% load  CustomFilter %}
+		{% load CustomFilter %}
 
-        <script>
-            hljs.initHighlightingOnLoad();
+		<script>
+			hljs.initHighlightingOnLoad();
 
-function getQueryVariable() {
-	var window_location = window.location.href;
-	window_location = decodeURI(window_location);
-	var params = window_location.split("/");
+			function getQueryVariable() {
+				var window_location = window.location.href;
+				window_location = decodeURI(window_location);
+				var params = window_location.split("/");
 
-    return params[params.length-1];
-}
-            window.onload=function(){
-             var article_pk =  getQueryVariable();
-               articleDetails(article_pk);
-            };
+				return params[params.length - 1];
+			}
+			window.onload = function() {
+				var article_pk = getQueryVariable();
+				articleDetails(article_pk);
+			};
 
-            function articleDetails(pk){
-                $.ajax({
-                    url:'../articleDetails/',
-                    data:{pk:pk},
-                    dataType:'json',
-                    success:function (data) {
-                        console.log(data);
-                        if(data){
-                            $(data).each(function(index,item){
-                                if(item && item.fields){
-                                    var tags_str='';
-                                    var arr_tags = item.fields.tag;
-                                    for (i in arr_tags){
-                                        tags_str += arr_tags[i].name +' ';
-                                    }
-                                    var date_str = strFormat2Date(item.fields.createTime);
+			function articleDetails(pk) {
+				$.ajax({
+					url: '../articleDetails/',
+					data: {
+						pk: pk
+					},
+					dataType: 'json',
+					success: function(data) {
+						console.log(data);
+						if(data) {
+							$(data).each(function(index, item) {
+								if(item && item.fields) {
+									var tags_str = '';
+									var arr_tags = item.fields.tag;
+									for(i in arr_tags) {
+										tags_str += arr_tags[i].name + ' ';
+									}
+									var date_str = strFormat2Date(item.fields.createTime);
 
-                                    article_details_str = '<h2>'+item.fields.title+'</h2><p><span>'+date_str+' 类别: '+item.fields.classify.name+' 标签: '+tags_str+' </span></p><div class="article_content">'+item.fields.content+'</div>';
+									article_details_str = '<h2>' + item.fields.title + '</h2><p><span>' + date_str + ' 类别: ' + item.fields.classify.name + ' 标签: ' + tags_str + ' </span></p><div class="article_content">' + item.fields.content + '</div>';
 
-                                }
-                                 $('.articleDiv').append(article_details_str);
-                            });
-                        }
+								}
+								$('.articleDiv').append(article_details_str);
+							});
+						}
 
-                        $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-                    }
-                })
-            }
-            function strFormat2Date(str){
-                var datetime = new Date(str);
-                var year = datetime.getFullYear();
-                var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-                var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-                var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-                var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-                var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-                return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
-            }
+						$('pre code').each(function(i, e) {
+							hljs.highlightBlock(e)
+						});
+					}
+				})
+			}
 
-        </script>
+			function strFormat2Date(str) {
+				var datetime = new Date(str);
+				var year = datetime.getFullYear();
+				var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+				var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+				var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+				var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+				var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+			}
+		</script>
 	</head>
+
 	<body>
 		<div class="nav">
 
-			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
+			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png" /></a>
 
-{#			<div class="addblogDiv">#}
-{#				<a href="add_blog.html" target="_self"></a>#}
-{#			</div>#}
+			<!--<div class="addblogDiv">
+				<a href="add_blog.html" target="_self"></a>
+			</div>-->
 
 			<div class="searchInput">
-{#				<input placeholder="搜索框"/>#}
-{#				<button class="searhBtn">搜索</button>#}
+				<!--<input placeholder="搜索框"/>
+				<button class="searhBtn">搜索</button>-->
 			</div>
 
 			<ul>
-				<li><a href="#">主页</a></li>
-				<li><a href="#">文章</a></li>
-				<li><a href="#">收藏</a></li>
-				<li><a href="#">文件下载</a></li>
+				<li>
+					<a href="#">主页</a>
+				</li>
+				<li>
+					<a href="#">文章</a>
+				</li>
+				<li>
+					<a href="#">收藏</a>
+				</li>
+				<li>
+					<a href="#">文件下载</a>
+				</li>
 			</ul>
-
 
 		</div>
 		<div class="main">
 			<div class="content">
 				<div class="leftContent">
-                    <!-- 用户信息 -->
+					<!-- 用户信息 -->
 					<div class="banner">
-                        {% for u in userinfo %}
-                            <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('/{{ u.img }}') no-repeat center;"></div>
-                                <h4>{{ u.uname }}</h4>
-                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
-						    </div>
-                        {% endfor %}
+						{% for u in userinfo %}
+							<div class="uinfoDiv clearfix">
+								<div class="uhead" style="background: url('/{{ u.img }}') no-repeat center;"></div>
+								<h4>{{ u.uname }}</h4>
+								<p class="chickenSoup">{{ u.chickenSoup }}</p>
+							</div>
+						{% endfor %}
 					</div>
 					<!-- 时间 -->
 					<div class="calendarDiv">
-						<iframe class="clockFrame" scrolling="no"
-							 src="../clock.html" style="width: 255px;height: 100px">
+						<iframe class="clockFrame" scrolling="no" src="../clock.html" style="width: 255px;height: 100px">
 						</iframe>
 					</div>
 					<!-- 文章分类 -->
 					<div class="articleClassify">
 						<h4>分类</h4>
 						<ul>
-                            {% for c in classify %}
-                                <li><a href="#">{{ c.name }}</a></li>
-                            {% endfor %}
+							{% for c in classify %}
+								<li>
+									<a href="#">{{ c.name }}</a>
+								</li>
+							{% endfor %}
 
 						</ul>
 					</div>
-                    <!--  文章标签  -->
+					<!--  文章标签  -->
 					<div class="articleTag articleClassify">
 						<h4>标签</h4>
 						<ul>
-							 {% for t in tag %}
-                                <li><a href="#">{{ t.name }}</a></li>
-                            {% endfor %}
+							{% for t in tag %}
+								<li>
+									<a href="#">{{ t.name }}</a>
+								</li>
+							{% endfor %}
 						</ul>
 					</div>
 				</div>
 				<div class="rightContent">
-                    <!-- 文章 -->
-                    <div class="articleDiv">
+					<!-- 文章 -->
+					<div class="articleDiv">
 
-                    </div>
+					</div>
 				</div>
 			</div>
 
@@ -143,4 +159,5 @@ function getQueryVariable() {
 			</div>-->
 		</div>
 	</body>
+
 </html>

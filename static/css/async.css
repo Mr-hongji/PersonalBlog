@@ -9,6 +9,7 @@ ul.ztree{
     margin-top: 5px;
     height: 787px;
     width: 312px;
+    overflow-y:auto;
 }
 
 .content .rightContent{

@@ -1,245 +1,260 @@
 <!DOCTYPE html>
 <HTML>
-<HEAD>
-	<TITLE> </TITLE>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
-	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
-    <link rel="stylesheet" href="/static/css/index.css?rn=11"/>
-    <link rel="stylesheet" href="/static/css/async.css?rn=21"/>
-    <link rel="stylesheet" href="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/idea.css">
-    <script src="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
 
-	<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck.js"></script>
+	<HEAD>
+		<TITLE> </TITLE>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
+		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
+		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
+		<link rel="stylesheet" href="/static/css/async.css?rn=21" />
+		<link rel="stylesheet" href="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/styles/idea.css">
+		<script src="/static/plugins/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+
+		<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck.js"></script>
 	  <script type="text/javascript" src="../../../js/jquery.ztree.exedit.js"></script>-->
-	<SCRIPT type="text/javascript">
-		<!--
-		var setting = {
-			async: {
-				enable: true,
-				url:"../list_dir/",
-				autoParam:["id", "name=n", "level=lv"],
-				otherParam:treeNodePath,
-				dataFilter: filter
-			},
+		<SCRIPT type="text/javascript">
+			<!--
+			var setting = {
+				async: {
+					enable: true,
+					url: "../list_dir/",
+					autoParam: ["id", "name=n", "level=lv"],
+					otherParam: treeNodePath,
+					dataFilter: filter
+				},
 
-			callback: {
-		        onClick: zTreeOnClick,
-                onDblClick: zTreeOnDblClick
-	        }
-		};
+				callback: {
+					onClick: zTreeOnClick,
+					onDblClick: zTreeOnDblClick
+				}
+			};
 
-        function treeNodePath(treeId, treeNode){
-            {#console.log(treeNode);#}
-             var path = null;
-            if(treeNode){
-                path = treeNode.path;
-            }
-            else{
-                path = 'D:\pycode\PersonalBlog';
-            }
-            return {'fpath':path, 'type':'all'};
-        }
-
-		function zTreeOnDblClick(event, treeId, treeNode) {
-            //console.log(treeNode.getPath());
-            alert(treeNode ? treeNode.tId + ", " + treeNode.name + ", " + treeNode.getPath() : 'isRoot');
-            if(treeNode && !treeNode.isParent){
-                var path=treeNode.path;
-                var suffix_name = getFileNameSuffix(treeNode.name);
-                switch (suffix_name.toLowerCase()) {
-                    case 'png':
-                    case 'jpg':
-                    case 'bmp':
-                    case 'gif':
-                    case 'jpeg':
-                    case 'png':
-                    case 'pdf':
-                    case 'sqlite3':
-                        break;
-                    default:
-                        var selNodePath = '';
-                        var nodes = treeNode.getPath();
-                        for(i in nodes){
-                            selNodePath += nodes[i].name + ' / ';
-                        }
-                        readFile(path, treeNode.name, selNodePath.substring(0, selNodePath.length - 2));
-                }
-            }
-        };
-
-        function getFileNameSuffix(name){
-             var arr = name.split('.');
-            var suffix_name = arr[arr.length-1];
-            return suffix_name;
-        }
-
-         /** 读取文件内容
-          *  path: 文件在硬盘位置的路径
-          *  selNodePath: 当前选中的节点在目录树结构中的位置路径
-          *  name: 节点名称
-         */
-        function readFile(path, name, selNodePath){
-            $.ajax({
-                url:'../readFile/',
-                data:{fpath:path},
-                dataType:'json',
-                type:'post',
-                success:function(ret){
-                    {#console.log(ret);#}
-                    if(ret.status){
-                        pasrseData(ret.data, name, selNodePath);
-                    }else{
-                        alert(ret.data);
-                    }
-                }
-            });
-        }
-
-        function pasrseData(data, name, selNodePath){
-            var suffix_name = getFileNameSuffix(name);
-            var lan = 'no-highlight';
-            
-            switch (suffix_name) {
-                case 'html':
-                    lan = 'language-html';
-                    data = unhtml(data);
-                    break;
-                case 'py':
-                    lan = 'language-python';
-                    break;
-                case 'css':
-                    lan = 'language-css';
-                    break;
-                case 'js':
-                    lan = 'language-javascript';
-                    break;
-                case 'bat':
-                    lan = 'language-bash';
-                    break;
-                case 'xml':
-                    lan = 'language-xml';
-                    break;
-                case 'tcl':
-                    lan = 'language-tcl';
-                    break;
-                case 'ini':
-                    lan = 'language-ini';
-                    break;
-                case 'md':
-                    lan = 'language-markdown';
-                    break;
-                case 'vbs':
-                    lan = 'language-vbscript';
-                    break;
-            }
-
-            var pre_el = $('.article_content').find('pre');
-            if(pre_el){
-                $(pre_el).remove();
-            }
-
-            $('.article_content').append('<pre><code class="'+lan+'">'+data+'</code></pre>');
-            $('.time_line').find('span').text(selNodePath);
-            $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-        }
-
-        /** 将text中的html字符转义， 仅转义  ', ", <, > 四个字符
-        * @param  { String } str 需要转义的字符串
-       * @returns { String }     转义后的字符串
-       */
-      function unhtml(str) {
-          return str ? str.replace(/[<">']/g, (a) => {
-              return {
-                  '<': '&lt;',
-                  '"': '&quot;',
-                 '>': '&gt;',
-                 "'": '&#39;'
-             }[a]
-         }) : '';
-     }
-
-        function zTreeOnClick(event, treeId, treeNode) {
-            if (treeNode.isParent) {
-                return false;
-            }
-            {#alert(treeNode.tId + ", " + treeNode.name);#}
-        }
-
-		function filter(treeId, parentNode, childNodes) {
-		    {#alert('1111111');#}
-			if (!childNodes) return null;
-			for (var i=0, l=childNodes.length; i<l; i++) {
-				childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+			function treeNodePath(treeId, treeNode) {
+				//console.log(treeNode);
+				var path = null;
+				if(treeNode) {
+					path = treeNode.path;
+				} else {
+					path = 'E:\\MyGitHubProject';
+				}
+				return {
+					'fpath': path,
+					'type': 'all'
+				};
 			}
-			return childNodes;
-		}
 
-		$(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting);
+			function zTreeOnDblClick(event, treeId, treeNode) {
+				//console.log(treeNode.getPath());
+				//alert(treeNode ? treeNode.tId + ", " + treeNode.name + ", " + treeNode.getPath() : 'isRoot');
+				if(treeNode && !treeNode.isParent) {
+					var path = treeNode.path;
+					var suffix_name = getFileNameSuffix(treeNode.name);
+					switch(suffix_name.toLowerCase()) {
+						case 'png':
+						case 'jpg':
+						case 'bmp':
+						case 'gif':
+						case 'jpeg':
+						case 'png':
+						case 'pdf':
+						case 'sqlite3':
+							break;
+						default:
+							var selNodePath = '';
+							var nodes = treeNode.getPath();
+							for(i in nodes) {
+								selNodePath += nodes[i].name + ' / ';
+							}
+							readFile(path, treeNode.name, selNodePath.substring(0, selNodePath.length - 2));
+					}
+				}
+			};
 
-		});
-		//-->
+			function getFileNameSuffix(name) {
+				var arr = name.split('.');
+				var suffix_name = arr[arr.length - 1];
+				return suffix_name;
+			}
 
-        hljs.initHighlightingOnLoad();
+			/** 读取文件内容
+			 *  path: 文件在硬盘位置的路径
+			 *  selNodePath: 当前选中的节点在目录树结构中的位置路径
+			 *  name: 节点名称
+			 */
+			function readFile(path, name, selNodePath) {
+				$.ajax({
+					url: '../readFile/',
+					data: {
+						fpath: path
+					},
+					dataType: 'json',
+					type: 'post',
+					success: function(ret) {
+						//console.log(ret);
+						if(ret.status) {
+							pasrseData(ret.data, name, selNodePath);
+						} else {
+							alert(ret.data);
+						}
+					}
+				});
+			}
 
-	</SCRIPT>
-</HEAD>
+			function pasrseData(data, name, selNodePath) {
+				var suffix_name = getFileNameSuffix(name);
+				var lan = 'no-highlight';
 
-<BODY>
+				switch(suffix_name) {
+					case 'html':
+						lan = 'language-html';
+						data = unhtml(data);
+						break;
+					case 'py':
+						lan = 'language-python';
+						break;
+					case 'css':
+						lan = 'language-css';
+						break;
+					case 'js':
+						lan = 'language-javascript';
+						break;
+					case 'bat':
+						lan = 'language-bash';
+						break;
+					case 'xml':
+						lan = 'language-xml';
+						break;
+					case 'tcl':
+						lan = 'language-tcl';
+						break;
+					case 'ini':
+						lan = 'language-ini';
+						break;
+					case 'md':
+						lan = 'language-markdown';
+						break;
+					case 'vbs':
+						lan = 'language-vbscript';
+						break;
+				}
 
-<div class="nav">
+				var pre_el = $('.article_content').find('pre');
+				if(pre_el) {
+					$(pre_el).remove();
+				}
 
-			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png"/></a>
+				$('.article_content').append('<pre><code class="' + lan + '">' + data + '</code></pre>');
+				$('.time_line').find('span').text(selNodePath);
+				$('pre code').each(function(i, e) {
+					hljs.highlightBlock(e)
+				});
+			}
 
-{#			<div class="addblogDiv">#}
-{#				<a href="../articleEdit/" target="_self"></a>#}
-{#			</div>#}
+			/** 将text中的html字符转义， 仅转义  ', ", <, > 四个字符
+			 * @param  { String } str 需要转义的字符串
+			 * @returns { String }     转义后的字符串
+			 */
+			function unhtml(str) {
+				return str ? str.replace(/[<">']/g, (a) => {
+					return {
+						'<': '&lt;',
+						'"': '&quot;',
+						'>': '&gt;',
+						"'": '&#39;'
+					}[a]
+				}) : '';
+			}
+
+			function zTreeOnClick(event, treeId, treeNode) {
+				if(treeNode.isParent) {
+					return false;
+				}
+				//alert(treeNode.tId + ", " + treeNode.name);
+			}
+
+			function filter(treeId, parentNode, childNodes) {
+				//alert('1111111');//
+				if(!childNodes) return null;
+				for(var i = 0, l = childNodes.length; i < l; i++) {
+					childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+				}
+				return childNodes;
+			}
+
+			$(document).ready(function() {
+				$.fn.zTree.init($("#treeDemo"), setting);
+
+			});
+			//-->
+
+			hljs.initHighlightingOnLoad();
+		</SCRIPT>
+	</HEAD>
+
+	<BODY>
+
+		<div class="nav">
+
+			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png" /></a>
+
+			<!--<div class="addblogDiv">
+				<a href="../articleEdit/" target="_self"></a>
+			</div>-->
 
 			<div class="searchInput">
-{#                <select class="searchType">#}
-{#                    <option value="1" selected>标题</option>#}
-{#                    <option value="2">分类</option>#}
-{#                    <option value="3">标签</option>#}
-{#                </select>#}
+				<!--<select class="searchType">
+                    <option value="1" selected>标题</option>
+                    <option value="2">分类</option>
+                    <option value="3">标签</option>
+                </select>
 
-{#				<input placeholder="搜索框"/>#}
-{#				<button class="searhBtn">搜索</button>#}
+				<input placeholder="搜索框"/>
+				<button class="searhBtn">搜索</button>-->
 			</div>
 			<ul>
-				<li><a href="../">笔记</a></li>
-				<li><a href="../bookMark/p/">书签</a></li>
-				<li><a href="./" style="border-bottom: 2px solid red;">文档</a></li>
-				<li><a href="../videoPlay/">视频</a></li>
+				<li>
+					<a href="../">笔记</a>
+				</li>
+				<li>
+					<a href="../bookMark/p/">书签</a>
+				</li>
+				<li>
+					<a href="./" style="border-bottom: 2px solid red;">文档</a>
+				</li>
+				<li>
+					<a href="../videoPlay/">视频</a>
+				</li>
 			</ul>
 		</div>
 		<div class="main">
 			<div class="content clearfix1">
 				<div class="leftContent">
-                    <!-- 用户信息 -->
+					<!-- 用户信息 -->
 					<div class="banner">
-                        {% for u in userinfo %}
-                            <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
-                                <h4>{{ u.uname }}</h4>
-                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
-						    </div>
-                        {% endfor %}
+						{% for u in userinfo %}
+							<div class="uinfoDiv clearfix">
+								<div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
+								<h4>{{ u.uname }}</h4>
+								<p class="chickenSoup">{{ u.chickenSoup }}</p>
+							</div>
+						{% endfor %}
 					</div>
-                    <ul id="treeDemo" class="ztree"></ul>
+					<ul id="treeDemo" class="ztree"></ul>
 				</div>
 				<div class="rightContent">
-                    <!-- 面包屑 -->
-                    <div class="time_line">
-                        <p> <strong> >> </strong> <span>Root</span></p>
-                    </div>
-                    <div class="article_content">
+					<!-- 面包屑 -->
+					<div class="time_line">
+						<p> <strong> >> </strong> <span>Root</span></p>
+					</div>
+					<div class="article_content">
 
-                    </div>
+					</div>
 				</div>
 			</div>
 
 		</div>
-</BODY>
+	</BODY>
+
 </HTML>

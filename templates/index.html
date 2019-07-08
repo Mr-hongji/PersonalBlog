@@ -1,234 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="../static/css/index.css?rn=11"/>
-        <script src="../static/js/jquery.js"></script>
-        {% load  CustomFilter %}
+		<link rel="stylesheet" href="../static/css/index.css?rn=11" />
+		<script src="../static/js/jquery.js"></script>
+		{% load CustomFilter %}
 
-        <script>
-            var old_type = 'all';
-            window.onload=function(){
-                var type = 'all';
-                loadMore(type, null, 0, null);
-            };
+		<script>
+			var old_type = 'all';
+			window.onload = function() {
+				var type = 'all';
+				loadMore(type, null, 0, null);
+			};
 
-            /*
-            * @param type 查询类型
-            *   classify: 按分类查询或查询全部
-            *   tag: 按标签查询
-            *   all: 查询全部
-            *
-            * @param type_id 查询类型的id（比如分类id， 标签id）
-            *
-            *@param pgnum 当前第几页
-             *  */
-            function loadMore(type, type_id, pgnum, name=null, eventType=null){
+			/*
+			 * @param type 查询类型
+			 *   classify: 按分类查询或查询全部
+			 *   tag: 按标签查询
+			 *   all: 查询全部
+			 *
+			 * @param type_id 查询类型的id（比如分类id， 标签id）
+			 *
+			 *@param pgnum 当前第几页
+			 *  */
+			function loadMore(type, type_id, pgnum, name = null, eventType = null) {
 
-                var load_over = '已加载到最后';
-                var click_load_more = '点击加载更多';
-                var no_data = '暂无文章';
+				var load_over = '已加载到最后';
+				var click_load_more = '点击加载更多';
+				var no_data = '暂无文章';
 
-                changeTimeLine(type, name);
+				changeTimeLine(type, name);
 
-                //如果加载数据的 当前type 不等于 上一次的type（oldType）
-                //并且不是点击loadMore按钮触发的事件
-                if(old_type != type || eventType != 'loadMoreEvent'){
-                    $('.articlesDiv').children().remove();
-                    updateLoadMoreBtnContent('');
-                }
+				//如果加载数据的 当前type 不等于 上一次的type（oldType）
+				//并且不是点击loadMore按钮触发的事件
+				if(old_type != type || eventType != 'loadMoreEvent') {
+					$('.articlesDiv').children().remove();
+					updateLoadMoreBtnContent('');
+				}
 
-                if($('.rightContent').find('.load_more').find('a').text() == load_over){
-                    return;
-                }
+				if($('.rightContent').find('.load_more').find('a').text() == load_over) {
+					return;
+				}
 
-                old_type = type;
+				old_type = type;
 
-                type_id = type_id?type_id:'';
-                var req_url = 'articles/'+type+'/' + type_id;
-                //console.log(req_url);
-                $.ajax({
-                    url:req_url,
-                    data:{pgnum:pgnum},
-                    dataType:'json',
-                    success:function (data) {
-                        var type = data.type;
-                        var type_id = data.id;
-                        var pgnum = data.pgnum;
-                        var article_data = JSON.parse(data.data);
-                        //console.log(old_type, type, eventType);
+				type_id = type_id ? type_id : '';
+				var req_url = 'articles/' + type + '/' + type_id;
+				//console.log(req_url);
+				$.ajax({
+					url: req_url,
+					data: {
+						pgnum: pgnum
+					},
+					dataType: 'json',
+					success: function(data) {
+						var type = data.type;
+						var type_id = data.id;
+						var pgnum = data.pgnum;
+						var article_data = JSON.parse(data.data);
+						//console.log(old_type, type, eventType);
 
+						if(article_data) {
+							$(article_data).each(function(index, item) {
+								if(item && item.fields) {
+									var tags_str = '';
+									var arr_tags = item.fields.tag;
+									for(i in arr_tags) {
+										tags_str += arr_tags[i].name + ' ';
+									}
+									var date_str = strFormat2Date(item.fields.createTime);
+									var summery_str = item.fields.content.replace(/<\/?.+?>/g, "").replace(/ /g, "").substring(0, 300) + '...';
 
-                        if(article_data){
-                            $(article_data).each(function(index,item){
-                                if(item && item.fields){
-                                    var tags_str='';
-                                    var arr_tags = item.fields.tag;
-                                    for (i in arr_tags){
-                                        tags_str += arr_tags[i].name +' ';
-                                    }
-                                    var date_str = strFormat2Date(item.fields.createTime);
-                                   var summery_str = item.fields.content.replace(/<\/?.+?>/g,"").replace(/ /g,"").substring(0,300) + '...';
+									article_str = '<div class="article"><p class="blog_op"><a href="articleEdit/' + item.pk + '" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/' + item.pk + '" target="_blank">' + item.fields.title + '</a></h4><p class="articleSummery"><a href="article/' + item.pk + '" target="_blank">' + summery_str + '</a></p><div class="article_info"><span>发布时间: ' + date_str + ' &nbsp;&nbsp;&nbsp;分类: ' + item.fields.classify.name + ' &nbsp;&nbsp;&nbsp;标签: ' + tags_str + '</span></div></div>';
+								}
 
-                                    article_str = '<div class="article"><p class="blog_op"><a href="articleEdit/'+ item.pk +'" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/'+item.pk+'" target="_blank">'+ item.fields.title +'</a></h4><p class="articleSummery"><a href="article/'+item.pk+'" target="_blank">'+ summery_str +'</a></p><div class="article_info"><span>发布时间: '+ date_str +' &nbsp;&nbsp;&nbsp;分类: '+ item.fields.classify.name +' &nbsp;&nbsp;&nbsp;标签: '+ tags_str +'</span></div></div>';
-                                }
+								$('.articlesDiv').append(article_str);
+							});
+							//console.log(article_data.length);
+							var el_a = $('.rightContent').find('.load_more').find('a');
+							if(article_data.length < 10) {
+								if(pgnum == 1 && article_data.length == 0) {
+									updateLoadMoreBtnContent(no_data);
+								} else {
+									updateLoadMoreBtnContent(load_over);
+								}
+								$(el_a).removeAttr("onclick");
+							} else {
+								$(el_a).attr("onclick", "loadMore('" + type + "','" + type_id + "','" + pgnum + "'," + name + ",'loadMoreEvent')");
+								updateLoadMoreBtnContent(click_load_more);
+							}
+						}
 
-                                 $('.articlesDiv').append(article_str);
-                            });
-                            //console.log(article_data.length);
-                            var el_a = $('.rightContent').find('.load_more').find('a');
-                            if(article_data.length < 10){
-                                if(pgnum == 1 && article_data.length == 0){
-                                    updateLoadMoreBtnContent(no_data);
-                                }
-                                else{
-                                    updateLoadMoreBtnContent(load_over);
-                                }
-                                $(el_a).removeAttr("onclick");
-                            }else{
-                                $(el_a).attr("onclick","loadMore('"+type+"','"+type_id+"','"+pgnum+"',"+name+",'loadMoreEvent')");
-                                updateLoadMoreBtnContent(click_load_more);
-                            }
-                        }
+					}
+				})
+			}
 
-                    }
-                })
-            }
-            function strFormat2Date(str){
-                var datetime = new Date(str);
-                var year = datetime.getFullYear();
-                var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-                var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-                var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-                var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-                var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-                return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
-            }
+			function strFormat2Date(str) {
+				var datetime = new Date(str);
+				var year = datetime.getFullYear();
+				var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+				var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+				var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+				var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+				var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+			}
 
-            function getArticlesByClassify( id, name){
-                var type = 'classify';
-                 updateLoadMoreBtnContent('');
-                loadMore(type, id , 0, name);
+			function getArticlesByClassify(id, name) {
+				var type = 'classify';
+				updateLoadMoreBtnContent('');
+				loadMore(type, id, 0, name);
 
-            }
+			}
 
-            function  getArticlesByTag( id, name) {
-                var type = 'tag';
-                updateLoadMoreBtnContent('');
-                loadMore(type, id , 0, name);
+			function getArticlesByTag(id, name) {
+				var type = 'tag';
+				updateLoadMoreBtnContent('');
+				loadMore(type, id, 0, name);
 
-            }
+			}
 
-            function updateLoadMoreBtnContent(value){
-                 $('.rightContent').find('.load_more').find('a').text(value);
-            }
+			function updateLoadMoreBtnContent(value) {
+				$('.rightContent').find('.load_more').find('a').text(value);
+			}
 
-            function changeTimeLine(type, name){
-                var el_p = $('.time_line').find('p');
-                var el_span = $(el_p).find('span');
-                if(el_span){
-                    $(el_span).remove();
-                }
-                 if(type != 'all'){
-                     if(type == 'classify'){
-                         type = '文章分类';
-                     }
-                     if(type == 'tag'){
-                        type = '文章标签';
-                     }
-                    $(el_p).append('<span> > '+type+' > '+name+'</span>');
-                }
-            }
-        </script>
+			function changeTimeLine(type, name) {
+				var el_p = $('.time_line').find('p');
+				var el_span = $(el_p).find('span');
+				if(el_span) {
+					$(el_span).remove();
+				}
+				if(type != 'all') {
+					if(type == 'classify') {
+						type = '文章分类';
+					}
+					if(type == 'tag') {
+						type = '文章标签';
+					}
+					$(el_p).append('<span> > ' + type + ' > ' + name + '</span>');
+				}
+			}
+		</script>
 	</head>
+
 	<body>
 		<div class="nav">
-			
-            <a href="../blog/" target="_self"><img class="blogimg" src="../static/images/blog_icon.png"/></a>
-			
 
-			
+			<a href="../blog/" target="_self"><img class="blogimg" src="../static/images/blog_icon.png" /></a>
+
 			<div class="searchInput">
-{#                <select class="searchType">#}
-{#                    <option value="1" selected>标题</option>#}
-{#                    <option value="2">分类</option>#}
-{#                    <option value="3">标签</option>#}
-{#                </select>#}
+				<!--<select class="searchType">
+                    <option value="1" selected>标题</option>
+                    <option value="2">分类</option>
+                    <option value="3">标签</option>
+                </select>#}
 
-{#				<input placeholder="搜索框"/>#}
-{#				<button class="searhBtn">搜索</button>#}
+				<input placeholder="搜索框"/>
+				<button class="searhBtn">搜索</button>-->
 			</div>
-			
+
 			<ul>
-				<li><a href="./" style="border-bottom: 2px solid red;">笔记</a></li>
-				<li><a href="./bookMark/p/">书签</a></li>
-				<li><a href="./async/">文档</a></li>
-				<li><a href="./videoPlay/">视频</a></li>
+				<li>
+					<a href="./" style="border-bottom: 2px solid red;">笔记</a>
+				</li>
+				<li>
+					<a href="./bookMark/p/">书签</a>
+				</li>
+				<li>
+					<a href="./async/">文档</a>
+				</li>
+				<li>
+					<a href="./videoPlay/">视频</a>
+				</li>
 			</ul>
-			
-			
+
 		</div>
 		<div class="main">
 			<div class="content">
 				<div class="leftContent">
-                    <!-- 用户信息 -->
+					<!-- 用户信息 -->
 					<div class="banner">
-                        {% for u in userinfo %}
-                            <div class="uinfoDiv clearfix">
-                                <div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
-                                <h4>{{ u.uname }}</h4>
-                                <p class="chickenSoup">{{ u.chickenSoup }}</p>
-						    </div>
-                        {% endfor %}
+						{% for u in userinfo %}
+						<div class="uinfoDiv clearfix">
+							<div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
+							<h4>{{ u.uname }}</h4>
+							<p class="chickenSoup">{{ u.chickenSoup }}</p>
+						</div>
+						{% endfor %}
 					</div>
 					<!-- 时间 -->
 					<div class="calendarDiv">
-						<iframe class="clockFrame" scrolling="no"
-							 src="clock.html" style="width: 255px;height: 100px">
+						<iframe class="clockFrame" scrolling="no" src="clock.html" style="width: 255px;height: 100px">
 						</iframe>
 					</div>
 					<!-- 文章分类 -->
 					<div class="articleClassify">
 						<h4>分类</h4>
 						<ul>
-                            {% for c in classify %}
-                                <li><a href="javascript:void(0);" onclick="getArticlesByClassify({{ c.id }}, {{ c.name }})">{{ c.name }}</a></li>
-                            {% endfor %}
+							{% for c in classify %}
+							<li>
+								<a href="javascript:void(0);" onclick="getArticlesByClassify({{ c.id }}, {{ c.name }})">{{ c.name }}</a>
+							</li>
+							{% endfor %}
 
 						</ul>
 					</div>
-                    <!--  文章标签  -->
+					<!--  文章标签  -->
 					<div class="articleTag articleClassify">
 						<h4>标签</h4>
 						<ul>
-							 {% for t in tag %}
-                                <li><a href="#" onclick="getArticlesByTag({{ t.id }}, {{ t.name }})">{{ t.name }}</a></li>
-                            {% endfor %}
+							{% for t in tag %}
+							<li>
+								<a href="#" onclick="getArticlesByTag({{ t.id }}, {{ t.name }})">{{ t.name }}</a>
+							</li>
+							{% endfor %}
 						</ul>
 					</div>
 				</div>
 				<div class="rightContent">
-                    <!-- 面包屑 -->
-                    <div class="time_line">
-                        <p><a href="javascript:void(0)" onclick="loadMore('all',null, 0)">全部文章</a></p>
-                    </div>
-                    <div class="addblogDiv">
-				        <!--<img src="images/blog_add.png" />-->
-				        <a href="articleEdit/" target="_blank" title="添加文章"></a>
-			        </div>
-                    <!-- 文章 -->
-                    <div class="articlesDiv">
+					<!-- 面包屑 -->
+					<div class="time_line">
+						<p>
+							<a href="javascript:void(0)" onclick="loadMore('all',null, 0)">全部文章</a>
+						</p>
+					</div>
+					<div class="addblogDiv">
+						<!--<img src="images/blog_add.png" />-->
+						<a href="articleEdit/" target="_blank" title="添加文章"></a>
+					</div>
+					<!-- 文章 -->
+					<div class="articlesDiv">
 
-                    </div>
-                    <p class="load_more"><a href="javascript:void(0)"></a></p>
+					</div>
+					<p class="load_more">
+						<a href="javascript:void(0)"></a>
+					</p>
 				</div>
 			</div>
 
 			<!--<div class="footer">
 				<p class="Copyright">Copyright &copy;2019 &nbsp; www.xiaohong.com</p>
-				
+
 			</div>-->
 		</div>
 	</body>
+
 </html>
