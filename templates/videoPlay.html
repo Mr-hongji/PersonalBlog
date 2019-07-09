@@ -6,24 +6,24 @@
 		<title></title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
-		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
-		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
 		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
 		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
 		<link rel="stylesheet" href="/static/css/video_play.css?rn=111" />
-
-		<script src="/static/js/jquery.js"></script>
+        <script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
+        <script src="/static/js/jquery.js"></script>
+        <script src="/static/js/settings.js"></script>
 		{% load CustomFilter %}
 
 		<script>
-			var root_p = 'F:\\视频'; //根目录
+
 			window.onload = function() {
-				showFiles();
+				showFiles(null);
 			}
 
 			function showFiles(path) {
 				if(!path) {
-					path = root_p;
+					path = video_root_path;
 				}
 
 				$.ajax({
@@ -61,11 +61,11 @@
 
 			function parseTimeLine(path) {
 				var el_a = '';
-				if(path == root_p) {
-					//el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ root_p +'\', \'folder\')">root</a>' + '/';#}
+				if(path == video_root_path) {
+					//el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ video_root_path +'\', \'folder\')">root</a>' + '/';#}
 					el_a += 'root/';
 				} else {
-					path = path.replace(root_p, 'root');
+					path = path.replace(video_root_path, 'root');
 					var paths = path.split('\\');
 					if(paths) {
 						for(var i = 0; i < paths.length - 1; i++) {
@@ -76,7 +76,7 @@
 								el_a_href += paths[n] + "\\\\";
 							}
 							//console.log(el_a_href);
-							el_a_href = el_a_href.replace('root', root_p.replace(/\\/g, '\\\\'));
+							el_a_href = el_a_href.replace('root', video_root_path.replace(/\\/g, '\\\\'));
 							el_a_href = el_a_href.substring(0, el_a_href.length - 2);
 							el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
 						}
