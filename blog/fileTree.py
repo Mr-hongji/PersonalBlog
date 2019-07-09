@@ -34,18 +34,32 @@ def list_dir(file_dir, type):
 
     return (json.dumps(ret))
 
-
+import chardet
 def readFile(path):
     ret = {'status':None, 'data':None, 'path':path}
     if path:
-        with open(path, 'r', encoding='UTF-8') as f:
-            ret['data'] = f.read()
-        ret['status'] = 1
+        try:
+            with open(path, 'rb') as f:
+                data = f.read();
+                if data:
+                    encoding_format = chardet.detect(data).get("encoding")  # 获取文件的编码格式
+                    data = data.decode(encoding_format)
+                else:
+                    data = ""
+
+                print(data)
+                ret['status'] = 1
+                ret['data'] = data
+        except:
+            ret['status'] = 0
+            ret['data'] = '文件读取失败'
+
     else:
         ret['status'] = 0
-        ret['data'] = '文件读取失败'
+        ret['data'] = '文件路径错误'
 
     return json.dumps(ret)
+
 
 
 # if __name__ == '__main__':

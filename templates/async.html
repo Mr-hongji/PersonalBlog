@@ -45,30 +45,27 @@
 				};
 			}
 
+            var allow_extensions = {'html':'html', 'py':'py', 'css':'css', 'js':'js', 'bat':'bat', 'xml':'xml', 'mxml':'mxml', 'tcl':'tcl', 'ini':'ini', 'md':'md', 'vbs':'vbs', 'as':'as', 'json':'json', 'php':'php', 'java':'java', 'jsp':'jsp'};
+
+			var notAllow_extensions = ['png', 'jpg', 'bmp', 'gif', 'jpeg', 'png', 'pdf', 'sqlite3', 'dll', 'exe', 'swf', 'tmp', 'vch', 'lib', 'rar', 'zip'];
 			function zTreeOnDblClick(event, treeId, treeNode) {
 				//console.log(treeNode.getPath());
 				//alert(treeNode ? treeNode.tId + ", " + treeNode.name + ", " + treeNode.getPath() : 'isRoot');
 				if(treeNode && !treeNode.isParent) {
 					var path = treeNode.path;
-					var suffix_name = getFileNameSuffix(treeNode.name);
-					switch(suffix_name.toLowerCase()) {
-						case 'png':
-						case 'jpg':
-						case 'bmp':
-						case 'gif':
-						case 'jpeg':
-						case 'png':
-						case 'pdf':
-						case 'sqlite3':
-							break;
-						default:
-							var selNodePath = '';
-							var nodes = treeNode.getPath();
-							for(i in nodes) {
-								selNodePath += nodes[i].name + ' / ';
-							}
-							readFile(path, treeNode.name, selNodePath.substring(0, selNodePath.length - 2));
-					}
+					var suffix_name = getFileNameSuffix(treeNode.name).toLowerCase();
+                    //alert(allow_extensions[suffix_name]);
+
+					if(!allow_extensions[suffix_name]){
+                        alert('无法打开' + suffix_name + '类型文件');
+                    }else {
+                        var selNodePath = '';
+                        var nodes = treeNode.getPath();
+                        for (i in nodes) {
+                            selNodePath += nodes[i].name + ' / ';
+                        }
+                        readFile(path, treeNode.name, selNodePath.substring(0, selNodePath.length - 2));
+                    }
 				}
 			};
 
@@ -106,8 +103,9 @@
 				var suffix_name = getFileNameSuffix(name);
 				var lan = 'no-highlight';
 
-				switch(suffix_name) {
+				switch(suffix_name.toLowerCase()) {
 					case 'html':
+					case 'jsp':
 						lan = 'language-html';
 						data = unhtml(data);
 						break;
@@ -124,13 +122,15 @@
 						lan = 'language-bash';
 						break;
 					case 'xml':
+                    case 'mxml':
 						lan = 'language-xml';
+						data = unhtml(data);
 						break;
 					case 'tcl':
 						lan = 'language-tcl';
 						break;
 					case 'ini':
-						lan = 'language-ini';
+						lan = 'language-INI';
 						break;
 					case 'md':
 						lan = 'language-markdown';
@@ -138,12 +138,28 @@
 					case 'vbs':
 						lan = 'language-vbscript';
 						break;
+                   //
+                    case 'as':
+                        lan = 'language-ActionScript';
+                        break;
+                    case 'json':
+                        lan = 'language-json';
+                        break;
+                    case 'php':
+                        lan = 'language-php';
+                        break;
+                    case 'java':
+                        lan = 'language-java';
+                        break;
+
 				}
 
 				var pre_el = $('.article_content').find('pre');
 				if(pre_el) {
 					$(pre_el).remove();
 				}
+
+
 
 				$('.article_content').append('<pre><code class="' + lan + '">' + data + '</code></pre>');
 				$('.time_line').find('span').text(selNodePath);
@@ -157,14 +173,18 @@
 			 * @returns { String }     转义后的字符串
 			 */
 			function unhtml(str) {
-				return str ? str.replace(/[<">']/g, (a) => {
-					return {
-						'<': '&lt;',
-						'"': '&quot;',
-						'>': '&gt;',
-						"'": '&#39;'
-					}[a]
-				}) : '';
+			    if(str){
+			        return str ? str.replace(/[<">']/g, (a) => {
+                        return {
+                            '<': '&lt;',
+                            '"': '&quot;',
+                            '>': '&gt;',
+                            "'": '&#39;'
+                        }[a]
+				    }) : '';
+                }else{
+			        return str;
+                }
 			}
 
 			function zTreeOnClick(event, treeId, treeNode) {
