@@ -8,16 +8,34 @@ ul,li{
     /*background-color: #0f74a8;*/
 
 }
-.articleDiv h2{
+.articleDiv h3{
     margin-top: 10px;
     margin-left: 15px;
 }
-.articleDiv p{
-    padding: 15px 0px;
+
+.articleDiv > p{
     border-bottom: 1px #d4d4d4 solid;
+    padding: 15px 0px;
     color: #858585;
+    font-size: 12px;
 }
+
 .article_content{
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.articleDiv .editBtn{
+    float: right;
+    margin-right: 10px;
+    margin-top: 40px;
+}
+
+.articleDiv .editBtn a{
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.articleDiv .editBtn a:hover{
+    color: red;
 }

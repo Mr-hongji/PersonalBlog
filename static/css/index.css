@@ -385,23 +385,18 @@ p{
 	margin-top: 5px;
 }
 
-.blog_op .blog_edit,
 .blog_op .blog_del{
-	width: 20px;
-	height: 20px;
+	width: 25px;
+	height: 25px;
 	display: inline-block;
 } 
 
-.blog_op .blog_edit:hover,
 .blog_op .blog_del:hover{
-	opacity: 0.6;
-}
-.blog_op .blog_edit{
-	background: url(../images/blog_edit.png) no-repeat;
+	border: 1px #4f4f4f solid;
 }
 
 .blog_op .blog_del{
-	background: url(../images/blog_del.png) no-repeat;
+	background: url(../images/del_article.png) no-repeat;
 	margin-left: 5px;
 }
 

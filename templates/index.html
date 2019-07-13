@@ -30,6 +30,7 @@
 				var load_over = '已加载到最后';
 				var click_load_more = '点击加载更多';
 				var no_data = '暂无文章';
+				var uid = $(".uinfoDiv").attr("uid");
 
 				changeTimeLine(type, name);
 
@@ -52,7 +53,8 @@
 				$.ajax({
 					url: req_url,
 					data: {
-						pgnum: pgnum
+						pgnum: pgnum,
+                        uid: uid
 					},
 					dataType: 'json',
 					success: function(data) {
@@ -73,7 +75,7 @@
 									var date_str = strFormat2Date(item.fields.createTime);
 									var summery_str = item.fields.content.replace(/<\/?.+?>/g, "").replace(/ /g, "").substring(0, 300) + '...';
 
-									article_str = '<div class="article"><p class="blog_op"><a href="articleEdit/' + item.pk + '" class="blog_edit" target="_blank"></a></p><h4 class="articleTitle"><a href="article/' + item.pk + '" target="_blank">' + item.fields.title + '</a></h4><p class="articleSummery"><a href="article/' + item.pk + '" target="_blank">' + summery_str + '</a></p><div class="article_info"><span>发布时间: ' + date_str + ' &nbsp;&nbsp;&nbsp;分类: ' + item.fields.classify.name + ' &nbsp;&nbsp;&nbsp;标签: ' + tags_str + '</span></div></div>';
+									article_str = '<div class="article" articleid="'+item.pk+'"><p class="blog_op"><a href="javascript:void(0);" class="blog_del" target="_blank" onclick="delArticle('+item.pk+')"></a></p><h4 class="articleTitle"><a href="article/'+uid+'/'+item.pk+'" target="_blank">' + item.fields.title + '</a></h4><p class="articleSummery"><a href="article/'+uid+'/'+item.pk+'" target="_blank">' + summery_str + '</a></p><div class="article_info"><span>发布时间: ' + date_str + ' &nbsp;&nbsp;&nbsp;分类: ' + item.fields.classify.name + ' &nbsp;&nbsp;&nbsp;标签: ' + tags_str + '</span></div></div>';
 								}
 
 								$('.articlesDiv').append(article_str);
@@ -97,6 +99,21 @@
 				})
 			}
 
+			function delArticle(pk){
+			    $.ajax({
+                    url: "delArticle/" + pk,
+                    type: "Get",
+                    dataType: "json",
+                    success:function (args) {
+                        //console.log(args);
+                        alert(args.message);
+                        if(args.status){
+                            $(".articlesDiv").find(".article[articleid='"+args.article+"']").remove();
+                        }
+                    }
+                });
+            }
+
 			function strFormat2Date(str) {
 				var datetime = new Date(str);
 				var year = datetime.getFullYear();
@@ -110,7 +127,9 @@
 
 			function getArticlesByClassify(id, name) {
 				var type = 'classify';
+				//console.log(id, name);
 				updateLoadMoreBtnContent('');
+				//console.log(id, name);
 				loadMore(type, id, 0, name);
 
 			}
@@ -163,16 +182,16 @@
 
 			<ul>
 				<li>
-					<a href="./" style="border-bottom: 2px solid red;">笔记</a>
+					<a href="./?uid={{ userinfo.uid }}" style="border-bottom: 2px solid red;">笔记</a>
 				</li>
 				<li>
-					<a href="./bookMark/p/">书签</a>
+					<a href="./bookMark/p/?uid={{ userinfo.uid }}">书签</a>
 				</li>
 				<li>
-					<a href="./async/">文档</a>
+					<a href="./async/?uid={{ userinfo.uid }}">文档</a>
 				</li>
 				<li>
-					<a href="./videoPlay/">视频</a>
+					<a href="./videoPlay/?uid={{ userinfo.uid }}">视频</a>
 				</li>
 			</ul>
 
@@ -182,13 +201,13 @@
 				<div class="leftContent">
 					<!-- 用户信息 -->
 					<div class="banner">
-						{% for u in userinfo %}
-						<div class="uinfoDiv clearfix">
-							<div class="uhead" style="background: url('../{{ u.img }}') no-repeat center;"></div>
-							<h4>{{ u.uname }}</h4>
-							<p class="chickenSoup">{{ u.chickenSoup }}</p>
+						<div class="uinfoDiv clearfix" uid="{{ userinfo.uid }}">
+							<div class="uhead">
+                                <img src="{{ userinfo.headImg_48x48 }}">
+                            </div>
+							<h4>{{ userinfo.uname }}</h4>
+							<p class="chickenSoup">{{ userinfo.chickenSoup }}</p>
 						</div>
-						{% endfor %}
 					</div>
 					<!-- 时间 -->
 					<div class="calendarDiv">
@@ -201,7 +220,7 @@
 						<ul>
 							{% for c in classify %}
 							<li>
-								<a href="javascript:void(0);" onclick="getArticlesByClassify({{ c.id }}, {{ c.name }})">{{ c.name }}</a>
+								<a href="javascript:void(0);" onclick="getArticlesByClassify({{ c.id }}, '{{ c.name }}')">{{ c.name }}</a>
 							</li>
 							{% endfor %}
 
@@ -213,7 +232,7 @@
 						<ul>
 							{% for t in tag %}
 							<li>
-								<a href="#" onclick="getArticlesByTag({{ t.id }}, {{ t.name }})">{{ t.name }}</a>
+								<a href="#" onclick="getArticlesByTag({{ t.id }}, '{{ t.name }}')">{{ t.name }}</a>
 							</li>
 							{% endfor %}
 						</ul>
@@ -228,7 +247,7 @@
 					</div>
 					<div class="addblogDiv">
 						<!--<img src="images/blog_add.png" />-->
-						<a href="articleEdit/" target="_blank" title="添加文章"></a>
+						<a href="articleEdit/?uid={{ userinfo.uid }}" target="_blank" title="添加文章"></a>
 					</div>
 					<!-- 文章 -->
 					<div class="articlesDiv">

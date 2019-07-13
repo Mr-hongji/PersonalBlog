@@ -28,14 +28,15 @@
 			};
 
 			function articleDetails(pk) {
+			    var uid = $(".uinfoDiv").attr("uid");
 				$.ajax({
-					url: '../articleDetails/',
+					url: '../../articleDetails/',
 					data: {
 						pk: pk
 					},
 					dataType: 'json',
 					success: function(data) {
-						console.log(data);
+						//console.log(data);
 						if(data) {
 							$(data).each(function(index, item) {
 								if(item && item.fields) {
@@ -46,7 +47,11 @@
 									}
 									var date_str = strFormat2Date(item.fields.createTime);
 
-									article_details_str = '<h2>' + item.fields.title + '</h2><p><span>' + date_str + ' 类别: ' + item.fields.classify.name + ' 标签: ' + tags_str + ' </span></p><div class="article_content">' + item.fields.content + '</div>';
+									article_details_str = '<div class="editBtn"><a href="../../articleEdit/?articleid=' + pk + '&uid='+uid+'">编辑</a></div><h3>' + item.fields.title + '</h3>' +
+                                        '<p>' +
+                                        '<span>' + date_str + ' &nbsp;&nbsp;类别: ' + item.fields.classify.name + ' &nbsp;&nbsp;标签: ' + tags_str + ' </span>' +
+                                        '</p>' +
+                                        '<div class="article_content">' + item.fields.content + '</div>';
 
 								}
 								$('.articleDiv').append(article_details_str);
@@ -89,16 +94,16 @@
 
 			<ul>
 				<li>
-					<a href="#">主页</a>
+					<a href="../../?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">笔记</a>
 				</li>
 				<li>
-					<a href="#">文章</a>
+					<a href="../../bookMark/p/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">书签</a>
 				</li>
 				<li>
-					<a href="#">收藏</a>
+					<a href="../../async/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">文档</a>
 				</li>
 				<li>
-					<a href="#">文件下载</a>
+					<a href="../../videoPlay/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">视频</a>
 				</li>
 			</ul>
 
@@ -108,17 +113,17 @@
 				<div class="leftContent">
 					<!-- 用户信息 -->
 					<div class="banner">
-						{% for u in userinfo %}
-							<div class="uinfoDiv clearfix">
-								<div class="uhead" style="background: url('/{{ u.img }}') no-repeat center;"></div>
-								<h4>{{ u.uname }}</h4>
-								<p class="chickenSoup">{{ u.chickenSoup }}</p>
-							</div>
-						{% endfor %}
+						<div class="uinfoDiv clearfix" uid="{{ userinfo.uid }}">
+							<div class="uhead">
+                                <img src="{{ userinfo.headImg_48x48 }}">
+                            </div>
+							<h4>{{ userinfo.uname }}</h4>
+							<p class="chickenSoup">{{ userinfo.chickenSoup }}</p>
+						</div>
 					</div>
 					<!-- 时间 -->
 					<div class="calendarDiv">
-						<iframe class="clockFrame" scrolling="no" src="../clock.html" style="width: 255px;height: 100px">
+						<iframe class="clockFrame" scrolling="no" src="../../clock.html" style="width: 255px;height: 100px">
 						</iframe>
 					</div>
 					<!-- 文章分类 -->

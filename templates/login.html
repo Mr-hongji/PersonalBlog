@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/login.css" />
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/plugins/imageCut/js/iscroll-zoom.js"></script>
+    <script src="/static/plugins/imageCut/js/hammer.js"></script>
+    <script src="/static/plugins/imageCut/js/lrz.all.bundle.js"></script>
+    <script src="/static/plugins/imageCut/js/jquery.photoClip.js"></script>
+
+
+    <script>
+        function showRegesitPage(){
+            $(".loginDiv").slideUp('fast');
+            $(".regustDiv").slideDown('fast');
+        }
+
+        function showLoginPage(){
+            $(".regustDiv").slideUp('fast');
+            $(".loginDiv").slideDown('fast');
+        }
+
+        window.onload = function() {
+            $('.loginInfoDiv').find('.verificationcode').find('img').attr("src", "../verifycode/?d="+new Date().getTime());
+            clip();
+        }
+
+        function loadVerifycode(){
+            $.ajax({
+                url: "../verifycode/",
+                type: "get",
+                success:function (args) {
+                    //console.log(args);
+                    $(".loginInfoDiv").find(".verificationcode").find("img").attr("src", args);
+                }
+            });
+        }
+
+    var headers = [];
+        function clip(){
+
+            $("#clipArea").photoClip({
+                size: [100, 100],
+                file: "#file",
+                ok: "#clipBtn",
+                view:"#imgcav",
+                rotaBtn:'#rotaBtn',
+                bigBtn:'#bigImg',
+                smallBtn:'#smallImg',
+                outputSize:[100, 100],
+                outputType: 'png',
+                loadStart: function() {
+                    console.log("照片读取中");
+                },
+                loadComplete: function() {
+                    console.log("照片读取完成");
+                },
+
+                clipFinish: function(dataURL) {
+
+                    headers.push(dataURL); //100x100 48x48 35x35
+                    //console.log(headers);
+                    var img = '<img src="'+dataURL+'">';
+                    //$('#uploadUserHeadDiv').html(img);
+                    $('.uploadUserHeadDiv').css('background','url("'+headers[0]+'") no-repeat  center');
+                    hideUploadHeadWeidget();
+                }
+            });
+        }
+
+        function opuploadHeadWediget(){
+            $('.headerCutDiv').css('display', 'inline-block');
+        }
+
+        function hideUploadHeadWeidget(){
+            $('.headerCutDiv').css('display', 'none');
+        }
+
+        function startRegistUser(){
+            //console.log($('.registInfoDiv').find('.uname').find('input'));
+            var uname = $('.registInfoDiv').find('.uname').find('input').val();
+            var upwd = $('.registInfoDiv').find('.passwd').find('input').val();
+            var uemail = $('.registInfoDiv').find('.email').find('input').val();
+            var uhead_100x100 = null;
+            var uhead_48x48 = null;
+            var uhead_35x35 = null;
+
+            if(!uname){
+                hideRegistInfoErrorTip('.registInfoDiv', '.uname', $('.registInfoDiv').find('.uname'));
+            }
+            if(!upwd){
+                hideRegistInfoErrorTip('.registInfoDiv', '.passwd', $('.registInfoDiv').find('.passwd'));
+            }
+            if(!uemail){
+                hideRegistInfoErrorTip('.registInfoDiv', '.email', $('.registInfoDiv').find('.email'));
+            }
+
+            if(!uname || !upwd || !uemail){
+                return;
+            }
+
+            var reqData = {uname:uname, upwd:upwd, uemail:uemail};
+            if(headers.length > 0){
+                uhead_100x100 = headers[0];
+                uhead_48x48 = headers[1];
+                uhead_35x35 = headers[2];
+                reqData = {uname:uname, upwd:upwd, uemail:uemail, uhead_100x100:uhead_100x100, uhead_48x48:uhead_48x48, uhead_35x35:uhead_35x35};
+            }
+
+            $.ajax({
+                url: "../registUser/",
+                data: reqData,
+                type: "POST",
+                dataType: "json",
+                success: function(args){
+                    //console.log(args);
+                    alert(args.message);
+                    if(args.status){
+                        showLoginPage();
+                    }
+                }
+            });
+        }
+
+        function unameInputValChanged_regist(el){
+            hideRegistInfoErrorTip('.registInfoDiv', '.uname', el);
+        }
+        function passwordInputValChanged_regist(el){
+            hideRegistInfoErrorTip('.registInfoDiv', '.passwd', el);
+        }
+        function emailInputValChanged_regist(el){
+            hideRegistInfoErrorTip('.registInfoDiv', '.email', el);
+        }
+
+        function hideRegistInfoErrorTip(parentElClassName, elClassName, el){
+            var displayState = "inline-block";
+            if($(el).val()){
+                displayState = "none";
+            }
+            //console.log($(el).val(), elClassName, $('.registInfoDiv').find(elClassName).find("span:last-child"), displayState);
+            $(parentElClassName).find(elClassName).find("span:last-child").css("display", displayState);
+        }
+
+        function startLogin(){
+            var uname = $('.loginInfoDiv').find('.uname').find('input').val();
+            var upwd = $('.loginInfoDiv').find('.passwd').find('input').val();
+            var verificationcode = $('.loginInfoDiv').find('.verificationcode').find('input').val();
+
+            if(!uname){
+                hideRegistInfoErrorTip('.loginInfoDiv', '.uname', $('.loginInfoDiv').find('.uname'));
+            }
+            if(!upwd){
+                hideRegistInfoErrorTip('.loginInfoDiv', '.passwd', $('.loginInfoDiv').find('.passwd'));
+            }
+            if(!verificationcode){
+                hideRegistInfoErrorTip('.loginInfoDiv', '.verificationcode', $('.loginInfoDiv').find('.verificationcode'));
+            }
+
+            if(!uname || !upwd || !verificationcode){
+                return;
+            }
+
+            $.ajax({
+                url: "../startLogin/",
+                data: {uname:uname, upwd:upwd, verificationcode:verificationcode},
+                type: "Post",
+                dataType: "json",
+                success:function (args) {
+                    console.log(args);
+                    if(args.status){
+                        window.location.href = "../?uid="+args.user.uid;
+                    }else{
+                        alert(args.message);
+                        $('.loginInfoDiv').find('.verificationcode').find('img').attr("src", "../verifycode/?d="+new Date().getTime());
+                    }
+                }
+            });
+        }
+
+        function keyLogin(){
+            if (event.keyCode==13){  //回车键的键值为13
+               startLogin();
+            }
+        }
+
+        function keyRegist(){
+            if (event.keyCode==13){  //回车键的键值为13
+               startRegistUser();
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="watermarkDiv"></div>
+    <div class="loginDiv" onkeydown="keyLogin()">
+
+        <a href="javascript:void(0);" class="showRegesitPage" onclick="showRegesitPage()">注册</a>
+
+        <div class="loginIcon"></div>
+        <div class="uLoginInfoDiv loginInfoDiv">
+            <div class="uname">
+                <p><span>用户名: </span><span style="color: red;">用户名不能为空</span></p>
+                <input type="text" spellcheck="false"/>
+            </div>
+            <div class="passwd">
+                <p><span>密码: </span><span style="color: red;">密码不能为空</span></p>
+                <input type="password" spellcheck="false"/>
+            </div>
+            <div class="verificationcode">
+                <p><span>验证码: </span><span style="color: red;">请输入验证码</span></p>
+                <input type="text" spellcheck="false">
+                <img />
+            </div>
+            <div class="loginBtnDiv">
+                <a href="javascript:void(0);" onclick="startLogin()">登录</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="regustDiv" onkeydown="keyRegist()">
+        <div class="headerCutDiv">
+            <a href="javascript:void(0);" onclick="hideUploadHeadWeidget()"></a>
+            <div class="boxCen">
+                <div id="clipArea" class="file-clip"></div>
+                 <div class="uploadImageOprationDiv">
+                     <div class="file">
+                        <div class="file-btn uploadBtn"><span>打开图片</span></div>
+                        <input type="file" class="service-file" id="file" accept="image/jpeg,image/jpg,image/png"/>
+                    </div>
+                     <div class="file-btn" id="bigImg" >放大</div>
+                    <div class="file-btn" id="smallImg">缩小</div>
+                    <div class="file-btn" id="clipBtn">裁剪</div>
+                    <div class="file-btn" id="rotaBtn">旋转</div>
+                 </div>
+            </div>
+        </div>
+        <a href="javascript:void(0);" class="showLoginPage"  onclick="showLoginPage()">登录</a>
+
+        <div class="uploadUserHeadDiv" onclick="opuploadHeadWediget()">
+        {#<input class="uploadUserHeadFile" type="file" accept="image/jpeg,image/jpg,image/png"/>#}
+        </div>
+        <p class="uploadUserHeadP">上传头像</p>
+
+        <div class="uLoginInfoDiv registInfoDiv">
+            <div class="uname">
+                <p><span>用户名: </span><span style="color: red;">用户名不能为空</span></p>
+                <input type="text" spellcheck="false" oninput ="unameInputValChanged_regist(this)"/>
+            </div>
+            <div class="passwd">
+                <p><span>密码: </span> <span style="color: red;">密码不能为空</span></p>
+                <input type="password" spellcheck="false" oninput ="passwordInputValChanged_regist(this)"/>
+            </div>
+            <div class="email">
+                <p><span>邮箱: </span><span style="color: red;">邮箱不能为空</span></p>
+                <input type="email" spellcheck="false" oninput ="emailInputValChanged_regist(this)">
+            </div>
+            <div class="loginBtnDiv">
+                <a href="javascript:void(0);" onclick="startRegistUser()">注册</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

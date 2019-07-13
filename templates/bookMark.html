@@ -111,7 +111,7 @@
 			function saveMarkClassify() {
 				var classifyName = $(".addNewClassify").val();
 				var uid = $(".uinfoDiv").attr('uid');
-				console.log(classifyName, uid);
+				//console.log(classifyName, uid);
 				if(!classifyName && bookMarkClassifyOpreation == 'add') {
 					alert("请输入要添加的标签分类");
 					return;
@@ -132,7 +132,7 @@
 					data: {
 						name: classifyName,
 						uid: uid
-					},
+					},  //'loadMoreBookMark-'+pageSize+'-0-'+ classify.id
 					type: 'GET',
 					dataType: 'json',
 					success: function(args) {
@@ -143,8 +143,8 @@
 								$('.markClassifySel').append('<option value="' + classify.id + '" selected>' + classify.name + '</option>');
 
 								var classifyItem = '<div class="bookMarkClassifyItem" classifyid="' + classify.id + '">' +
-									'<a href="#" onclick="getArticlesByTag(' + classify.id + ', ' + classify.name + ')">' + classify.name + '</a>' +
-									'<a href="#">100个</a>' +
+									'<a href="#" onclick="bookMark(\''+'loadMoreBookMark-'+pageSize+'-0-'+ classify.id+'\')">' + classify.name + '</a>' +
+									'<a href="#">0</a>' +
 									'</div>';
 								$('.bookMarkClassifyDiv').append(classifyItem);
 
@@ -175,9 +175,9 @@
 				var uid = $(".uinfoDiv").attr('uid');
 				var classifyId = $(".markClassifySel").find("option:selected").attr('value');
 				var bookMarkPK = $('.addBookmarkForm').attr('bookmarkid');
-				//console.log(bookMarkOpration, des, url, !des);
+				//console.log(bookMarkOpration);
 
-				if(bookMarkOpration.indexOf('loadMoreBookMark-') < 0) {
+				if(bookMarkOpration.indexOf('loadMoreBookMark-') < 0 && bookMarkOpration != "del") {
 					if(!des) {
 						alert('请输入书签描述');
 						return;
@@ -195,11 +195,10 @@
 						bookMarkOpration = 'edit';
 					}
 
-				} else {
+				} else if(bookMarkOpration.indexOf('loadMoreBookMark-') > -1) {
 					if(bookMarkOpration.split("-").length < 4) {
 						bookMarkOpration = bookMarkOpration + "-" + $('.classifyTipEl').find('span:last-child').attr("classifyid");
 					}
-					console.log(bookMarkOpration);
 				}
 
 				$.ajax({
@@ -220,8 +219,6 @@
 								//更新左侧的分类列表中每个分类的书签个数
 								//全部分类中的书签数加1
 								var el_bookmarkSum = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='-1']").find('a:last-child');
-
-								console.log(parseInt($(el_bookmarkSum).text()) + 1);
 								$(el_bookmarkSum).text(parseInt($(el_bookmarkSum).text()) + 1);
 
 								//新增书签所属分类的个数加1
@@ -282,7 +279,8 @@
 			}
 
 			function removeBookMarkItem(args) {
-				var bookMarkItemEl = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='" + args.bookMark.bookMarkPk + "']");
+			    //console.log(args);
+				var bookMarkItemEl = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='" + args.bookMark + "']");
 				$(bookMarkItemEl).remove();
 			}
 
@@ -390,6 +388,11 @@
 				//console.log('........del');
 				bookMark('del');
 			}
+
+			function showArticleDetial(uid, articleid){
+			    console.log(uid, articleid);
+				window.open("../../article/" + uid + "/" + articleid, "_blank");
+			}
 		</script>
 	</head>
 
@@ -415,16 +418,16 @@
 
 			<ul>
 				<li>
-					<a href="../../">笔记</a>
+					<a href="../../?uid={{ userinfo.uid }}">笔记</a>
 				</li>
 				<li>
-					<a href="./" style="border-bottom: 2px solid red;">书签</a>
+					<a href="./?uid={{ userinfo.uid }}" style="border-bottom: 2px solid red;">书签</a>
 				</li>
 				<li>
-					<a href="../../async/">文档</a>
+					<a href="../../async/?uid={{ userinfo.uid }}">文档</a>
 				</li>
 				<li>
-					<a href="../../videoPlay/">视频</a>
+					<a href="../../videoPlay/?uid={{ userinfo.uid }}">视频</a>
 				</li>
 			</ul>
 
@@ -434,13 +437,13 @@
 				<div class="leftContent">
 					<!-- 用户信息 -->
 					<div class="banner">
-						{% for u in userinfo %}
-							<div class="uinfoDiv clearfix" uid="{{ u.id }}">
-								<div class="uhead" style="background: url('../../../{{ u.img }}') no-repeat center;"></div>
-								<h4>{{ u.uname }}</h4>
-								<p class="chickenSoup">{{ u.chickenSoup }}</p>
-							</div>
-						{% endfor %}
+						<div class="uinfoDiv clearfix" uid="{{ userinfo.uid }}">
+                            <div class="uhead">
+                                <img src="{{ userinfo.headImg_48x48 }}">
+                            </div>
+                            <h4>{{ userinfo.uname }}</h4>
+                            <p class="chickenSoup">{{ userinfo.chickenSoup }}</p>
+                        </div>
 					</div>
 
 					<!--  书签分类  -->
@@ -461,7 +464,7 @@
 					<div class="new_articles ">
 						<p class="new_articles_title">最新文章</p>
 						{% for article in articles %}
-							<div class="article clearfix1" onclick="showArticleDetial({{ article.id }})">
+							<div class="article clearfix1" onclick="showArticleDetial({{ userinfo.uid }}, {{ article.id }})">
 								<p class="article_title">{% substringFilter article.title 10 %}</p>
 								<p class="article_createTime">{% utc_to_local article.createTime %}</p>
 							</div>

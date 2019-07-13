@@ -273,6 +273,9 @@
 
 				var articleid = $('.article_id').attr('value');
 				//获取属性name='checkboxClassfy' 和 选中的 input 标签的value
+
+                var uid = $(".uinfoDiv").attr("uid");
+
 				if(!articleTitle) {
 					alert("内容不能为空");
 					return;
@@ -313,14 +316,15 @@
 						articleTitle: articleTitle,
 						articleContent: articleContent,
 						classifyId: classifyId,
-						tagIds: articleTagIds
+						tagIds: articleTagIds,
+                        uid: uid
 					},
 					dataType: 'json',
 					traditional: true,
 					success: function(args) {
 						//console.log(args);
 						if(args.status) {
-							window.location = '../';
+							window.location = '../?uid='+ uid;
 						} else {
 							alert('数据保存失败');
 						}
@@ -345,15 +349,25 @@
 		</script>
 
 		<script>
-			function getQueryVariable() {
+			function getQueryVariable(paramName) {
+			    var paramVal = "";
 				var window_location = window.location.href;
 				window_location = decodeURI(window_location);
-				var params = window_location.split("/");
-
-				return params[params.length - 1];
+                var params = window_location.match(/[^?&]+=[^&]+/g);
+                //console.log(window_location, params);
+                if(params){
+                    for(var i=0; i<params.length; i++){
+                        //console.log(params[i]);
+                        if(params[i].split("=")[0] == paramName){
+                            paramVal = params[i].split("=")[1];
+                            break;
+                        }
+                    }
+                }
+				return paramVal;
 			}
 			window.onload = function() {
-				var article_pk = getQueryVariable();
+				var article_pk = getQueryVariable("articleid");
 				//console.log('getQueryVariable: ' + article_pk);
 				post_article(article_pk);
 
@@ -379,10 +393,13 @@
 			}
 
 			function post_article(pk) {
+			    var uid = $(".uinfoDiv").attr("uid");
 				$.ajax({
 					url: '../postedit/',
+                    type: "POST",
 					data: {
-						pk: pk
+						pk: pk,
+                        uid: uid
 					},
 					dataType: 'json',
 					success: function(args) {
@@ -470,11 +487,11 @@
 		<div class="nav">
 
 			<!-- 用户信息 -->
-			{% for u in userinfo %}
-				<div class="uinfoDiv clearfix" uid="{{ u.id }}">
-					<div class="uhead" style="background: url('../../../{{ u.img }}') no-repeat center;" title="{{ u.uname }}"></div>
-				</div>
-			{% endfor %}
+			<div class="uinfoDiv clearfix" uid="{{ userinfo.uid }}">
+                <div class="uhead">
+                    <img src="{{ userinfo.headImg_35x35 }}" title="{{ userinfo.uname }}">
+                </div>
+            </div>
 
 			<input class="article_id" hidden/>
 			<a href="../" target="_self"><img class="blogimg" src="/static/images/blog_icon.png" /></a>
@@ -485,16 +502,16 @@
 
 			<ul>
 				<li>
-					<a href="#">主页</a>
+					<a href="../?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">笔记</a>
 				</li>
 				<li>
-					<a href="#">文章</a>
+					<a href="../bookMark/p/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">书签</a>
 				</li>
 				<li>
-					<a href="#">收藏</a>
+					<a href="../async/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">文档</a>
 				</li>
 				<li>
-					<a href="#">文件下载</a>
+					<a href="../videoPlay/?uid={{ userinfo.uid }}" style="border-bottom: 0px solid #ffffff;">视频</a>
 				</li>
 			</ul>
 

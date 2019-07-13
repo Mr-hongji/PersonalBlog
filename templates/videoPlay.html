@@ -99,8 +99,9 @@
 				}
 			}
 
-			function showArticleDetial(id) {
-				window.open("../article/" + id, "_blank");
+			function showArticleDetial(uid, articleid){
+			    //console.log(uid, articleid);
+				window.open("../article/" + uid + "/" + articleid, "_blank");
 			}
 		</script>
 	</head>
@@ -114,16 +115,16 @@
 			</div>-->
 			<ul>
 				<li>
-					<a href="../">笔记</a>
+					<a href="../?uid={{ userinfo.uid }}">笔记</a>
 				</li>
 				<li>
-					<a href="../bookMark/p/">书签</a>
+					<a href="../bookMark/p/?uid={{ userinfo.uid }}">书签</a>
 				</li>
 				<li>
-					<a href="../async/">文档</a>
+					<a href="../async/?uid={{ userinfo.uid }}">文档</a>
 				</li>
 				<li>
-					<a href="./" style="border-bottom: 2px solid red;">视频</a>
+					<a href="./?uid={{ userinfo.uid }}" style="border-bottom: 2px solid red;">视频</a>
 				</li>
 			</ul>
 		</div>
@@ -132,19 +133,19 @@
 				<div class="leftContent">
 					<!-- 用户信息 -->
 					<div class="banner">
-						{% for u in userinfo %}
-							<div class="uinfoDiv clearfix">
-								<div class="uhead" style="background: url('../../{{ u.img }}') no-repeat center;"></div>
-								<h4>{{ u.uname }}</h4>
-								<p class="chickenSoup">{{ u.chickenSoup }}</p>
-							</div>
-						{% endfor %}
+						<div class="uinfoDiv clearfix" uid="{{ userinfo.uid }}">
+                            <div class="uhead">
+                                <img src="{{ userinfo.headImg_48x48 }}">
+                            </div>
+                            <h4>{{ userinfo.uname }}</h4>
+                            <p class="chickenSoup">{{ userinfo.chickenSoup }}</p>
+                        </div>
 					</div>
 
 					<div class="new_articles ">
 						<p class="new_articles_title">最新文章</p>
 						{% for article in articles %}
-							<div class="article clearfix1" onclick="showArticleDetial({{ article.id }})">
+							<div class="article clearfix1" onclick="showArticleDetial({{ userinfo.uid }}, {{ article.id }})">
 								<p class="article_title">{% substringFilter article.title 10 %}</p>
 								<p class="article_createTime">{% utc_to_local article.createTime %}</p>
 							</div>

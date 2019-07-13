@@ -2,10 +2,16 @@ from django.urls import path,re_path
 from django.urls import include
 from blog import views
 urlpatterns = [
+
     path('',views.index),
+    path('verifycode/',views.verifycode),
+    path('registUser/',views.registUser),
+    path('login/',views.login),
+    path('startLogin/',views.startLogin),
     path('clock.html', views.clock),
-    re_path(r'articleEdit/(?P<pk>\d*)', views.articleEditPage),
-    path('article/<int:pk>', views.article),
+    re_path(r'articleEdit/', views.articleEditPage),
+    re_path(r'delArticle/(?P<pk>\d+)', views.delArticle),
+    path('article/<int:uid>/<int:articleid>', views.article),
     path('postedit/', views.postedit),
 
     path('addArticleClassify/', views.addArticleClassify),
