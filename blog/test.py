@@ -6,3 +6,6 @@ imgdata = base64.b64decode("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEB
 f.write(imgdata)
 f.close()
 
+name = 'A'
+new_name = name.swapcase()
+print(name.isupper())
