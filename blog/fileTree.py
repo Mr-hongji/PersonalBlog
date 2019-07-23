@@ -6,7 +6,7 @@ def list_dir(file_dir, type):
         通过 listdir 得到的是仅当前路径下的文件名，不包括子目录中的文件，如果需要得到所有文件需要递归
     '''
 
-    print ("current dir : {0}".format(file_dir))
+    #print ("current dir : {0}".format(file_dir))
     dir_list = os.listdir(file_dir)
     ret = [];
     for cur_file in dir_list:
@@ -23,12 +23,12 @@ def list_dir(file_dir, type):
                     else:
                         addNode = False
 
-                print("{0} : is file!".format(cur_file))
+                #print("{0} : is file!".format(cur_file))
                 if addNode:
                     ret.append({'name': cur_file, 'isParent': False, 'path':path})
 
             if os.path.isdir(path) and cur_file.find('__') != 0:
-                print ("{0} : is dir!".format(cur_file))
+                #print ("{0} : is dir!".format(cur_file))
                 #list_dir(path) # 递归子目录
                 ret.append({'name':cur_file, 'isParent': True, 'path':path})
 
@@ -47,7 +47,7 @@ def readFile(path):
                 else:
                     data = ""
 
-                print(data)
+                #print(data)
                 ret['status'] = 1
                 ret['data'] = data
         except:

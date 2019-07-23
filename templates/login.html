@@ -29,7 +29,7 @@
 
         function loadVerifycode(){
             $.ajax({
-                url: "../verifycode/",
+                url: "verifycode/",
                 type: "get",
                 success:function (args) {
                     //console.log(args);
@@ -110,7 +110,7 @@
             }
 
             $.ajax({
-                url: "../registUser/",
+                url: "blog/registUser/",
                 data: reqData,
                 type: "POST",
                 dataType: "json",
@@ -163,14 +163,14 @@
             }
 
             $.ajax({
-                url: "../startLogin/",
+                url: "blog/startLogin/",
                 data: {uname:uname, upwd:upwd, verificationcode:verificationcode},
                 type: "Post",
                 dataType: "json",
                 success:function (args) {
                     console.log(args);
                     if(args.status){
-                        window.location.href = "../?uid="+args.user.uid;
+                        window.location.href = "blog/?uid="+args.user.uid;
                     }else{
                         alert(args.message);
                         $('.loginInfoDiv').find('.verificationcode').find('img').attr("src", "../verifycode/?d="+new Date().getTime());

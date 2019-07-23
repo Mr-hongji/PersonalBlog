@@ -4,7 +4,7 @@ from blog import views
 urlpatterns = [
 
     path('',views.index),
-    path('verifycode/',views.verifycode),
+
     path('registUser/',views.registUser),
     path('login/',views.login),
     path('startLogin/',views.startLogin),

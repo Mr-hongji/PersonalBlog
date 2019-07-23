@@ -45,7 +45,7 @@
 				};
 			}
 
-            var allow_extensions = {'html':'html', 'py':'py', 'css':'css', 'js':'js', 'bat':'bat', 'xml':'xml', 'mxml':'mxml', 'tcl':'tcl', 'ini':'ini', 'md':'md', 'vbs':'vbs', 'as':'as', 'json':'json', 'php':'php', 'java':'java', 'jsp':'jsp'};
+            var allow_extensions = {'txt':'txt', 'html':'html', 'py':'py', 'css':'css', 'js':'js', 'bat':'bat', 'xml':'xml', 'mxml':'mxml', 'tcl':'tcl', 'ini':'ini', 'md':'md', 'vbs':'vbs', 'as':'as', 'json':'json', 'php':'php', 'java':'java', 'jsp':'jsp'};
 			var notAllow_extensions = ['png', 'jpg', 'bmp', 'gif', 'jpeg', 'png', 'pdf', 'sqlite3', 'dll', 'exe', 'swf', 'tmp', 'vch', 'lib', 'rar', 'zip'];
 
 			function zTreeOnDblClick(event, treeId, treeNode) {
@@ -56,7 +56,7 @@
 					var suffix_name = getFileNameSuffix(treeNode.name).toLowerCase();
                     //alert(allow_extensions[suffix_name]);
 
-					if(!allow_extensions[suffix_name]){
+					if(suffix_name && suffix_name.length > 0 && !allow_extensions[suffix_name]){
                         alert('无法打开' + suffix_name + '类型文件');
                     }else {
                         var selNodePath = '';
@@ -71,7 +71,11 @@
 
 			function getFileNameSuffix(name) {
 				var arr = name.split('.');
-				var suffix_name = arr[arr.length - 1];
+				console.log(arr);
+				var suffix_name = "";
+				if(arr.length > 1){
+				    suffix_name = arr[arr.length - 1];
+                }
 				return suffix_name;
 			}
 
@@ -158,8 +162,6 @@
 				if(pre_el) {
 					$(pre_el).remove();
 				}
-
-
 
 				$('.article_content').append('<pre><code class="' + lan + '">' + data + '</code></pre>');
 				$('.time_line').find('span').text(selNodePath);

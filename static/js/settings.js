@@ -1,2 +1,2 @@
-var doc_root_path="E:\\";
-var video_root_path="F:\\视频";
+var doc_root_path="/opt/files/docfile/";
+var video_root_path="/opt/files/videofile/";

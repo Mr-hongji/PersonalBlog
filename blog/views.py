@@ -61,7 +61,7 @@ def verifycode(request):
     buf = BytesIO()
     # 将图片保存在内存中，文件类型为png
     im.save(buf, 'png')
-    print(buf.getvalue())
+    #print(buf.getvalue())
 
     # 将内存中的图片数据返回给客户端，MIME类型为图片png
     return HttpResponse(buf.getvalue(), 'image/png')
@@ -142,14 +142,14 @@ def index(request):
 
         return render(request, 'index.html',{'userinfo':ret_user, 'classify':getClassify(uid), 'tag':getTag(uid)})
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def article(request, uid, articleid):
     if 'uname' in request.session:
         user = models.UserInfo.objects.filter(pk=uid)[0]
         return render(request, 'article.html', {'userinfo': get_user_info_data(user), 'classify': getClassify(uid), 'tag': getTag(uid)})
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def postedit(request):
     ret = {'status': None, 'article': None, 'classify': None, 'tag': None}
@@ -186,7 +186,7 @@ def getArticles(request, type, pk):
         ret_article = models.Article.objects.filter(user_id=uid, deleted=0).filter(tag__id=pk)[start_index:end_index]
 
     json_data = serializers.serialize('json', ret_article, use_natural_foreign_keys=True)
-    print(json_data)
+    #print(json_data)
     ret['data'] = json_data
     return HttpResponse(json.dumps(ret))
 
@@ -205,7 +205,7 @@ def articleEditPage(request):
         user = models.UserInfo.objects.filter(pk=uid)[0]
         return render(request, 'articleEdit.html', {'userinfo': get_user_info_data(user)})
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def delArticle(request, pk):
     ret = {"status":None, "message":None, "article":None}
@@ -352,7 +352,7 @@ def async(request):
         user = models.UserInfo.objects.filter(pk=uid)[0]
         return render(request, 'async.html', {'userinfo': get_user_info_data(user)})
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def list_dir(request):
     p = request.POST.get('fpath', None)
@@ -371,7 +371,7 @@ def videoPlay(request):
         ret_article = models.Article.objects.filter(user_id=uid)[:18]
         return render(request, 'videoPlay.html', {'userinfo': get_user_info_data(user), 'articles':ret_article})
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def getVideoUrl(request):
 
@@ -443,7 +443,7 @@ def bookMark(request, opration, pk):
 
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
     else:
-        return redirect('login/')
+        return redirect('../')
 
 def delBookMark(request, pk):
     ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'del'}
