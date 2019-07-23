@@ -149,6 +149,47 @@ http {
 
 
 
+### **Uwsi.ini**
+* 随便找个目录在不在虚拟环境中无所谓，新建并编辑 uwsgi.ini 文件
+
+➣ 比如在 root 目录下 
+```
+cd ~
+vim uwsgi.ini
+```
+
+* 文件内容如下：
+```
+[uwsgi]
+#使用nginx连接时使用
+socket=0.0.0.0:8000
+#不用nginx直接当做web服务器使用
+#http=0.0.0.0:9000
+#项目目录绝对路径
+chdir=/root/PersonalBlog
+#wsgi文件路径，在项目底下
+wsgi-file=PersonalBlog/wsgi.py
+#指定解释器目录
+（虚拟环境的目录）
+home=/root/Envs/venv1
+processes=4
+threads=2
+master=True
+pidfile=uwsgi.pid
+```
+<br/>
+
+## **项目启动**
+* 启动nginx
+`nginx`
+
+* 启动uwsgi
+```
+#进入python虚拟环境
+uwsgi --ini ~/uwsgi.ini
+```
+
+
 
 
 
