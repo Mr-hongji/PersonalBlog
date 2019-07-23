@@ -32,15 +32,23 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 * 安装 python3、 virtualenv 、virtualenvwrapper 、git 、sqlite3 、nginx、uwsgi
 
 ➣`wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz`
+
 ➣ `yum install -y sqlite   sqlite-devel`
+
 ➣ `yum install git`
+
 ➣ `pip3 install virtualenv `
+
 ➣ `pip3 install virtualenvwrapper `
+
 ➣ `wget  https://nginx.org/download/nginx-1.12.0.tar.gz`
+
 ➣ `pip3 install uwsgi (需要进入到virtualenv 虚拟环境中安装)`
+
 详细安装：
 
  ➣ [python3、 virtualenv 、virtualenvwrapper]([Linux安装Python3](https://app.yinxiang.com/shard/s54/nl/19471276/1fce3bab-a630-4811-a124-3b2354750d7d))
+ 
 ➣ [nginx安装]([Linux安装Nginx](https://app.yinxiang.com/shard/s54/nl/19471276/11951e62-ef56-4337-a7c9-d6a80f528e72))
 
 
@@ -57,6 +65,7 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 
 ➣ 进入虚拟环境 
 `workon venv1`
+
 ➣ 安装依赖
 `pip3 install -r requirements.txt`
 
