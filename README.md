@@ -15,7 +15,7 @@
 
 ➣ 整理平时的学习视频，可以随时观看，不用再把个视频拷贝来拷贝去的了，只要有网就可以观看
 
-![image](https://github.com/Mr-hongji/MakePageTool/blob/master/images/perblog.png)
+![image](https://github.com/Mr-hongji/PersonalBlog/blob/master/images/perblog.png)
 
 
 ## **项目部署**
@@ -59,7 +59,7 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 * 在pyCharm导出依赖包文件
 `pip3 install -r requirements.txt`
 
-![image](https://github.com/Mr-hongji/MakePageTool/blob/master/images/requirements.png)
+![image](https://github.com/Mr-hongji/PersonalBlog/blob/master/images/requirements.png)
 
 * 在发布环境中安装依赖
 
