@@ -3,12 +3,16 @@
 
 ### **功能模块**
 * 笔记
+
 ➣ 记录知识点和学习笔记
 * 书签
+
 ➣ 用于收藏网页
 * 文档
+
 ➣ 指定显示并浏览文件文件内容，可以把学习时做的项目例子等集中来方便温故知新
 * 视频
+
 ➣ 整理平时的学习视频，可以随时观看，不用再把个视频拷贝来拷贝去的了，只要有网就可以观看
 
 ![image](https://github.com/Mr-hongji/MakePageTool/blob/master/images/perblog.png)
@@ -26,6 +30,7 @@
 yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel -y
 ```
 * 安装 python3、 virtualenv 、virtualenvwrapper 、git 、sqlite3 、nginx、uwsgi
+
 ➣`wget https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tgz`
 ➣ `yum install -y sqlite   sqlite-devel`
 ➣ `yum install git`
@@ -34,6 +39,7 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 ➣ `wget  https://nginx.org/download/nginx-1.12.0.tar.gz`
 ➣ `pip3 install uwsgi (需要进入到virtualenv 虚拟环境中安装)`
 详细安装：
+
  ➣ [python3、 virtualenv 、virtualenvwrapper]([Linux安装Python3](https://app.yinxiang.com/shard/s54/nl/19471276/1fce3bab-a630-4811-a124-3b2354750d7d))
 ➣ [nginx安装]([Linux安装Nginx](https://app.yinxiang.com/shard/s54/nl/19471276/11951e62-ef56-4337-a7c9-d6a80f528e72))
 
@@ -48,6 +54,7 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 ![image](https://github.com/Mr-hongji/MakePageTool/blob/master/images/requirements.png)
 
 * 在发布环境中安装依赖
+
 ➣ 进入虚拟环境 
 `workon venv1`
 ➣ 安装依赖
