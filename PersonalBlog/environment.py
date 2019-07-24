@@ -4,7 +4,7 @@ import os
 
 class ENV(object):
     def __init__(self):
-        env = os.environ.get("oa_env", "local")
+        env = os.environ.get("perblog_env", "local")
         print('...............................')
         print(env)
         print('...............................')
