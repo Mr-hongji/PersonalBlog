@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from .environment import ENV
+
 import os
+
+current_env = ENV()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,9 +27,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '6^ya9(0ryi)41rb=ba1@u*+!yrg(ll=k+t0vt3#2(^tok63@-u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = current_env.get_config("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,13 +79,7 @@ WSGI_APPLICATION = 'PersonalBlog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        #'NAME': '/opt/db/db.sqlite3',
-    }
-}
+DATABASES = current_env.get_config("DATABASES")
 
 
 
@@ -132,10 +130,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 #STATIC_ROOT='/opt/static/django'
+if current_env.get_config("STATIC_ROOT"):
+    globals["STATIC_ROOT"] = current_env.get_config("STATIC_ROOT")
+
+FILE_BASE_HOST_NAME = current_env.get_config("FILE_BASE_HOST_NAME")
+VIDEO_BASE_HOST_NAME = current_env.get_config("VIDEO_BASE_HOST_NAME")
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS =(
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'video'),
 )
 
 

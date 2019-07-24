@@ -27,7 +27,7 @@ urlpatterns = [
     path('async/', views.async),
     path('readFile/', views.readFile),
     path('videoPlay/', views.videoPlay),
-    path('getVideoUrl/', views.getVideoUrl),
+    path('getVideoFilePlayUrl/', views.getVideoFilePlayUrl),
 
     re_path('bookMark/(?P<opration>[\w\d-]+)/(?P<pk>\d*)', views.bookMark),
     re_path('bookMarkClassify/(?P<opration>\w+)/(?P<pk>\d*)', views.bookMarkClassify),

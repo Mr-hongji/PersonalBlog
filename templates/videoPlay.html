@@ -12,20 +12,17 @@
         <script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery-1.4.4.min.js"></script>
 		<script type="text/javascript" src="/static/plugins/zTree_v3/js/jquery.ztree.core.js"></script>
         <script src="/static/js/jquery.js"></script>
-        <script src="/static/js/settings.js"></script>
+        <script src="/static/js/settings.js?rn=111"></script>
 		{% load CustomFilter %}
 
 		<script>
-
+            //var video_root_path="/opt/files/videofile/";
+            var video_root_path="h:/";
 			window.onload = function() {
-				showFiles(null);
+				showFiles(video_root_path);
 			}
 
 			function showFiles(path) {
-				if(!path) {
-					path = video_root_path;
-				}
-
 				$.ajax({
 					url: '../list_dir/',
 					data: {
@@ -61,23 +58,28 @@
 
 			function parseTimeLine(path) {
 				var el_a = '';
+				console.log(path);
+				path = path.replace(/\\/g, '/');
+				console.log(path);
 				if(path == video_root_path) {
 					//el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ video_root_path +'\', \'folder\')">root</a>' + '/';#}
 					el_a += 'root/';
 				} else {
-					path = path.replace(video_root_path, 'root');
-					var paths = path.split('\\');
+					path = path.replace(video_root_path, 'root/');
+					var paths = path.split('/');
+					console.log(paths);
 					if(paths) {
 						for(var i = 0; i < paths.length - 1; i++) {
 							//console.log(paths[i]);
 							var el_a_href = '';
 
 							for(var n = 0; n <= i; n++) {
-								el_a_href += paths[n] + "\\\\";
+							    el_a_href += paths[n] + "/";
 							}
-							//console.log(el_a_href);
-							el_a_href = el_a_href.replace('root', video_root_path.replace(/\\/g, '\\\\'));
-							el_a_href = el_a_href.substring(0, el_a_href.length - 2);
+							console.log(el_a_href);
+							el_a_href = el_a_href.replace('root/', video_root_path);
+							console.log(el_a_href);
+							el_a_href = el_a_href.substring(0, el_a_href.length-1);
 							el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
 						}
 						el_a += paths[paths.length - 1] + '/';
@@ -90,12 +92,26 @@
 
 			function openDir(path, fileType) {
 				if(fileType == 'folder') {
+				    console.log(path);
 					showFiles(path);
 				} else {
 					//console.log(path.length + 'videoPlayer://'.length);
 					//getVideoUrl(path);
 					//console.log(('videoPlayer://' + path).length);
-					window.location.href = 'videoPlayer://' + path;
+                    $.ajax({
+                        url: '../getVideoFilePlayUrl/',
+                        type: 'Get',
+                        data: {path:path},
+                        dataType: 'json',
+                        success: function (args) {
+                            if(args.status){
+                                console.log(args.playUrl);
+                                window.location.href = 'videoPlayer://' + args.playUrl;
+                            }else{
+                                alert('视频播放地址获取失败');
+                            }
+                        }
+                    });
 				}
 			}
 

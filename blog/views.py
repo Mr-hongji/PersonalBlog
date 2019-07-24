@@ -373,24 +373,27 @@ def videoPlay(request):
     else:
         return redirect('../')
 
-def getVideoUrl(request):
+def getVideoFilePlayUrl(request):
 
-    ret = {'status':0, 'vPath':None,'vTrueName':None, 'vExtName':None}
-    path = request.POST.get('path', None)
-    if path:
-        fpath, fname = os.path.split(path) # 获取文件路径，和文件名
-        shotname, extension = os.path.splitext(fname) # 获取文件名 和 文件扩展名
-        fsize = os.path.getsize(path)
-        print(fsize)
-        tempFileUrl= os.path.join(settings.BASE_DIR, '1') + '/112233' + extension
-        #shutil.copyfile(path, tempFileUrl)
-        #newfsize = os.path.getsize(tempFileUrl)
+    ret = {'status':0, 'playUrl':None,'vTrueName':None, 'vExtName':None}
+    path = request.GET.get('path', None)
+    try:
+        if path:
+            fpath, fname = os.path.split(path)  # 获取文件路径，和文件名
+            shotname, extension = os.path.splitext(fname)  # 获取文件名 和 文件扩展名
+            playUrl = path
 
-        ret['status'] = 1
-        ret['vPath'] = '/static/112233' + extension
-        ret['vTrueName'] = fname
-        ret['vExtName'] = extension
+            if settings.VIDEO_BASE_HOST_NAME:
+                playUrl = settings.VIDEO_BASE_HOST_NAME + '/' + fname
 
+            ret['status'] = 1
+            ret['playUrl'] = playUrl
+            ret['vTrueName'] = fname
+            ret['vExtName'] = extension
+        else:
+            ret['status'] = 0
+    except Exception as e:
+        ret['status'] = 0
 
     return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
