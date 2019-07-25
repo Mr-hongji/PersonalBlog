@@ -74,6 +74,7 @@ yum install gcc patch libffi-devel python-devel zlib-devel bzip2-devel openssl-d
 
 
 ### **Nginx 配置**
+* nginx.conf文件配置
 ```
 pid        logs/nginx.pid;
 
@@ -145,7 +146,17 @@ http {
     }
 
 ```
+* 执行命令统一收集静态文件，使得网站正常加载js，css
+```
+#进入虚拟环境venv1
+workon venv1
 
+#进入到项目目录下
+cd ~/PersionalBlog
+
+#收集静态文件
+python3 manage.py collectstatic
+```
 
 
 
@@ -176,6 +187,16 @@ processes=4
 threads=2
 master=True
 pidfile=uwsgi.pid
+```
+<br/>
+
+### **环境变量设置**
+```
+#编辑/etc/profile
+vim /etc/profile
+
+# 文件末尾添加变量
+export perblog_env=online
 ```
 <br/>
 
