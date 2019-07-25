@@ -384,8 +384,8 @@ def getVideoFilePlayUrl(request):
             playUrl = path
 
             if settings.VIDEO_BASE_HOST_NAME:
-                playUrl = str(playUrl).replace(settings.DOC_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME)#   VIDEO_ROOT_PATH
-                playUrl = settings.VIDEO_BASE_HOST_NAME + '/' + fname
+                playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME + '/')
+                #playUrl = playUrl + '/' + fname
 
             ret['status'] = 1
             ret['playUrl'] = playUrl
