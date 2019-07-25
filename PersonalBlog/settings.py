@@ -131,7 +131,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 #STATIC_ROOT='/opt/static/django'
 if current_env.get_config("STATIC_ROOT"):
-    globals["STATIC_ROOT"] = current_env.get_config("STATIC_ROOT")
+    globals()["STATIC_ROOT"] = current_env.get_config("STATIC_ROOT")
+
+if current_env.get_config("DOC_ROOT_PATH"):
+    globals()["DOC_ROOT_PATH"] = current_env.get_config("DOC_ROOT_PATH")
+
+if current_env.get_config("VIDEO_ROOT_PATH"):
+    globals()["VIDEO_ROOT_PATH"] = current_env.get_config("VIDEO_ROOT_PATH")
 
 FILE_BASE_HOST_NAME = current_env.get_config("FILE_BASE_HOST_NAME")
 VIDEO_BASE_HOST_NAME = current_env.get_config("VIDEO_BASE_HOST_NAME")

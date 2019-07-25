@@ -16,8 +16,6 @@
 		{% load CustomFilter %}
 
 		<script>
-            //var video_root_path="/opt/files/videofile/";
-            var video_root_path="h:/";
 			window.onload = function() {
 				showFiles(video_root_path);
 			}
@@ -58,16 +56,16 @@
 
 			function parseTimeLine(path) {
 				var el_a = '';
-				console.log(path);
+
 				path = path.replace(/\\/g, '/');
-				console.log(path);
-				if(path == video_root_path) {
+
+				if(path == video_root_path || path + "/" == video_root_path) {
 					//el_a = '<a href="javascript:void(0);" ondblclick="openDir(\''+ video_root_path +'\', \'folder\')">root</a>' + '/';#}
 					el_a += 'root/';
 				} else {
 					path = path.replace(video_root_path, 'root/');
 					var paths = path.split('/');
-					console.log(paths);
+
 					if(paths) {
 						for(var i = 0; i < paths.length - 1; i++) {
 							//console.log(paths[i]);
@@ -76,9 +74,9 @@
 							for(var n = 0; n <= i; n++) {
 							    el_a_href += paths[n] + "/";
 							}
-							console.log(el_a_href);
+
 							el_a_href = el_a_href.replace('root/', video_root_path);
-							console.log(el_a_href);
+
 							el_a_href = el_a_href.substring(0, el_a_href.length-1);
 							el_a += '<a href="javascript:void(0);" onclick="openDir(\'' + el_a_href + '\', \'folder\')">' + paths[i] + '</a>/';
 						}
@@ -92,7 +90,7 @@
 
 			function openDir(path, fileType) {
 				if(fileType == 'folder') {
-				    console.log(path);
+
 					showFiles(path);
 				} else {
 					//console.log(path.length + 'videoPlayer://'.length);
@@ -105,7 +103,7 @@
                         dataType: 'json',
                         success: function (args) {
                             if(args.status){
-                                console.log(args.playUrl);
+
                                 window.location.href = 'videoPlayer://' + args.playUrl;
                             }else{
                                 alert('视频播放地址获取失败');

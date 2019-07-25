@@ -13,3 +13,5 @@ STATIC_ROOT='/opt/static/django'
 
 FILE_BASE_HOST_NAME = 'http://perblog.natapp1.cc/doc'
 VIDEO_BASE_HOST_NAME = 'http://perblog.natapp1.cc/video'
+DOC_ROOT_PATH = '/opt/files/docfile/'
+VIDEO_ROOT_PATH="/opt/files/videofile/"
