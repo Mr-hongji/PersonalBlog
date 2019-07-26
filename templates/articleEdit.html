@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title></title>
+		<title>新增笔记</title>
 
 		<link rel="stylesheet" href="/static/plugins/editorPlugin/css/editormd.css" />
 
@@ -419,6 +419,9 @@
 							$('.articleTitle').attr('value', ret_article.fields.title);
 							CKEDITOR.instances.editor.setData(ret_article.fields.content);
 							$('.article_id').attr('value', ret_article.pk);
+
+							//设置页面title
+                            $('title').text('编辑-' + ret_article.fields.title);
 						}
 
 						var classifyret_str = '';
@@ -464,7 +467,6 @@
 
 						addEvent();
 					}
-
 				});
 			}
 

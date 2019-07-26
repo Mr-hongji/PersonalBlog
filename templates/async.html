@@ -2,7 +2,7 @@
 <HTML>
 
 	<HEAD>
-		<TITLE> </TITLE>
+		<TITLE>文档</TITLE>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/static/plugins/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
 		<link rel="stylesheet" href="/static/css/index.css?rn=11" />
@@ -39,7 +39,7 @@
 				} else {
 					path = doc_root_path;
 				}
-				alert(doc_root_path);
+				//alert(doc_root_path);
 				return {
 					'fpath': path,
 					'type': 'all'
@@ -158,6 +158,8 @@
                         break;
 
 				}
+
+				$('title').text('文档-' + name);
 
 				var pre_el = $('.article_content').find('pre');
 				if(pre_el) {

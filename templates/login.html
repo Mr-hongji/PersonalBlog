@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>登录</title>
     <link rel="stylesheet" href="/static/css/login.css" />
     <script src="/static/js/jquery.js"></script>
     <script src="/static/plugins/imageCut/js/iscroll-zoom.js"></script>
@@ -13,11 +13,13 @@
 
     <script>
         function showRegesitPage(){
+            $('title').text('注册');
             $(".loginDiv").slideUp('fast');
             $(".regustDiv").slideDown('fast');
         }
 
         function showLoginPage(){
+            $('title').text('登录');
             $(".regustDiv").slideUp('fast');
             $(".loginDiv").slideDown('fast');
         }

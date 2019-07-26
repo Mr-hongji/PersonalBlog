@@ -47,6 +47,9 @@
 									}
 									var date_str = strFormat2Date(item.fields.createTime);
 
+									//设置页面title
+                                    $('title').text(item.fields.title);
+
 									article_details_str = '<div class="editBtn"><a href="../../articleEdit/?articleid=' + pk + '&uid='+uid+'">编辑</a></div><h3>' + item.fields.title + '</h3>' +
                                         '<p>' +
                                         '<span>' + date_str + ' &nbsp;&nbsp;类别: ' + item.fields.classify.name + ' &nbsp;&nbsp;标签: ' + tags_str + ' </span>' +
