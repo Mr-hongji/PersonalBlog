@@ -9,3 +9,13 @@ f.close()
 name = 'A'
 new_name = name.swapcase()
 print(name.isupper())
+
+l = range(0,10)
+print(l)
+
+
+
+
+
+import  os
+os.rename('d:/ttest.png', 'd:/test.png')
