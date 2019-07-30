@@ -331,7 +331,7 @@ def addArticle(request):
         uid = request.GET.get('uid')
 
         if pk:
-            article = models.Article.objects.filter(pk=int(pk))
+            article = models.Article.objects.filter(pk=int(pk), deleted=0)
             article.update(title=articleTitle, content=articleContent, classify_id=classifyId)
             article.first().tag.set(list(map(int, tagIds)))
         else:
@@ -368,7 +368,7 @@ def videoPlay(request):
     if 'uname' in request.session:
         uid = request.GET.get("uid", None)
         user = models.UserInfo.objects.filter(pk=uid)[0]
-        ret_article = models.Article.objects.filter(user_id=uid)[:18]
+        ret_article = models.Article.objects.filter(user_id=uid, deleted=0)[:18]
         return render(request, 'videoPlay.html', {'userinfo': get_user_info_data(user), 'articles':ret_article})
     else:
         return redirect('../')
@@ -405,7 +405,7 @@ def bookMark(request, opration, pk):
         if opration == 'p':
             uid = request.GET.get("uid", None)
             user = models.UserInfo.objects.filter(pk=uid)[0]
-            ret_article = models.Article.objects.filter(user_id=uid)[:10]
+            ret_article = models.Article.objects.filter(user_id=uid, deleted=0)[:10]
 
             book_mark_classify_ret = models.BookMarkClassify.objects.filter(user_id=uid)
             ret_classify_count = models.BookMark.objects.filter(user_id=uid).values('classify').annotate(classifyCount=Count('pk'))
