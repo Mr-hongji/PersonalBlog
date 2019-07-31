@@ -323,12 +323,12 @@ def delArticleTag(request):
 def addArticle(request):
     msg = {'status': None}
     try:
-        articleTitle = request.GET.get('articleTitle')
-        articleContent = request.GET.get('articleContent')
-        classifyId = request.GET.get('classifyId')
-        tagIds = request.GET.getlist('tagIds')
-        pk = request.GET.get('pk')
-        uid = request.GET.get('uid')
+        articleTitle = request.POST.get('articleTitle')
+        articleContent = request.POST.get('articleContent')
+        classifyId = request.POST.get('classifyId')
+        tagIds = request.POST.getlist('tagIds')
+        pk = request.POST.get('pk')
+        uid = request.POST.get('uid')
 
         if pk:
             article = models.Article.objects.filter(pk=int(pk), deleted=0)
