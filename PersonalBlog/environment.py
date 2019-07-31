@@ -20,7 +20,7 @@ class ENV(object):
         if env == 'local':
             f.write('var doc_root_path="e:/";\nvar video_root_path="h:/";')
         else:
-            f.write('var doc_root_path="/opt/files/docfile";\nvar video_root_path="/opt/files/videofile";')
+            f.write('var doc_root_path="/opt/files/docfile/";\nvar video_root_path="/opt/files/videofile/";')
         f.close()
 
     def get_config(self, value):
