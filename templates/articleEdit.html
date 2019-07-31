@@ -239,7 +239,7 @@
 			}
 
 			function delClassfyTagInputVal(id, flag, obj) {
-				var urlS = flag == 2 ? 'delArticleTag/' : 'delArticleClassify/';
+				var urlS = flag == 2 ? '../delArticleTag/' : '../delArticleClassify/';
 				$.ajax({
 					url: urlS,
 					data: {
@@ -389,7 +389,8 @@
 			}
 
 			function canclePublishArticle() {
-				window.location = '../';
+			    var uid = $(".uinfoDiv").attr("uid");
+				window.location = '../?uid='+ uid;
 			}
 
 			function post_article(pk) {
