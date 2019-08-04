@@ -23,7 +23,7 @@ def list_dir(file_dir, type):
                 if type == 'video':
                     temp_arr = cur_file.split('.')
 
-                    if temp_arr and temp_arr[len(temp_arr) - 1:][0] in ['mp4', 'flv', 'avi', 'rmvb', 'mkv', 'swf']:
+                    if temp_arr and temp_arr[len(temp_arr) - 1:][0] in ['mp4', 'flv', 'avi', 'rmvb', 'mkv', 'swf', 'wrf']:
                         addNode = True
                     else:
                         addNode = False
