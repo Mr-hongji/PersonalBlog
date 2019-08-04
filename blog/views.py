@@ -452,10 +452,11 @@ def bookMark(request, opration, pk):
 def delBookMark(request, pk):
     ret = {'status': None, 'bookMark': None, "message": None, 'opration': 'del'}
     uid = request.POST.get('uid', None)
+    classifyId = request.POST.get('classifyId', None)
     try:
         models.BookMark.objects.filter(pk=pk, user_id=uid).delete()
         ret['status'] = 1
-        ret['bookMark'] = pk
+        ret['bookMark'] = {'pk':pk, 'classifyid':classifyId}
         ret['message'] = '书签已删除'
     except Exception as e:
         print(e)

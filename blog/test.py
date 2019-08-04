@@ -17,5 +17,21 @@ print(l)
 
 
 
-import  os
-os.rename('d:/ttest.png', 'd:/test.png')
+def outer(func):
+    sum = 0
+    def inner(len):
+        nonlocal sum
+        for n in range(1, len + 1):
+            sum += n
+
+        print(sum)
+
+
+    return inner
+
+@outer
+def Fibs(len):
+    print('Fibs...............')
+
+
+Fibs(100)

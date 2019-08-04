@@ -245,6 +245,14 @@
 
 							} else if(args.opration == 'del') {
 								removeBookMarkItem(args);
+								//全部分类中的书签数加1
+								var el_bookmarkSum = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='-1']").find('a:last-child');
+								$(el_bookmarkSum).text(parseInt($(el_bookmarkSum).text()) - 1);
+
+								//新增书签所属分类的个数加1
+								var el_bookMarkCategory = $('.bookMarkClassifyDiv').find(".bookMarkClassifyItem[classifyid='" + args.bookMark.classifyid + "']").find('a:last-child');
+								$(el_bookMarkCategory).text(parseInt($(el_bookMarkCategory).text()) - 1);
+
 							} else if(args.opration == 'loadMoreBookMark') {
 
 								//按书签分类加载并且当前页数是第一页
@@ -280,7 +288,7 @@
 
 			function removeBookMarkItem(args) {
 			    //console.log(args);
-				var bookMarkItemEl = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='" + args.bookMark + "']");
+				var bookMarkItemEl = $('.bookMarkDiv').find(".bookMarkItem[bookmarkid='" + args.bookMark.pk + "']");
 				$(bookMarkItemEl).remove();
 			}
 
