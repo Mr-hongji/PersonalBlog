@@ -31,16 +31,23 @@
 }
 
 .fileDir{
-    margin: 10px 0px 0px 22px;
+    margin: 10px 0px 0px 0px;
+    padding-left: 20px;
     float: left;
-    width: 120px;
+    width: 47%;
+}
+
+.fileDir:hover{
+    background-color: #f4f4f4;
 }
 
 .fileDir .folder_icon,
 .fileDir .file_icon{
     display: inline-block;
+    float: left;
     width: 120px;
     height: 90px;
+    margin-top: 7px;
 }
 
 .fileDir .folder_icon{
@@ -68,7 +75,13 @@
     -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
     -webkit-line-clamp: 2; /** 显示的行数 **/
     overflow: hidden;/** 隐藏超出的内容 **/
-    height:40px;
+    height:80px;
+    margin: 0px;
+    text-align: left;
+    margin-left: 10px;
+    padding-top: 25px;
+    /*width: 380px;*/
+
 }
 
 .fileDir:hover{

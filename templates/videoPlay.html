@@ -46,7 +46,7 @@
 							var p = item.path;
 							p = p.replace(/\\/g, '\\\\');
 							var s = 'ba'
-							html_el += '<div class="fileDir ' + fileType + '" fpath="' + p + '" ondblclick="openDir(\'' + p + '\',\'' + fileType + '\')" style=""><div class="' + fileType + '_icon" ></div><div class="ellipsis" title="' + item.name + '">' + item.name + '</div></div>';
+							html_el += '<div class="fileDir ' + fileType + '" fpath="' + p + '" ondblclick="openDir(\'' + p + '\',\'' + fileType + '\')" style=""><div class="' + fileType + '_icon" title="' + item.name + '"></div><div class="ellipsis" title="' + item.name + '">' + item.name + '</div></div>';
 						}
 
 						$('.file_div').append(html_el);
