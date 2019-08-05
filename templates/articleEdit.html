@@ -324,7 +324,12 @@
 					success: function(args) {
 						//console.log(args);
 						if(args.status) {
-							window.location = '../?uid='+ uid;
+							//window.location = '../article/'+ uid +'/' + articleid;
+							if(articleid){
+                                window.location = '../article/'+ uid +'/' + articleid;
+                            }else{
+                                window.location = '../?uid=' + uid;
+                            }
 						} else {
 							alert('数据保存失败');
 						}
@@ -390,7 +395,14 @@
 
 			function canclePublishArticle() {
 			    var uid = $(".uinfoDiv").attr("uid");
-				window.location = '../?uid='+ uid;
+			    var articleid = $('.article_id').attr('value');
+
+			    if(articleid){
+			        window.location = '../article/'+ uid +'/' + articleid;
+                }else{
+                    window.location = '../?uid=' + uid;
+                }
+
 			}
 
 			function post_article(pk) {
