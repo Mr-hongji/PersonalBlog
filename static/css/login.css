@@ -54,7 +54,7 @@ uploadUserHeadDiv{
     float: right;
     width: 90%;
     height: 50%;
-    margin-top: 30px;
+    margin-top: 10px;
     /*background-color: #6a9fb5;*/
     text-align: left;
 }
@@ -71,6 +71,10 @@ uploadUserHeadDiv{
     border-style: none;
     border-bottom: 1px #3ba8e7 solid;
     text-align: center;
+}
+
+.modifyPwdDiv input:focus {
+	outline: none;
 }
 
 .verificationcode input{
@@ -101,7 +105,9 @@ uploadUserHeadDiv{
     display: none;
 }
 
-.loginBtnDiv{
+.loginBtnDiv,
+.confirmModifyDiv,
+.cancleModifyDiv{
     float: left;
     width: 50%;
     height: 30px;
@@ -112,11 +118,18 @@ uploadUserHeadDiv{
     margin-left: 60px;
 }
 
-.loginBtnDiv a{
+.confirmModifyDiv,
+.cancleModifyDiv{
+    width: 80%;
+    margin-left: 35px;
+}
+
+.loginBtnDiv a,
+.confirmModifyDiv a,
+.cancleModifyDiv a{
     color: #ffffff;
     text-decoration: none;
     font-size: 14px;
-    /*background-color: #66b1ff;*/
     background-color: #3ba8e7;
     display: inline-block;
     width: 100%;
@@ -126,11 +139,23 @@ uploadUserHeadDiv{
     border-radius: 3px;
 }
 
-.loginBtnDiv a:hover{
+.cancleModifyDiv a{
+    background-color: #aeaeae;
+    border: 1px #e8e8e8 solid;
+}
+
+.cancleModifyDiv a:hover{
+    background-color: #eee;
+    border: 1px #f2f2f2 solid;
+}
+
+.loginBtnDiv a:hover,
+.confirmModifyDiv a:hover{
     /*opacity: 0.8;*/
     background-color: #93C8E7;
     border: 1px #93C8E7 solid;
 }
+
 
  .uploadUserHeadDiv{
      width: 128px;
@@ -145,6 +170,8 @@ uploadUserHeadDiv{
 
 .regustDiv{
     display: none;
+    -moz-box-shadow: 0px 0px 0px #fff; /* 老的 Firefox */
+    box-shadow: 0px 0px 0px #fff;
 }
 
 .headerCutDiv{
@@ -242,4 +269,61 @@ uploadUserHeadDiv{
     float: right;
     margin-top: 25px;
     margin-right: 30px;
+}
+
+.forgetPwdBtn{
+    position: absolute;
+    /*background-color: #00B0E8;*/
+    bottom: 5px;
+    left: 0px;
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+}
+
+.forgetPwdBtn:hover,
+.modifyPwdDiv .verificationcode .sendyzm:hover{
+    color: #3E62B8;
+}
+
+.forgetPwdBtn:active,
+.modifyPwdDiv .verificationcode .sendyzm:active{
+    color: #7B9FF5;
+}
+
+.modifyPwdDiv{
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    position: absolute;
+    bottom: 0px;
+    display: none;
+}
+
+.modifyPwdDivTip{
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    color: #1d75b3;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.modifyPwdDiv .uname, .modifyPwdDiv .passwd, .modifyPwdDiv .verificationcode, .modifyPwdDiv .email{
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.modifyPwdDiv .verificationcode .sendyzm{
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
+.confirmModifyDiv{
+    margin-top: 15px;
 }

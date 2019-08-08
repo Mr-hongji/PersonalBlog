@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>登录</title>
     <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/static/css/dataCampLight.css" />
     <script src="/static/js/jquery.js"></script>
     <script src="/static/plugins/imageCut/js/iscroll-zoom.js"></script>
     <script src="/static/plugins/imageCut/js/hammer.js"></script>
@@ -14,14 +15,16 @@
     <script>
         function showRegesitPage(){
             $('title').text('注册');
-            $(".loginDiv").slideUp('fast');
-            $(".regustDiv").slideDown('fast');
+            $(".regustDiv").slideDown();
+            {#$(".loginDiv").slideUp('fast');#}
+
         }
 
         function showLoginPage(){
             $('title').text('登录');
-            $(".regustDiv").slideUp('fast');
-            $(".loginDiv").slideDown('fast');
+
+            {#$(".loginDiv").slideDown('fast');#}
+            $(".regustDiv").slideUp();
         }
 
         window.onload = function() {
@@ -192,6 +195,19 @@
                startRegistUser();
             }
         }
+
+        function closeDataCampLight(){
+            {#alert($('.dataCampLight'));#}
+            $('.dataCampLight').slideUp();
+        }
+
+        function forgetPwdBtn(){
+            $('.modifyPwdDiv').slideDown();
+        }
+
+        function cancleModifyPwd(){
+            $('.modifyPwdDiv').slideUp();
+        }
     </script>
 
 </head>
@@ -220,6 +236,37 @@
             <div class="loginBtnDiv">
                 <a href="javascript:void(0);" onclick="startLogin()">登录</a>
             </div>
+
+        </div>
+        <a href="javascript:void(0);" class="forgetPwdBtn" onclick="forgetPwdBtn()">忘记密码</a>
+
+        <div class="modifyPwdDiv">
+            <div class="modifyPwdDivTip">密码修改</div>
+            <div class="uname">
+                <p><span>用户名: </span><span style="color: red;">用户名不能为空</span></p>
+                <input type="text" spellcheck="false"/>
+            </div>
+            <div class="passwd">
+                <p><span>新密码: </span><span style="color: red;">密码不能为空</span></p>
+                <input type="password" spellcheck="false"/>
+            </div>
+            <div class="email">
+                <p><span>邮箱: </span><span style="color: red;">邮箱不能为空</span></p>
+                <input type="email" spellcheck="false" oninput ="emailInputValChanged_regist(this)">
+            </div>
+            <div class="verificationcode">
+                <p><span>验证码: </span><span style="color: red;">请输入验证码</span></p>
+                <input type="text" spellcheck="false"> <a href="#" class="sendyzm">发送验证码</a>
+            </div>
+
+            <div class="cancleModifyDiv">
+                <a href="javascript:void(0);" onclick="cancleModifyPwd()">取消</a>
+            </div>
+
+            <div class="confirmModifyDiv">
+                <a href="javascript:void(0);" onclick="confirmModifyPwd()">修改</a>
+            </div>
+
         </div>
 
     </div>
@@ -268,5 +315,8 @@
 
     </div>
 
+{#<div class="dataCampLight">#}
+{#    <a class="closeDataCampLightBtn" href="javascript:void(0);" onclick="closeDataCampLight()"></a>#}
+{#</div>#}
 </body>
 </html>

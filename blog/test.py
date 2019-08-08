@@ -40,9 +40,46 @@ Fibs(100)
 
 def f():
     sum = 0
+
     for i in range(1,101):
         sum += i
 
     print(sum)
 
 f()
+
+def generator():
+    yield
+    yield 1
+    n = yield 2
+    yield n
+
+
+
+g = generator()
+print(next(g))
+print(g.send(None))
+print(g.send(10))
+print(next(g))
+
+
+
+l = [1,2,3,4,5,6,7,8,9]
+
+print([i*i for i in l])
+
+sum([0,1,2])
+print(sum([0,1,2]))
+
+
+with open('d:/population_statistics.txt', 'r') as f:
+    for i in f:
+        print(type(eval(i)))
+    all_pop = sum(eval(i)['population'] for i in f)
+    print(all_pop)
+    print(i for i in range(10))
+
+
+#exec ('for i in range(5):print("iter time: %d" % i) if i==0 else print(i)')
+
+exec('for i in range(5):if i==0:print("iter time: %d" % i) else print(i)')
