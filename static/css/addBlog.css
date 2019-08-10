@@ -229,7 +229,7 @@ body {
 
 .selectDiv {
 	width: 98%;
-	height: 385px;
+	max-height: 375px;
 	overflow: auto;
 	margin-left: 5px;
 	margin-top: 0px;
@@ -407,4 +407,5 @@ width: 100%;
     /*text-align: center;*/
 	float: left;
 	margin-left: 150px;
+
 }

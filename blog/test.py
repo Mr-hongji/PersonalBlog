@@ -82,4 +82,4 @@ with open('d:/population_statistics.txt', 'r') as f:
 
 #exec ('for i in range(5):print("iter time: %d" % i) if i==0 else print(i)')
 
-exec('for i in range(5):if i==0:print("iter time: %d" % i) else print(i)')
+
