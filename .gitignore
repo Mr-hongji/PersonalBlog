@@ -9,3 +9,5 @@ articleImages/
 __pycache__/
 .project
 .sqlite3
+
+static/js/settings.js
