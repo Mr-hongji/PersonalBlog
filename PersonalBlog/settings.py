@@ -149,3 +149,4 @@ STATICFILES_DIRS =(
 )
 
 uploadFilePath = current_env.get_config("uploadFilePath")
+uploadImageRootLoaction = current_env.get_config("uploadImageRootLoaction")

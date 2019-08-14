@@ -13,4 +13,5 @@ FILE_BASE_HOST_NAME = ''
 VIDEO_BASE_HOST_NAME = ''
 DOC_ROOT_PATH = 'e:/'
 VIDEO_ROOT_PATH='h:/'
-uploadFilePath="../static/uploadfiles/articleImages/"
+uploadFilePath=os.path.join(BASE_DIR,"static/uploadfiles/articleImages/")
+uploadImageRootLoaction = "http://127.0.0.1:8000/static/uploadfiles/articleImages/"

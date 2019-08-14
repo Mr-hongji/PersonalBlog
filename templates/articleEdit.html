@@ -65,24 +65,33 @@
 			$(function() {
 				initSample();
 
+                //ckeditor上传图片成功的回调函数
                 CKEDITOR.instances.editor.on( 'fileUploadResponse', function( evt ) {
                     // Prevent the default response handler.
                     evt.stop();
-                    console.log(this, evt);
+                    //console.log(this, evt);
                     // Get XHR and response.
                     var data = evt.data,
                         xhr = data.fileLoader.xhr,
                         response = xhr.responseText.split( '|' );
                         console.log(response);
                     if ( response[ 1 ] ) {
-
                         // An error occurred during upload.
                         data.message = response[ 1 ];
-                        console.log(data);
                         evt.cancel();
                     } else {
                         data.url = response[ 0 ];
-                        console.log(response[ 1 ]);
+                        res = JSON.parse(response[ 0 ]);
+                        //console.log(res.url);
+
+                        //取出ditor中所有的 img
+                        $(".cke_wysiwyg_frame").contents().find("img").each(function(index, item){
+                            //console.log($(item).attr("src"));
+                            //如果src等于，上传成功返回的url,则更新新URL来刷新img
+                            if($(item).attr("src")==res.url){
+                                $(item).attr("src", res.url+"?rn="+new Date().getTime());
+                            }
+                        });
                     }
                 } );
 

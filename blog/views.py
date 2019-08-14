@@ -640,4 +640,4 @@ def uploadEditorImage(request):
     for line in img.chunks():
         f.write(line)
     f.close()
-    return HttpResponse(json.dumps({'uploaded':1,"fileName":image_name, "url":""}))
+    return HttpResponse(json.dumps({'uploaded':1,"fileName":image_name, "url":settings.uploadImageRootLoaction+image_name}))

@@ -17,3 +17,4 @@ DOC_ROOT_PATH = '/opt/files/docfile/'
 VIDEO_ROOT_PATH="/opt/files/videofile/"
 
 uploadFilePath="/opt/files/articleImages/"
+uploadImageRootLoaction = "http://perblog.natapp1.cc/articleImg/"
