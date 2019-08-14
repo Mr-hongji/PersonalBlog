@@ -354,12 +354,13 @@ p{
 }
 
 .article .article_info span{
-	color: #81c6e6;
+	color: #999;
 }
 
 .article span, .article .publishDateDiv{
 	padding: 0 8px;
 	font-size: 14px;
+	color: #999;
 }
 
 .article .publishDateDiv{

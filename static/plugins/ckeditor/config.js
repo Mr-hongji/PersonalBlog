@@ -23,7 +23,15 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor', 'CodeSnippet', 'EasyImageUpload', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'Blockquote', 'Iframe',  '-'] },
 		{ name: 'document', items: [ 'Undo', 'Redo', 'Maximize', 'Preview', 'Source', 'About' ] }
 	];
+	config.image_previewText = ' ';
+	config.filebrowserImageUploadUrl= "/blog/uploadEditorImage/"; //图片上传地址
+    config.uploadFileRootUrl=uploadImageRootLoaction;
 };
+
+
+
+
+
 
 /*
 

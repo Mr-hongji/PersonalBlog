@@ -148,4 +148,4 @@ STATICFILES_DIRS =(
     os.path.join(BASE_DIR, 'static'),
 )
 
-
+uploadFilePath = current_env.get_config("uploadFilePath")

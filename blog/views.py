@@ -628,3 +628,17 @@ def get_user_info_data(user):
    return {"uid": user.pk, "uname": user.uname, "upwd": user.upwd,
      "headImg_100x100": user.headImg_100x100, "headImg_48x48": user.headImg_48x48,
      "headImg_35x35": user.headImg_35x35, "chickenSoup": user.chickenSoup}
+
+
+def uploadEditorImage(request):
+
+    img = request.FILES.get('upload',None)
+    shotname, extension = os.path.splitext(img.name)
+    image_name =  img.name
+    imgpath = os.path.join('static', image_name)
+    settings.uploadFilePath
+    f = open(imgpath, 'wb')
+    for line in img.chunks():
+        f.write(line)
+    f.close()
+    return HttpResponse(json.dumps({'uploaded':1,"fileName":image_name, "url":"http://127.0.0.1:8000/static/"+image_name}))

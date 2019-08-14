@@ -40,7 +40,7 @@ Fibs(100)
 
 def f():
     sum = 0
-
+    print(range(1,101))
     for i in range(1,101):
         sum += i
 
@@ -82,4 +82,13 @@ with open('d:/population_statistics.txt', 'r') as f:
 
 #exec ('for i in range(5):print("iter time: %d" % i) if i==0 else print(i)')
 
-
+from urllib import request
+from urllib.request import *
+req = Request(url="http://www.baidu.com", method='GET')
+# 添加请求头
+req.add_header('Accept', '*/*')
+req.add_header('Charset', 'UTF-8')
+req.add_header('Connection', 'Keep-Alive')
+# 打开要下载的资源
+re = request.urlopen(req)
+print(re)

@@ -13,3 +13,4 @@ FILE_BASE_HOST_NAME = ''
 VIDEO_BASE_HOST_NAME = ''
 DOC_ROOT_PATH = 'e:/'
 VIDEO_ROOT_PATH='h:/'
+uploadFilePath="../static/uploadfiles/articleImages/"

@@ -6,13 +6,13 @@
 		<title>新增笔记</title>
 
 		<link rel="stylesheet" href="/static/plugins/editorPlugin/css/editormd.css" />
+		<link rel="stylesheet" href="/static/css/addBlog.css?rnd=1" />
 
+        <script src="/static/js/settings.js"></script>
 		<script src="/static/js/jquery.js"></script>
 		<script src="/static/plugins/editorPlugin/editormd.js"></script>
-
 		<script src="/static/plugins/ckeditor/ckeditor.js?rn=1"></script>
 
-		<link rel="stylesheet" href="/static/css/addBlog.css?rnd=1" />
 		<script type="text/javascript">
 			if(CKEDITOR.env.ie && CKEDITOR.env.version < 9)
 				CKEDITOR.tools.enableHtml5Elements(document);
@@ -23,6 +23,8 @@
 			CKEDITOR.config.width = 'auto';
 
 			var initSample = (function() {
+
+
 				var wysiwygareaAvailable = isWysiwygareaAvailable(),
 					isBBCodeBuiltIn = !!CKEDITOR.plugins.get('bbcode');
 
@@ -62,6 +64,28 @@
 
 			$(function() {
 				initSample();
+
+                CKEDITOR.instances.editor.on( 'fileUploadResponse', function( evt ) {
+                    // Prevent the default response handler.
+                    evt.stop();
+                    console.log(this, evt);
+                    // Get XHR and response.
+                    var data = evt.data,
+                        xhr = data.fileLoader.xhr,
+                        response = xhr.responseText.split( '|' );
+                        console.log(response);
+                    if ( response[ 1 ] ) {
+
+                        // An error occurred during upload.
+                        data.message = response[ 1 ];
+                        console.log(data);
+                        evt.cancel();
+                    } else {
+                        data.url = response[ 0 ];
+                        console.log(response[ 1 ]);
+                    }
+                } );
+
 
 				editormd("test-editormd", {
 					width: "70%",
