@@ -635,8 +635,8 @@ def uploadEditorImage(request):
     img = request.FILES.get('upload',None)
     shotname, extension = os.path.splitext(img.name)
     image_name =  img.name
-    imgpath = os.path.join(settings.uploadFilePath, image_name)
-    f = open(imgpath, 'wb')
+    imgpath = settings.uploadFilePath
+    f = open(imgpath+image_name, 'wb')
     for line in img.chunks():
         f.write(line)
     f.close()
