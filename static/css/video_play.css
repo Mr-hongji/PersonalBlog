@@ -27,6 +27,7 @@
 .content .rightContent{
     left: 348px;
     height: 880px;
+	top: 0;
     /*border: 5px solid #f4f4f4;*/
 }
 
