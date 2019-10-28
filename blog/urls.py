@@ -32,6 +32,8 @@ urlpatterns = [
     re_path('bookMark/(?P<opration>[\w\d-]+)/(?P<pk>\d*)', views.bookMark),
     re_path('bookMarkClassify/(?P<opration>\w+)/(?P<pk>\d*)', views.bookMarkClassify),
     re_path('uploadEditorImage/', views.uploadEditorImage),
+    re_path('confirmModufyPwd/', views.confirmModufyPwd),
+    re_path('sendVerificationCodeToEmail/', views.sendVerificationCodeToEmail),
 
 ]
 

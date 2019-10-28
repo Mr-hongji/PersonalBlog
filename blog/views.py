@@ -9,10 +9,21 @@ import os
 import random
 from io import BytesIO
 import base64
+
 # 引入绘图模块
 from PIL import Image, ImageDraw, ImageFont
 # Create your views here.
+import smtplib,sys,subprocess,time,datetime
 
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.header import Header
+from email import encoders
+from email.mime.base import MIMEBase
+from email.utils import parseaddr, formataddr
+
+import random
+from math import floor
 
 def verifycode(request):
     """
@@ -631,7 +642,6 @@ def get_user_info_data(user):
 
 
 def uploadEditorImage(request):
-
     img = request.FILES.get('upload',None)
     shotname, extension = os.path.splitext(img.name)
     image_name =  img.name
@@ -641,3 +651,95 @@ def uploadEditorImage(request):
         f.write(line)
     f.close()
     return HttpResponse(json.dumps({'uploaded':1,"fileName":image_name, "url":settings.uploadImageRootLoaction+image_name}))
+
+def confirmModufyPwd(request):
+    '''
+    密码修改
+    :return:
+    '''
+    ret = {'issuccess':None, 'msg':None}
+
+    verifycode_session = request.session['verifycode']
+    request.session['verifycode'] = None
+
+    if not verifycode_session:
+        ret['issuccess'] = False
+        ret['msg'] = '验证码无效'
+        return HttpResponse(json.dumps(ret))
+
+    verificationcode = request.POST.get("verificationcode", "")
+
+    if verificationcode == verifycode_session:
+        uname = request.POST.get("uname", "")
+        pwd = request.POST.get("pwd", "")
+        email = request.POST.get("email", "")
+
+        try:
+            ret_user = models.UserInfo.objects.filter(uname=uname)
+            if ret_user:
+
+                if email != ret_user[0].email:
+                    ret['issuccess'] = False
+                    ret['msg'] = '用户名和邮箱不匹配'
+                else:
+                    pk = ret_user[0].pk
+                    obj = models.UserInfo.objects.filter(pk=pk).update(upwd=pwd)
+                    ret['issuccess'] = True
+                    ret['msg'] = '密码已修改'
+            else:
+                ret['issuccess'] = False
+                ret['msg'] = '用户名错误'
+        except Exception as e:
+            ret['issuccess'] = False
+            ret['msg'] = '密码修改失败'
+
+    return HttpResponse(json.dumps(ret))
+
+def formatAddr(s):
+    name, addr = parseaddr(s)
+    return formataddr((Header(name, 'utf-8').encode(), addr))
+
+def sendVerificationCodeToEmail(request):
+    '''
+    向邮箱发送验证码
+    :return:
+    '''
+    to_addr = request.POST.get('email','')
+    ret = {'issuccess':None, 'msg':None}
+
+    if not to_addr:
+        ret['issuccess'] = False
+        ret['msg'] = '邮箱地址为空'
+        return HttpResponse(json.dumps(ret))
+    else:
+        try:
+            smtp_server = 'smtp.qq.com'
+            from_addr = '674767007@qq.com'
+            password = 'shihongjia25999'
+            qqcode = 'wmhafhsxokhebebe'
+            smtp_port = 465  # 固定端口
+
+            vcode = str(random.randint(1000,9999))
+            msg = MIMEText('验证码：' + vcode, 'plain', 'utf-8')
+            msg['From'] = formatAddr('perblog <%s>' % from_addr)
+            msg['To'] = formatAddr('admin <%s>' % to_addr)
+            msg['Subject'] = Header('perblog verification code', 'utf-8').encode()
+
+            # 配置服务器
+            stmp = smtplib.SMTP_SSL(smtp_server, smtp_port)
+            stmp.login(from_addr, qqcode)
+
+            stmp.sendmail(from_addr, [to_addr], msg.as_string())
+            stmp.quit()
+
+            ret['issuccess'] = True
+            ret['msg'] = '验证码已发送'
+
+            request.session['verifycode'] = vcode
+            request.session.set_expiry(62) #设置session 1分钟失效，即验证码失效
+        except Exception as e:
+            ret['issuccess'] = False
+            ret['msg'] = '验证码发送失败'
+
+        return HttpResponse(json.dumps(ret))
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
-    <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/static/css/login.css?r=6" />
     <link rel="stylesheet" href="/static/css/dataCampLight.css" />
     <script src="/static/js/jquery.js"></script>
     <script src="/static/plugins/imageCut/js/iscroll-zoom.js"></script>
@@ -206,8 +206,136 @@
         }
 
         function cancleModifyPwd(){
-            $('.modifyPwdDiv').slideUp();
+           clearTimeout(to);
+           $('.modifyPwdDiv').slideUp();
+           $('.modifyPwdDiv').find("input").val("");
+           changeClickSendyzmBtnState(false);
+           $('.modifyPwdDiv').find('.sendyzm').text("发送验证码");
         }
+
+        function sendVerificationCodeToEmail(){
+
+           var mpwd_email = $('.modifyPwdDiv').find('.email').find("input[type='email']");
+           var email_tip = $('.modifyPwdDiv').find('.email').find('span:last-child');
+           var email_val = $(mpwd_email).val();
+           re = /^[\w-]+@[A-Za-z0-9]+\.(com|cn|net)$/g;
+           var email_isok = re.test(email_val);
+           if(!email_val){
+                $(email_tip).text("请输入邮箱地址");
+           }else if(!email_isok){
+                $(email_tip).text("邮箱格式错误");
+           }
+
+           if(!email_val || !email_isok){
+                $(email_tip).css("display", "inline-block");
+                 return;
+           }else{
+               $(email_tip).css("display", "none");
+
+               changeClickSendyzmBtnState(true);
+               $('.modifyPwdDiv').find('.sendyzm').text('正在发送...');
+               sendVerificationCode(email_val);
+           }
+        }
+
+        function sendVerificationCode(email){
+            $.ajax({
+                url:'blog/sendVerificationCodeToEmail/',
+                type:'post',
+                data:{'email':email},
+                dataType:'json',
+                success:function (data) {
+                    if(data.issuccess){
+                        countDown();
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+
+
+        var i = 60;
+        var to = null;
+        function countDown() {
+            i = i - 1;
+            changeClickSendyzmBtnState(true);
+            $('.modifyPwdDiv').find('.sendyzm').text(i+ '秒后重新发送');
+
+            if (i == 0) {
+                changeClickSendyzmBtnState(false);
+                $('.modifyPwdDiv').find('.sendyzm').text("重新发送");
+
+                i = 60;
+                return;
+            }
+             to = setTimeout('countDown()',1000);
+        }
+
+        function changeClickSendyzmBtnState(disabled){
+            if(disabled){
+                $('.modifyPwdDiv').find('.sendyzm').removeAttr("onclick");
+                $('.modifyPwdDiv').find('.sendyzm').css("cursor", "not-allowed");
+                $('.modifyPwdDiv').find('.sendyzm').css("color", "grey");
+            }else{
+                $('.modifyPwdDiv').find('.sendyzm').attr("onclick", "sendVerificationCodeToEmail()");
+                $('.modifyPwdDiv').find('.sendyzm').css("cursor", "allowed");
+                $('.modifyPwdDiv').find('.sendyzm').css("color", "blue");
+            }
+
+        }
+        function confirmModufyPwd(){
+
+            clearTimeout(to);
+
+            var uname = $('.modifyPwdDiv').find('.uname').find('input').val();
+            var pwd = $('.modifyPwdDiv').find('.passwd').find('input').val();
+            var verificationcode =  $('.modifyPwdDiv').find('.verificationcode').find('input').val();
+            var email =  $('.modifyPwdDiv').find('.email').find('input').val();
+
+
+            if(!uname){
+                hideRegistInfoErrorTip('.modifyPwdDiv', '.uname', $('.modifyPwdDiv').find('.uname'));
+            }
+            if(!pwd){
+                hideRegistInfoErrorTip('.modifyPwdDiv', '.passwd', $('.modifyPwdDiv').find('.passwd'));
+            }
+            if(!verificationcode){
+                hideRegistInfoErrorTip('.modifyPwdDiv', '.verificationcode', $('.modifyPwdDiv').find('.verificationcode'));
+            }
+
+            if(!uname || !pwd || !verificationcode || !email){
+                return;
+            }
+
+            $('.modifyPwdDiv').find('.divMark').css("display", "inline-block");
+
+            $.ajax({
+                url:'blog/confirmModufyPwd/',
+                type:'post',
+                dataType:'json',
+                data:{'uname':uname, 'pwd':pwd, 'verificationcode':verificationcode, 'email':email},
+                success:function (data) {
+
+                    alert(data.msg);
+                    if(data.issuccess){
+                        window.location.href = './';
+                    }
+
+                    changeClickSendyzmBtnState(false);
+
+                    $('.modifyPwdDiv').find('.sendyzm').text("发送验证码");
+                    $('.modifyPwdDiv').find('.divMark').css("display", "none");
+                }
+            });
+        }
+
+        function showMark(show){
+
+
+        }
+
+
     </script>
 
 </head>
@@ -234,29 +362,30 @@
                 <img />
             </div>
             <div class="loginBtnDiv">
-                <a href="javascript:void(0);" onclick="startLogin()">登录</a>
+                <a href="javascript:void(0);" onclick="confirmModufyPwd()">登录</a>
             </div>
 
         </div>
-        <a href="javascript:void(0);" class="forgetPwdBtn" onclick="forgetPwdBtn()">忘记密码</a>
+        <a href="javascript:void(0);" class="forgetPwdBtn" onclick="forgetPwdBtn()">忘记密码？</a>
 
         <div class="modifyPwdDiv">
-            <div class="modifyPwdDivTip">密码修改</div>
+            <div class="modifyPwdDivTip">密码重置</div>
             <div class="uname">
                 <p><span>用户名: </span><span style="color: red;">用户名不能为空</span></p>
                 <input type="text" spellcheck="false"/>
             </div>
-            <div class="passwd">
-                <p><span>新密码: </span><span style="color: red;">密码不能为空</span></p>
+             <div class="passwd">
+                <p><span>密码: </span><span style="color: red;">密码不能为空</span></p>
                 <input type="password" spellcheck="false"/>
             </div>
             <div class="email">
                 <p><span>邮箱: </span><span style="color: red;">邮箱不能为空</span></p>
-                <input type="email" spellcheck="false" oninput ="emailInputValChanged_regist(this)">
+                <input type="email" spellcheck="false" >
+                <a href="javascript:void(0);" class="sendyzm" onclick="sendVerificationCodeToEmail()">发送验证码</a>
             </div>
             <div class="verificationcode">
                 <p><span>验证码: </span><span style="color: red;">请输入验证码</span></p>
-                <input type="text" spellcheck="false"> <a href="#" class="sendyzm">发送验证码</a>
+                <input type="text" spellcheck="false">
             </div>
 
             <div class="cancleModifyDiv">
@@ -264,8 +393,10 @@
             </div>
 
             <div class="confirmModifyDiv">
-                <a href="javascript:void(0);" onclick="confirmModifyPwd()">修改</a>
+                <a href="javascript:void(0);" onclick="confirmModufyPwd()">修改</a>
             </div>
+
+            <div class="divMark"></div>
 
         </div>
 
@@ -305,7 +436,7 @@
                 <input type="password" spellcheck="false" oninput ="passwordInputValChanged_regist(this)"/>
             </div>
             <div class="email">
-                <p><span>邮箱: </span><span style="color: red;">邮箱不能为空</span></p>
+                <p><span>邮箱: </span><span style="color: red;">邮箱输入不正确</span></p>
                 <input type="email" spellcheck="false" oninput ="emailInputValChanged_regist(this)">
             </div>
             <div class="loginBtnDiv">
