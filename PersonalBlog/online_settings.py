@@ -12,9 +12,9 @@ DATABASES = {
 STATIC_ROOT='/opt/static/django'
 
 FILE_BASE_HOST_NAME = 'http://perblog.natapp1.cc/doc'
-VIDEO_BASE_HOST_NAME = 'http://perblog.natapp1.cc/video'
+VIDEO_BASE_HOST_NAME = 'http://perblog.natapp1.cc'
 DOC_ROOT_PATH = '/opt/files/docfile/'
-VIDEO_ROOT_PATH="/opt/files/videofile/"
+VIDEO_ROOT_PATH="/video/opt/files/videofile/"
 
 uploadFilePath="/opt/files/articleImages/"
 uploadImageRootLoaction = "http://perblog.natapp1.cc/articleImg/"

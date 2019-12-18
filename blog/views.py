@@ -3,7 +3,7 @@ from blog import models
 from django.core import serializers
 import os, shutil, json, time
 from PersonalBlog import settings
-
+from urllib.parse import urlparse
 # 引入随机函数模块
 import os
 import random
@@ -385,7 +385,6 @@ def videoPlay(request):
         return redirect('../')
 
 def getVideoFilePlayUrl(request):
-
     ret = {'status':0, 'playUrl':None,'vTrueName':None, 'vExtName':None}
     path = request.GET.get('path', None)
     try:
@@ -395,6 +394,11 @@ def getVideoFilePlayUrl(request):
             playUrl = path
 
             if settings.VIDEO_BASE_HOST_NAME:
+                #获取请求地址中的协议头和域名
+                res = urlparse(request.build_absolute_uri(None))
+                print(res.scheme + "://" + res.netloc)
+
+                settings.VIDEO_BASE_HOST_NAME = res.scheme + "://" + res.netloc
                 playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME + '/')
                 #playUrl = playUrl + '/' + fname
 
@@ -714,7 +718,7 @@ def sendVerificationCodeToEmail(request):
     else:
         try:
             smtp_server = 'smtp.qq.com'
-            from_addr = '674767007@qq.com'
+            from_addr = to_addr = '674767007@qq.com'
             password = 'shihongjia25999'
             qqcode = 'wmhafhsxokhebebe'
             smtp_port = 465  # 固定端口
