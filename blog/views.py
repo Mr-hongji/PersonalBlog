@@ -78,6 +78,7 @@ def verifycode(request):
     return HttpResponse(buf.getvalue(), 'image/png')
 
 def login(request):
+    return HttpResponse("123")
     return render(request, 'login.html')
 
 def startLogin(request):
@@ -365,6 +366,7 @@ def async(request):
     else:
         return redirect('../')
 
+
 def list_dir(request):
     p = request.POST.get('fpath', None)
     type = request.POST.get('type', None)
@@ -396,12 +398,12 @@ def getVideoFilePlayUrl(request):
             if settings.VIDEO_BASE_HOST_NAME:
                 #获取请求地址中的协议头和域名
                 res = urlparse(request.build_absolute_uri(None))
-                print(res.scheme + "://" + res.netloc)
-
-                settings.VIDEO_BASE_HOST_NAME = res.scheme + "://" + res.netloc
-                playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME + '/')
+                host_name = res.scheme + "://" + res.netloc
+                print(host_name)
+                settings.VIDEO_BASE_HOST_NAME = str(settings.VIDEO_BASE_HOST_NAME).format(hostname=host_name)
+                playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME)
                 #playUrl = playUrl + '/' + fname
-
+                str(path).re
             ret['status'] = 1
             ret['playUrl'] = playUrl
             ret['vTrueName'] = fname
