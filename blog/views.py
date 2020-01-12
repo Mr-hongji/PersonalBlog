@@ -388,6 +388,7 @@ def videoPlay(request):
 
 def getVideoFilePlayUrl(request):
     ret = {'status':0, 'playUrl':None,'vTrueName':None, 'vExtName':None}
+    res = ''
     path = request.GET.get('path', None)
     try:
         if path:
@@ -403,11 +404,12 @@ def getVideoFilePlayUrl(request):
                 settings.VIDEO_BASE_HOST_NAME = str(settings.VIDEO_BASE_HOST_NAME).format(hostname=host_name)
                 playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME)
                 #playUrl = playUrl + '/' + fname
-                str(path).re
+
             ret['status'] = 1
             ret['playUrl'] = playUrl
             ret['vTrueName'] = fname
             ret['vExtName'] = extension
+            ret['hh'] = str(json.dumps(res))
         else:
             ret['status'] = 0
     except Exception as e:
