@@ -78,7 +78,7 @@ def verifycode(request):
     return HttpResponse(buf.getvalue(), 'image/png')
 
 def login(request):
-    return HttpResponse("123")
+    #return HttpResponse('123')
     return render(request, 'login.html')
 
 def startLogin(request):
@@ -388,7 +388,6 @@ def videoPlay(request):
 
 def getVideoFilePlayUrl(request):
     ret = {'status':0, 'playUrl':None,'vTrueName':None, 'vExtName':None}
-    res = ''
     path = request.GET.get('path', None)
     try:
         if path:
@@ -396,20 +395,17 @@ def getVideoFilePlayUrl(request):
             shotname, extension = os.path.splitext(fname)  # 获取文件名 和 文件扩展名
             playUrl = path
 
-            if settings.VIDEO_BASE_HOST_NAME:
-                #获取请求地址中的协议头和域名
-                res = urlparse(request.build_absolute_uri(None))
-                host_name = res.scheme + "://" + res.netloc
-                print(host_name)
-                settings.VIDEO_BASE_HOST_NAME = str(settings.VIDEO_BASE_HOST_NAME).format(hostname=host_name)
-                playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, settings.VIDEO_BASE_HOST_NAME)
-                #playUrl = playUrl + '/' + fname
+            # 获取请求地址中的协议头和域名
+            res = urlparse(request.build_absolute_uri(None))
+            host_name = res.scheme + "://" + res.netloc
+            vpath = host_name + '/' + str(settings.VIDEO_BASE_HOST_NAME)
+            playUrl = str(playUrl).replace(settings.VIDEO_ROOT_PATH, vpath)
+            # playUrl = playUrl + '/' + fname
 
             ret['status'] = 1
             ret['playUrl'] = playUrl
             ret['vTrueName'] = fname
             ret['vExtName'] = extension
-            ret['hh'] = str(json.dumps(res))
         else:
             ret['status'] = 0
     except Exception as e:
